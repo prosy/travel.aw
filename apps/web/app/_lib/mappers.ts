@@ -6,6 +6,7 @@ import type {
   TripItemStatus,
   Location,
   Price,
+  Citation,
   Media,
   MediaType,
   MediaSource,
@@ -49,8 +50,23 @@ export function mapTripItem(item: PrismaTripItem): TripItem {
       ? { amount: item.priceAmount, currency: item.priceCurrency ?? 'USD' }
       : null;
 
-  const offer = item.offerData ? JSON.parse(item.offerData) : null;
-  const citations = item.citationsData ? JSON.parse(item.citationsData) : undefined;
+  let offer = null;
+  if (item.offerData) {
+    try {
+      offer = JSON.parse(item.offerData);
+    } catch (e) {
+      console.error(`Malformed offerData for TripItem ${item.id}:`, e);
+    }
+  }
+
+  let citations: Citation[] | undefined;
+  if (item.citationsData) {
+    try {
+      citations = JSON.parse(item.citationsData);
+    } catch (e) {
+      console.error(`Malformed citationsData for TripItem ${item.id}:`, e);
+    }
+  }
 
   return {
     id: item.id,
@@ -72,9 +88,14 @@ export function mapTripItem(item: PrismaTripItem): TripItem {
 }
 
 export function mapMedia(m: PrismaCachedMedia): Media {
-  const attribution: MediaAttribution | null = m.attribution
-    ? JSON.parse(m.attribution)
-    : null;
+  let attribution: MediaAttribution | null = null;
+  if (m.attribution) {
+    try {
+      attribution = JSON.parse(m.attribution);
+    } catch (e) {
+      console.error(`Malformed attribution for CachedMedia ${m.id}:`, e);
+    }
+  }
 
   const dimensions =
     m.width != null && m.height != null

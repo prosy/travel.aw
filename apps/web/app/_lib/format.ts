@@ -5,7 +5,9 @@ export function formatPrice(amount: number, currency: string): string {
 
 /** Format an ISO date string as "Apr 1, 2026" */
 export function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-US', {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '\u2014';
+  return d.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -15,7 +17,9 @@ export function formatDate(iso: string): string {
 
 /** Format an ISO datetime string as "Apr 1, 10:30 AM" */
 export function formatDateTime(iso: string): string {
-  return new Date(iso).toLocaleString('en-US', {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '\u2014';
+  return d.toLocaleString('en-US', {
     month: 'short',
     day: 'numeric',
     hour: 'numeric',

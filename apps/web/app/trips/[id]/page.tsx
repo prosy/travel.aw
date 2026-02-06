@@ -91,11 +91,6 @@ function itemSubtitle(item: TripItem): string[] {
     lines.push(`${item.offer.flightNumber} (${item.offer.airline})`);
   } else if (item.offer?.type === 'hotel') {
     if (item.offer.checkIn && item.offer.checkOut) {
-      const checkIn = new Date(item.offer.checkIn + 'T00:00:00Z').toLocaleDateString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        timeZone: 'UTC',
-      });
       lines.push(`Check in: ${formatTime(item.startDateTime)} UTC`);
     }
     if (item.offer.address) lines.push(item.offer.address);
