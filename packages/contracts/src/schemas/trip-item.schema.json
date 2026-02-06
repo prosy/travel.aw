@@ -83,5 +83,5 @@
       "format": "date-time"
     }
   },
-  "required": ["id", "tripId", "type", "title", "startDateTime"]
+  "required": ["id", "tripId", "type", "title", "startDateTime", "status", "createdAt", "updatedAt"]
 }

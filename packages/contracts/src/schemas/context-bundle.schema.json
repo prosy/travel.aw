@@ -83,5 +83,5 @@
       "format": "date-time"
     }
   },
-  "required": ["id", "purpose"]
+  "required": ["id", "purpose", "createdAt"]
 }

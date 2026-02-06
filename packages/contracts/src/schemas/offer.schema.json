@@ -3,6 +3,10 @@
   "$id": "https://travel.aw/schemas/offer.json",
   "title": "Offer",
   "description": "Travel offer schemas for hotels and flights",
+  "oneOf": [
+    { "$ref": "#/definitions/OfferHotel" },
+    { "$ref": "#/definitions/OfferFlight" }
+  ],
   "definitions": {
     "OfferHotel": {
       "type": "object",

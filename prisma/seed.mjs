@@ -202,7 +202,9 @@ async function main() {
               roomType: 'Deluxe Room with Garden View',
               checkIn: '2026-06-16',
               checkOut: '2026-06-19',
-              amenities: ['spa', 'garden', 'restaurant', 'bar', 'gym']
+              amenities: ['spa', 'garden', 'restaurant', 'bar', 'gym'],
+              pricePerNight: { amount: 450, currency: 'EUR' },
+              totalPrice: { amount: 1350, currency: 'EUR' }
             })
           },
           {
