@@ -24,11 +24,17 @@ model Trip {
   destination String
   status      String   @default("draft") // draft, planned, booked, in_progress, completed, cancelled
 
+  // User ownership (nullable for migration - existing trips have no owner)
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
   items       TripItem[]
   members     TripMember[]  // Trip collaborators
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model TripItem {
@@ -191,6 +197,7 @@ model User {
   lastLoginAt     DateTime?
 
   // Relations
+  trips             Trip[]
   pointsAccounts    PointsAccount[]
   travelDocs        TravelDoc[]
   emergencyContacts EmergencyContact[]
