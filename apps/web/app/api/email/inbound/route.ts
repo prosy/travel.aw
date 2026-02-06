@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '@/app/_lib/prisma';
 
 /**
  * SendGrid-style inbound email payload (subset of fields we care about).
