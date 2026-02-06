@@ -10,8 +10,164 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Placeholder model for bootstrap - Session 1 replaces this
-model Placeholder {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
+// ============================================================================
+// Trip Models
+// ============================================================================
+
+model Trip {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  destination String
+  status      String   @default("draft") // draft, planned, booked, in_progress, completed, cancelled
+
+  items       TripItem[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TripItem {
+  id                 String   @id @default(cuid())
+  tripId             String
+  trip               Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  type               String   // flight, hotel, activity, transport, restaurant, other
+  title              String
+  description        String?
+  startDateTime      DateTime
+  endDateTime        DateTime?
+
+  // Location (stored as JSON)
+  locationName       String?
+  locationAddress    String?
+  locationLat        Float?
+  locationLng        Float?
+
+  confirmationNumber String?
+  priceAmount        Float?
+  priceCurrency      String?  @default("USD")
+  status             String   @default("pending") // pending, confirmed, cancelled
+
+  // Offer details stored as JSON
+  offerData          String?  // JSON string of OfferHotel or OfferFlight
+
+  // Citations stored as JSON array
+  citationsData      String?  // JSON string of Citation[]
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([tripId])
+  @@index([type])
+  @@index([startDateTime])
+}
+
+// ============================================================================
+// Media Cache
+// ============================================================================
+
+model CachedMedia {
+  id            String   @id @default(cuid())
+
+  type          String   // image, video, document
+  source        String   // wikimedia, unsplash, provider, user, placeholder
+  originalUrl   String   @unique
+  cachedUrl     String?  // Local/CDN cached URL
+  thumbnailUrl  String?
+
+  title         String?
+  alt           String?
+
+  // Attribution (stored as JSON)
+  attribution   String?  // JSON string of MediaAttribution
+
+  width         Int?
+  height        Int?
+  mimeType      String?
+  fileSize      Int?     // in bytes
+
+  // Cache metadata
+  cachedAt      DateTime @default(now())
+  expiresAt     DateTime?
+  lastAccessed  DateTime @default(now())
+  accessCount   Int      @default(0)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([source])
+  @@index([cachedAt])
+}
+
+// ============================================================================
+// Email Ingestion
+// ============================================================================
+
+model InboundEmail {
+  id              String   @id @default(cuid())
+
+  messageId       String   @unique // Email Message-ID header
+  from            String
+  to              String
+  subject         String?
+
+  // Email content
+  bodyText        String?
+  bodyHtml        String?
+
+  // Parsed travel data (JSON)
+  extractedData   String?  // JSON of extracted trip items, offers, etc.
+  extractionStatus String  @default("pending") // pending, processing, completed, failed
+  extractionError String?
+
+  // Processing metadata
+  receivedAt      DateTime
+  processedAt     DateTime?
+
+  // Link to created trip items
+  linkedTripId    String?
+
+  // Raw email storage
+  rawHeaders      String?  // JSON of all headers
+  attachments     String?  // JSON array of attachment metadata
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([from])
+  @@index([receivedAt])
+  @@index([extractionStatus])
+}
+
+// ============================================================================
+// Offer Cache (optional - for caching external API responses)
+// ============================================================================
+
+model OfferCache {
+  id            String   @id @default(cuid())
+
+  provider      String   // expedia, booking, amadeus, etc.
+  offerType     String   // hotel, flight
+  queryHash     String   // Hash of search parameters for deduplication
+
+  // Offer data
+  offerData     String   // JSON of the full offer response
+
+  // Cache metadata
+  cachedAt      DateTime @default(now())
+  expiresAt     DateTime
+
+  // Pricing snapshot
+  priceAmount   Float?
+  priceCurrency String?
+
+  createdAt     DateTime @default(now())
+
+  @@unique([provider, queryHash])
+  @@index([provider])
+  @@index([offerType])
+  @@index([expiresAt])
 }

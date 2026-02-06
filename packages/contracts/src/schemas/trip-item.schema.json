@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://travel.aw/schemas/trip-item.json",
+  "title": "TripItem",
+  "description": "An item within a trip (flight, hotel, activity, etc.)",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the item"
+    },
+    "tripId": {
+      "type": "string",
+      "description": "Reference to parent trip"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["flight", "hotel", "activity", "transport", "restaurant", "other"],
+      "description": "Type of trip item"
+    },
+    "title": {
+      "type": "string",
+      "description": "Item title/name"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "Optional description"
+    },
+    "startDateTime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start date/time"
+    },
+    "endDateTime": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "End date/time (optional for some items)"
+    },
+    "location": {
+      "type": ["object", "null"],
+      "properties": {
+        "name": { "type": "string" },
+        "address": { "type": ["string", "null"] },
+        "lat": { "type": ["number", "null"] },
+        "lng": { "type": ["number", "null"] }
+      }
+    },
+    "confirmationNumber": {
+      "type": ["string", "null"],
+      "description": "Booking confirmation number"
+    },
+    "price": {
+      "type": ["object", "null"],
+      "properties": {
+        "amount": { "type": "number" },
+        "currency": { "type": "string", "default": "USD" }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "confirmed", "cancelled"],
+      "default": "pending"
+    },
+    "offer": {
+      "oneOf": [
+        { "$ref": "offer.json#/definitions/OfferHotel" },
+        { "$ref": "offer.json#/definitions/OfferFlight" },
+        { "type": "null" }
+      ],
+      "description": "Associated offer details"
+    },
+    "citations": {
+      "type": "array",
+      "items": { "$ref": "citation.json" },
+      "description": "Source citations for this item"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": ["id", "tripId", "type", "title", "startDateTime"]
+}

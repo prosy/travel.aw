@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://travel.aw/schemas/media.json",
+  "title": "Media",
+  "description": "Media asset (image, video) with source tracking",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the media"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["image", "video", "document"],
+      "description": "Media type"
+    },
+    "source": {
+      "type": "string",
+      "enum": ["wikimedia", "unsplash", "provider", "user", "placeholder"],
+      "description": "Source of the media"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to the media asset"
+    },
+    "thumbnailUrl": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "URL to thumbnail version"
+    },
+    "title": {
+      "type": ["string", "null"],
+      "description": "Media title/caption"
+    },
+    "alt": {
+      "type": ["string", "null"],
+      "description": "Alt text for accessibility"
+    },
+    "attribution": {
+      "type": ["object", "null"],
+      "properties": {
+        "author": { "type": ["string", "null"] },
+        "license": { "type": ["string", "null"] },
+        "licenseUrl": { "type": ["string", "null"], "format": "uri" },
+        "sourceUrl": { "type": ["string", "null"], "format": "uri" }
+      },
+      "description": "Attribution info for licensed media"
+    },
+    "dimensions": {
+      "type": ["object", "null"],
+      "properties": {
+        "width": { "type": "integer" },
+        "height": { "type": "integer" }
+      }
+    },
+    "mimeType": {
+      "type": ["string", "null"],
+      "description": "MIME type of the media"
+    },
+    "cachedAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the media was cached locally"
+    }
+  },
+  "required": ["id", "type", "source", "url"]
+}

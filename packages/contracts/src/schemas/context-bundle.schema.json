@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://travel.aw/schemas/context-bundle.json",
+  "title": "ContextBundle",
+  "description": "A bundle of contextual information for AI/agent processing",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the context bundle"
+    },
+    "tripId": {
+      "type": ["string", "null"],
+      "description": "Associated trip ID if applicable"
+    },
+    "purpose": {
+      "type": "string",
+      "enum": ["search", "recommendation", "planning", "booking", "summary"],
+      "description": "Purpose of this context bundle"
+    },
+    "userIntent": {
+      "type": ["string", "null"],
+      "description": "Natural language description of user intent"
+    },
+    "constraints": {
+      "type": ["object", "null"],
+      "properties": {
+        "budget": {
+          "type": ["object", "null"],
+          "properties": {
+            "min": { "type": ["number", "null"] },
+            "max": { "type": ["number", "null"] },
+            "currency": { "type": "string", "default": "USD" }
+          }
+        },
+        "dates": {
+          "type": ["object", "null"],
+          "properties": {
+            "flexible": { "type": "boolean", "default": false },
+            "earliest": { "type": ["string", "null"], "format": "date" },
+            "latest": { "type": ["string", "null"], "format": "date" }
+          }
+        },
+        "travelers": {
+          "type": ["object", "null"],
+          "properties": {
+            "adults": { "type": "integer", "minimum": 1, "default": 1 },
+            "children": { "type": "integer", "minimum": 0, "default": 0 },
+            "infants": { "type": "integer", "minimum": 0, "default": 0 }
+          }
+        },
+        "preferences": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "User preferences (e.g., 'non-stop', 'pet-friendly')"
+        }
+      }
+    },
+    "priorContext": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "role": { "type": "string", "enum": ["user", "assistant", "system"] },
+          "content": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" }
+        }
+      },
+      "description": "Previous conversation context"
+    },
+    "relatedItems": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "IDs of related trip items"
+    },
+    "metadata": {
+      "type": ["object", "null"],
+      "additionalProperties": true,
+      "description": "Additional metadata"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": ["id", "purpose"]
+}

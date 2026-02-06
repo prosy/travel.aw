@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://travel.aw/schemas/citation.json",
+  "title": "Citation",
+  "description": "Source citation for trip data provenance",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the citation"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["email", "website", "api", "manual", "agent"],
+      "description": "Type of source"
+    },
+    "source": {
+      "type": "string",
+      "description": "Source identifier (e.g., email ID, URL, API name)"
+    },
+    "title": {
+      "type": ["string", "null"],
+      "description": "Title of the source document"
+    },
+    "url": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "URL if applicable"
+    },
+    "excerpt": {
+      "type": ["string", "null"],
+      "description": "Relevant excerpt from the source"
+    },
+    "confidence": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Confidence score for extracted data"
+    },
+    "extractedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the data was extracted"
+    },
+    "extractedBy": {
+      "type": ["string", "null"],
+      "description": "Agent or process that extracted the data"
+    },
+    "metadata": {
+      "type": ["object", "null"],
+      "additionalProperties": true,
+      "description": "Additional source-specific metadata"
+    }
+  },
+  "required": ["id", "type", "source", "extractedAt"]
+}

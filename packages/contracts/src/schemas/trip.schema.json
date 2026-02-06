@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://travel.aw/schemas/trip.json",
+  "title": "Trip",
+  "description": "A travel trip containing multiple items (flights, hotels, activities)",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the trip"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable trip name"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "Optional trip description"
+    },
+    "startDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Trip start date (YYYY-MM-DD)"
+    },
+    "endDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Trip end date (YYYY-MM-DD)"
+    },
+    "destination": {
+      "type": "string",
+      "description": "Primary destination"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "planned", "booked", "in_progress", "completed", "cancelled"],
+      "default": "draft"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "trip-item.json"
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": ["id", "name", "startDate", "endDate", "destination"]
+}

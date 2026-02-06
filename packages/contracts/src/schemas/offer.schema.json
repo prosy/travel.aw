@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://travel.aw/schemas/offer.json",
+  "title": "Offer",
+  "description": "Travel offer schemas for hotels and flights",
+  "definitions": {
+    "OfferHotel": {
+      "type": "object",
+      "properties": {
+        "type": { "const": "hotel" },
+        "hotelName": { "type": "string" },
+        "hotelChain": { "type": ["string", "null"] },
+        "starRating": { "type": ["number", "null"], "minimum": 1, "maximum": 5 },
+        "roomType": { "type": ["string", "null"] },
+        "checkIn": { "type": "string", "format": "date" },
+        "checkOut": { "type": "string", "format": "date" },
+        "address": { "type": ["string", "null"] },
+        "amenities": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "pricePerNight": {
+          "type": ["object", "null"],
+          "properties": {
+            "amount": { "type": "number" },
+            "currency": { "type": "string" }
+          }
+        },
+        "totalPrice": {
+          "type": ["object", "null"],
+          "properties": {
+            "amount": { "type": "number" },
+            "currency": { "type": "string" }
+          }
+        },
+        "cancellationPolicy": { "type": ["string", "null"] },
+        "sourceUrl": { "type": ["string", "null"], "format": "uri" },
+        "sourceProvider": { "type": ["string", "null"] },
+        "media": {
+          "type": "array",
+          "items": { "$ref": "media.json" }
+        }
+      },
+      "required": ["type", "hotelName", "checkIn", "checkOut"]
+    },
+    "OfferFlight": {
+      "type": "object",
+      "properties": {
+        "type": { "const": "flight" },
+        "airline": { "type": "string" },
+        "flightNumber": { "type": "string" },
+        "departure": {
+          "type": "object",
+          "properties": {
+            "airport": { "type": "string" },
+            "city": { "type": ["string", "null"] },
+            "dateTime": { "type": "string", "format": "date-time" },
+            "terminal": { "type": ["string", "null"] }
+          },
+          "required": ["airport", "dateTime"]
+        },
+        "arrival": {
+          "type": "object",
+          "properties": {
+            "airport": { "type": "string" },
+            "city": { "type": ["string", "null"] },
+            "dateTime": { "type": "string", "format": "date-time" },
+            "terminal": { "type": ["string", "null"] }
+          },
+          "required": ["airport", "dateTime"]
+        },
+        "class": {
+          "type": "string",
+          "enum": ["economy", "premium_economy", "business", "first"]
+        },
+        "aircraft": { "type": ["string", "null"] },
+        "duration": {
+          "type": ["string", "null"],
+          "description": "Flight duration in ISO 8601 duration format"
+        },
+        "stops": { "type": "integer", "minimum": 0, "default": 0 },
+        "price": {
+          "type": ["object", "null"],
+          "properties": {
+            "amount": { "type": "number" },
+            "currency": { "type": "string" }
+          }
+        },
+        "baggageAllowance": { "type": ["string", "null"] },
+        "sourceUrl": { "type": ["string", "null"], "format": "uri" },
+        "sourceProvider": { "type": ["string", "null"] }
+      },
+      "required": ["type", "airline", "flightNumber", "departure", "arrival"]
+    }
+  }
+}
