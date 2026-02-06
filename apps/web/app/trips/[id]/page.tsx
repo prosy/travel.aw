@@ -3,6 +3,7 @@ import { PlaceholderTile } from '@travel/ui';
 import { fetchTrip } from '@/app/_lib/mock-data';
 import { formatDate, formatDateTime, formatPrice, statusColor, typeIcon } from '@/app/_lib/format';
 import { notFound } from 'next/navigation';
+import { QuickSearchChips } from './QuickSearchChips';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -45,6 +46,12 @@ export default async function TripDetailPage({ params }: Props) {
       {trip.description && (
         <p className="mb-6 text-sm text-zinc-600 dark:text-zinc-400">{trip.description}</p>
       )}
+
+      {/* Quick searches */}
+      <div className="mb-6">
+        <h2 className="mb-2 text-sm font-semibold text-zinc-600">Quick searches</h2>
+        <QuickSearchChips query={trip.destination} />
+      </div>
 
       {/* Timeline */}
       <h2 className="mb-4 text-lg font-semibold">Itinerary</h2>
