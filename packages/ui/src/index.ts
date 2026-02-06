@@ -1,4 +1,5 @@
 export { PlaceholderTile } from './PlaceholderTile';
 export type { PlaceholderTileProps } from './PlaceholderTile';
 
-// TODO: MapPreview component will be added by codex-maps branch
+export { MapPreview } from './MapPreview';
+export type { MapPreviewProps, MapPin } from './MapPreview';
