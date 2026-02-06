@@ -19,8 +19,8 @@ async function main() {
     data: {
       name: 'Tokyo Adventure 2026',
       description: 'A week exploring Tokyo, from ancient temples to modern tech districts',
-      startDate: new Date('2026-04-10'),
-      endDate: new Date('2026-04-17'),
+      startDate: '2026-04-10',
+      endDate: '2026-04-17',
       destination: 'Tokyo, Japan',
       status: 'planned',
       items: {
@@ -144,8 +144,8 @@ async function main() {
     data: {
       name: 'Italian Summer 2026',
       description: 'Rome, Florence, and the Amalfi Coast',
-      startDate: new Date('2026-06-15'),
-      endDate: new Date('2026-06-25'),
+      startDate: '2026-06-15',
+      endDate: '2026-06-25',
       destination: 'Italy',
       status: 'draft',
       items: {

@@ -18,8 +18,8 @@ model Trip {
   id          String   @id @default(cuid())
   name        String
   description String?
-  startDate   DateTime
-  endDate     DateTime
+  startDate   String   // YYYY-MM-DD (date-only, matches contract)
+  endDate     String   // YYYY-MM-DD (date-only, matches contract)
   destination String
   status      String   @default("draft") // draft, planned, booked, in_progress, completed, cancelled
 
