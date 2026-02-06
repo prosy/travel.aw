@@ -274,7 +274,7 @@ export async function fetchTrips(): Promise<Trip[]> {
 export async function fetchTrip(id: string): Promise<Trip | null> {
   const trip = MOCK_TRIPS.find((t) => t.id === id) ?? null;
   if (trip) {
-    trip.items = MOCK_TRIP_ITEMS[id] ?? [];
+    return { ...trip, items: MOCK_TRIP_ITEMS[id] ?? [] };
   }
   return trip;
 }
