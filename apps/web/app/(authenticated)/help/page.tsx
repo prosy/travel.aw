@@ -1,6 +1,20 @@
 import Link from 'next/link';
+import { getCurrentUser } from '@/app/_lib/auth';
+import { prisma } from '@/app/_lib/prisma';
 
-export default function HelpCenterPage() {
+export default async function HelpCenterPage() {
+  const user = await getCurrentUser();
+
+  let openTicketCount = 0;
+  if (user) {
+    openTicketCount = await prisma.supportTicket.count({
+      where: {
+        userId: user.id,
+        status: { in: ['open', 'in_progress'] },
+      },
+    });
+  }
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="mb-6 text-2xl font-bold tracking-tight">Help Center</h1>
@@ -20,7 +34,14 @@ export default function HelpCenterPage() {
           href="/help/tickets"
           className="rounded-lg border border-zinc-200 bg-white p-6 transition-shadow hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
         >
-          <h2 className="mb-2 text-lg font-semibold">Support Tickets</h2>
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Support Tickets</h2>
+            {openTicketCount > 0 && (
+              <span className="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                {openTicketCount} open
+              </span>
+            )}
+          </div>
           <p className="text-sm text-zinc-500">
             Create and manage support tickets for issues that need our help.
           </p>
