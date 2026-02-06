@@ -47,8 +47,8 @@ export async function fetchHotelOffers(): Promise<OfferHotel[]> {
       if (offer.type === 'hotel') {
         hotelOffers.push(offer as OfferHotel);
       }
-    } catch {
-      // Skip malformed JSON
+    } catch (e) {
+      console.error(`Malformed offerData for TripItem ${item.id}:`, e);
     }
   }
   return hotelOffers;
@@ -73,8 +73,8 @@ export async function fetchFlightOffers(): Promise<OfferFlight[]> {
       if (offer.type === 'flight') {
         flightOffers.push(offer as OfferFlight);
       }
-    } catch {
-      // Skip malformed JSON
+    } catch (e) {
+      console.error(`Malformed offerData for TripItem ${item.id}:`, e);
     }
   }
   return flightOffers;

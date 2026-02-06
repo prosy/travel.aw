@@ -103,9 +103,9 @@ async function main() {
             title: 'NRT → SFO (United Airlines)',
             description: 'Return flight from Tokyo',
             startDateTime: new Date('2026-04-17T17:00:00+09:00'),
-            endDateTime: new Date('2026-04-17T11:30:00Z'),
+            endDateTime: new Date('2026-04-17T20:30:00Z'),
             locationName: 'Tokyo Narita Airport',
-            confirmationNumber: 'UA8834521',
+            confirmationNumber: 'UA8834522',
             priceAmount: 1180.00,
             priceCurrency: 'USD',
             status: 'confirmed',
@@ -122,7 +122,7 @@ async function main() {
               arrival: {
                 airport: 'SFO',
                 city: 'San Francisco',
-                dateTime: '2026-04-17T11:30:00Z',
+                dateTime: '2026-04-17T20:30:00Z',
                 terminal: 'International G'
               },
               class: 'economy',
@@ -216,6 +216,7 @@ async function main() {
             locationName: 'Roma Termini',
             priceAmount: 55.00,
             priceCurrency: 'EUR',
+            confirmationNumber: 'TI7723901',
             status: 'pending'
           },
           {

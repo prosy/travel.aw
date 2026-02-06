@@ -40,3 +40,58 @@ export type {
 
 // Citation types
 export type { Citation, CitationType } from './citation';
+
+// User types
+export type {
+  User,
+  UserSettings,
+  ConnectedApp,
+  UserWithStats,
+  UserStats,
+} from './user';
+
+// Points types
+export type {
+  PointsProgramType,
+  PointsTransactionType,
+  PointsAccount,
+  PointsAccountWithTransactions,
+  PointsTransaction,
+  CreatePointsAccount,
+  CreatePointsTransaction,
+} from './points';
+
+// Safety types
+export type {
+  EmergencyContact,
+  CreateEmergencyContact,
+  AdvisoryLevel,
+  TravelAdvisory,
+  AlertSeverity,
+  AlertType,
+  UserAlert,
+} from './safety';
+
+// Document types
+export type {
+  TravelDocType,
+  TravelDoc,
+  TravelDocDecrypted,
+  TravelDocSensitiveData,
+  CreateTravelDoc,
+} from './documents';
+
+// Support types
+export type {
+  TicketCategory,
+  TicketPriority,
+  TicketStatus,
+  MessageSenderType,
+  SupportTicket,
+  SupportTicketWithMessages,
+  SupportMessage,
+  CreateSupportTicket,
+  CreateSupportMessage,
+  FaqArticle,
+  FaqResponse,
+} from './support';

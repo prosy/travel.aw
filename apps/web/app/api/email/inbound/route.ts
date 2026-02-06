@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/app/_lib/prisma';
 
 /**
@@ -77,8 +78,8 @@ export async function POST(request: NextRequest) {
   const fromEmail = extractEmail(fromRaw) || 'unknown@unknown';
   const fromName = extractName(fromRaw);
 
-  // Generate a deterministic message ID if not present in headers
-  const messageId = extractMessageId(rawHeaders) || `<inbound-${Date.now()}@travel.aw>`;
+  // Generate a unique message ID if not present in headers
+  const messageId = extractMessageId(rawHeaders) || `<${crypto.randomUUID()}@travel.aw>`;
 
   const receivedAt = new Date();
 
@@ -120,7 +121,11 @@ export async function POST(request: NextRequest) {
           tripId: trip.id,
           type: 'note',
           title: subject || `Email from ${fromName || fromEmail}`,
-          description: textBody ? textBody.slice(0, 500) : null,
+          description: textBody
+            ? textBody.length > 500
+              ? textBody.slice(0, 497) + '...'
+              : textBody
+            : null,
           startDateTime: receivedAt,
           status: 'pending',
           // Store evidence reference in offerData as JSON
@@ -153,17 +158,18 @@ export async function POST(request: NextRequest) {
       linkedTripId: trip?.id ?? null,
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Unknown error';
-
-    // If it's a unique constraint violation (duplicate messageId), return 409
-    if (message.includes('Unique constraint')) {
+    // Unique constraint violation (duplicate messageId) → 409
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === 'P2002'
+    ) {
       return NextResponse.json(
         { error: 'Duplicate email (messageId already exists)' },
         { status: 409 }
       );
     }
 
-    console.error('Email ingest error:', message);
+    console.error('Email ingest error:', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

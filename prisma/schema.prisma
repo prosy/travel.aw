@@ -24,10 +24,17 @@ model Trip {
   destination String
   status      String   @default("draft") // draft, planned, booked, in_progress, completed, cancelled
 
+  // User ownership (nullable for migration - existing trips have no owner)
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
   items       TripItem[]
+  members     TripMember[]  // Trip collaborators
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model TripItem {
@@ -171,4 +178,320 @@ model OfferCache {
   @@index([provider])
   @@index([offerType])
   @@index([expiresAt])
+}
+
+// ============================================================================
+// User & Authentication
+// ============================================================================
+
+model User {
+  id              String   @id @default(cuid())
+  auth0Id         String   @unique  // Auth0 subject (sub) claim
+  email           String   @unique
+  emailVerified   Boolean  @default(false)
+  name            String?
+  picture         String?  // Profile picture URL from Auth0
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  lastLoginAt     DateTime?
+
+  // Relations
+  trips             Trip[]
+  pointsAccounts    PointsAccount[]
+  travelDocs        TravelDoc[]
+  emergencyContacts EmergencyContact[]
+  tripMemberships   TripMember[]
+  friendships       Friendship[] @relation("UserFriendships")
+  friendOf          Friendship[] @relation("FriendOfUser")
+  settings          UserSettings?
+  alerts            UserAlert[]
+  supportTickets    SupportTicket[]
+
+  @@index([auth0Id])
+  @@index([email])
+}
+
+model UserSettings {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Notification preferences
+  emailNotifications  Boolean  @default(true)
+  pushNotifications   Boolean  @default(false)
+  tripReminders       Boolean  @default(true)
+  priceAlerts         Boolean  @default(true)
+
+  // Display preferences
+  timezone            String   @default("America/New_York")
+  dateFormat          String   @default("MM/DD/YYYY")
+  currency            String   @default("USD")
+
+  // Connected apps (JSON)
+  connectedApps       String?
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+// ============================================================================
+// Points Tracker
+// ============================================================================
+
+model PointsAccount {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  programType     String   // airline, hotel, credit_card, other
+  programName     String   // "Delta SkyMiles", "Marriott Bonvoy", etc.
+  accountNumber   String?  // Encrypted
+  membershipTier  String?  // Gold, Platinum, etc.
+
+  currentBalance  Int      @default(0)
+  pendingPoints   Int      @default(0)
+  expiringPoints  Int?
+  expirationDate  DateTime?
+
+  // For credit cards
+  annualFee       Float?
+  nextFeeDate     DateTime?
+
+  notes           String?
+
+  transactions    PointsTransaction[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@index([programType])
+}
+
+model PointsTransaction {
+  id              String   @id @default(cuid())
+  accountId       String
+  account         PointsAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  type            String   // earned, redeemed, transferred, expired, adjustment
+  amount          Int
+  description     String?
+  transactionDate DateTime
+
+  // Link to trip item if applicable
+  tripItemId      String?
+
+  createdAt       DateTime @default(now())
+
+  @@index([accountId])
+  @@index([transactionDate])
+}
+
+// ============================================================================
+// Travel Friends & Collaboration
+// ============================================================================
+
+model Friendship {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation("UserFriendships", fields: [userId], references: [id], onDelete: Cascade)
+  friendId  String
+  friend    User     @relation("FriendOfUser", fields: [friendId], references: [id], onDelete: Cascade)
+
+  status    String   @default("pending")  // pending, accepted, blocked
+  nickname  String?  // Optional nickname for this friend
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, friendId])
+  @@index([userId])
+  @@index([friendId])
+}
+
+model TripMember {
+  id              String   @id @default(cuid())
+  tripId          String
+  trip            Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  role            String   @default("viewer")  // owner, editor, viewer
+  invitedAt       DateTime @default(now())
+  acceptedAt      DateTime?
+  invitedByUserId String?
+
+  // Guest info for non-registered users
+  guestEmail      String?
+  guestName       String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([tripId, userId])
+  @@index([tripId])
+  @@index([userId])
+}
+
+// ============================================================================
+// Safety Features
+// ============================================================================
+
+model EmergencyContact {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name         String
+  relationship String   // spouse, parent, friend, etc.
+  phone        String   // Encrypted
+  email        String?  // Encrypted
+  isPrimary    Boolean  @default(false)
+
+  // Auto-notify settings
+  notifyOnTripStart Boolean @default(false)
+  notifyOnDelay     Boolean @default(false)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model TravelAdvisory {
+  id            String   @id @default(cuid())
+
+  countryCode   String   // ISO 3166-1 alpha-2
+  countryName   String
+  advisoryLevel Int      // 1-4 (exercise normal precautions to do not travel)
+  advisoryText  String
+  lastUpdated   DateTime
+  source        String   // state_dept, cdc, etc.
+  sourceUrl     String?
+
+  // Specific hazards (JSON)
+  healthRisks     String?
+  securityRisks   String?
+  entryRequirements String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([countryCode, source])
+  @@index([countryCode])
+  @@index([advisoryLevel])
+}
+
+model UserAlert {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tripId      String?
+  advisoryId  String?
+
+  alertType   String   // advisory_change, weather, flight_status, etc.
+  severity    String   // info, warning, urgent
+  title       String
+  message     String
+  actionUrl   String?
+
+  isRead      Boolean  @default(false)
+  readAt      DateTime?
+
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// Travel Documents (Encrypted)
+// ============================================================================
+
+model TravelDoc {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type            String   // passport, visa, drivers_license, insurance, vaccination, other
+  title           String
+
+  // Encrypted fields (AES-256-GCM)
+  encryptedData   String   // JSON blob with all sensitive fields
+  encryptionIV    String   // Initialization vector for decryption
+
+  // Non-sensitive metadata (for listing/filtering)
+  countryCode     String?  // Issuing country
+  expirationDate  DateTime?
+  reminderDays    Int      @default(90)  // Days before expiry to remind
+
+  // File attachment (encrypted separately)
+  hasAttachment   Boolean  @default(false)
+  attachmentType  String?  // image/jpeg, application/pdf
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@index([type])
+  @@index([expirationDate])
+}
+
+// ============================================================================
+// Help Center
+// ============================================================================
+
+model SupportTicket {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  subject   String
+  category  String   // account, trips, billing, technical, other
+  priority  String   @default("normal")  // low, normal, high, urgent
+  status    String   @default("open")    // open, in_progress, resolved, closed
+
+  messages  SupportMessage[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  resolvedAt  DateTime?
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model SupportMessage {
+  id         String   @id @default(cuid())
+  ticketId   String
+  ticket     SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  senderType String   // user, support, system
+  message    String
+  attachments String? // JSON array of attachment URLs
+
+  createdAt  DateTime @default(now())
+
+  @@index([ticketId])
+}
+
+model FaqArticle {
+  id             String   @id @default(cuid())
+
+  category       String
+  question       String
+  answer         String
+  searchKeywords String?  // Space-separated keywords for search
+  sortOrder      Int      @default(0)
+  isPublished    Boolean  @default(true)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([category])
+  @@index([isPublished])
 }
