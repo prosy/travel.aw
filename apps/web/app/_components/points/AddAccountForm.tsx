@@ -12,6 +12,7 @@ interface AddAccountFormProps {
 const programTypes: { value: PointsProgramType; label: string }[] = [
   { value: 'airline', label: 'Airline' },
   { value: 'hotel', label: 'Hotel' },
+  { value: 'car_rental', label: 'Car Rental' },
   { value: 'credit_card', label: 'Credit Card' },
   { value: 'other', label: 'Other' },
 ];

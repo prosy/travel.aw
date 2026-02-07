@@ -2,7 +2,7 @@
  * Points and loyalty program types.
  */
 
-export type PointsProgramType = 'airline' | 'hotel' | 'credit_card' | 'other';
+export type PointsProgramType = 'airline' | 'hotel' | 'car_rental' | 'credit_card' | 'other';
 
 export type PointsTransactionType =
   | 'earned'
