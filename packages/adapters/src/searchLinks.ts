@@ -1,13 +1,12 @@
 /**
  * Deterministic search-link builder for one-click external searches.
  *
- * Generates ActionLink[] for: Google, Reddit, Wikipedia, and
- * Expedia (via Google site:expedia.com).
+ * Generates ActionLink[] for: Google, Reddit, and Wikipedia.
  */
 
 export interface ActionLink {
   label: string;
-  provider: 'google' | 'reddit' | 'wikipedia' | 'expedia';
+  provider: 'google' | 'reddit' | 'wikipedia';
   url: string;
   icon?: string;
 }
@@ -31,11 +30,6 @@ export function wikipediaSearchUrl(query: string): string {
   return `https://en.wikipedia.org/w/index.php?search=${encodeQuery(query)}`;
 }
 
-/** Expedia search via Google site search */
-export function expediaSearchUrl(query: string): string {
-  return `https://www.google.com/search?q=site%3Aexpedia.com+${encodeQuery(query)}`;
-}
-
 /**
  * Build a deterministic list of ActionLinks for a given search query.
  * The query is typically a destination or trip-item title.
@@ -47,6 +41,5 @@ export function buildSearchLinks(query: string): ActionLink[] {
     { label: 'Google', provider: 'google', url: googleSearchUrl(query) },
     { label: 'Reddit', provider: 'reddit', url: redditSearchUrl(query) },
     { label: 'Wikipedia', provider: 'wikipedia', url: wikipediaSearchUrl(query) },
-    { label: 'Expedia', provider: 'expedia', url: expediaSearchUrl(query) },
   ];
 }

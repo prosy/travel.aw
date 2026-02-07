@@ -7,7 +7,6 @@ const PROVIDER_COLORS: Record<ActionLink['provider'], string> = {
   google: 'bg-blue-50 text-blue-700 hover:bg-blue-100',
   reddit: 'bg-orange-50 text-orange-700 hover:bg-orange-100',
   wikipedia: 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200',
-  expedia: 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100',
 };
 
 interface QuickSearchChipsProps {
