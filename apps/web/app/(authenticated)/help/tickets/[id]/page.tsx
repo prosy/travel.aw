@@ -58,7 +58,7 @@ export default async function TicketDetailPage({
     notFound();
   }
 
-  const messages = ticket.messages.map((m) => ({
+  const messages = ticket.messages.map((m: (typeof ticket.messages)[number]) => ({
     id: m.id,
     senderType: m.senderType as 'user' | 'support' | 'system',
     message: m.message,

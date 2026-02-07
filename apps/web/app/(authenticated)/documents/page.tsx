@@ -13,7 +13,7 @@ export default async function DocumentsPage() {
     orderBy: { updatedAt: 'desc' },
   });
 
-  const docs = documents.map((doc) => ({
+  const docs = documents.map((doc: (typeof documents)[number]) => ({
     id: doc.id,
     type: doc.type as 'passport' | 'visa' | 'drivers_license' | 'insurance' | 'vaccination' | 'other',
     title: doc.title,

@@ -9,7 +9,7 @@ export default async function TravelAdvisoriesPage() {
     orderBy: [{ advisoryLevel: 'desc' }, { lastUpdated: 'desc' }],
   });
 
-  const advisories = rawAdvisories.map((advisory) => ({
+  const advisories = rawAdvisories.map((advisory: (typeof rawAdvisories)[number]) => ({
     id: advisory.id,
     countryCode: advisory.countryCode,
     countryName: advisory.countryName,
@@ -99,7 +99,7 @@ export default async function TravelAdvisoriesPage() {
                       Additional Sources
                     </p>
                     <ul className="space-y-2">
-                      {countryAdvisories.slice(1).map((advisory) => (
+                      {countryAdvisories.slice(1).map((advisory: (typeof advisories)[number]) => (
                         <li
                           key={advisory.id}
                           className="flex items-center gap-2 text-sm text-zinc-500"

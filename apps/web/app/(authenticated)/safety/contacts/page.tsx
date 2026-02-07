@@ -14,7 +14,7 @@ export default async function EmergencyContactsPage() {
     orderBy: [{ isPrimary: 'desc' }, { name: 'asc' }],
   });
 
-  const contacts: EmergencyContact[] = rawContacts.map((contact) => ({
+  const contacts: EmergencyContact[] = rawContacts.map((contact: (typeof rawContacts)[number]) => ({
     id: contact.id,
     name: contact.name,
     relationship: contact.relationship,

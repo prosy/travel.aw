@@ -19,7 +19,7 @@ export default async function SupportTicketsPage() {
     },
   });
 
-  const ticketList = tickets.map((ticket) => ({
+  const ticketList = tickets.map((ticket: (typeof tickets)[number]) => ({
     id: ticket.id,
     subject: ticket.subject,
     category: ticket.category as TicketCategory,

@@ -136,7 +136,7 @@ export default async function DashboardPage() {
             </p>
           ) : (
             <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
-              {recentTrips.map((trip) => (
+              {recentTrips.map((trip: (typeof recentTrips)[number]) => (
                 <li key={trip.id}>
                   <Link
                     href={`/trips/${trip.id}`}

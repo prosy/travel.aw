@@ -2,6 +2,7 @@ import { prisma } from '@/app/_lib/prisma';
 import { mapTripItem } from '@/app/_lib/mappers';
 import { MapClient } from './MapClient';
 import type { MapPin } from '@travel/ui';
+import type { TripItem } from '@travel/contracts';
 
 export default async function MapPage() {
   // Fetch all trip items with location data
@@ -16,8 +17,8 @@ export default async function MapPage() {
   // Map to contract types and extract pins
   const pins: MapPin[] = items
     .map(mapTripItem)
-    .filter((item) => item.location?.lat != null && item.location?.lng != null)
-    .map((item) => ({
+    .filter((item: TripItem) => item.location?.lat != null && item.location?.lng != null)
+    .map((item: TripItem) => ({
       lat: item.location!.lat!,
       lng: item.location!.lng!,
       label: item.title,

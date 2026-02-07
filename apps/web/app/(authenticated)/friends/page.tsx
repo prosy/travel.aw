@@ -24,9 +24,10 @@ export default async function FriendsPage() {
   });
 
   // Separate into accepted friends and pending incoming requests
+  type FriendshipEntry = (typeof friendships)[number];
   const acceptedFriends = friendships
-    .filter((f) => f.status === 'accepted')
-    .map((f) => {
+    .filter((f: FriendshipEntry) => f.status === 'accepted')
+    .map((f: FriendshipEntry) => {
       const isInitiator = f.userId === user.id;
       const other = isInitiator ? f.friend : f.user;
       return {
@@ -45,8 +46,8 @@ export default async function FriendsPage() {
     });
 
   const pendingRequests = friendships
-    .filter((f) => f.status === 'pending' && f.friendId === user.id)
-    .map((f) => ({
+    .filter((f: FriendshipEntry) => f.status === 'pending' && f.friendId === user.id)
+    .map((f: FriendshipEntry) => ({
       friendshipId: f.id,
       from: {
         id: f.user.id,
@@ -102,7 +103,7 @@ export default async function FriendsPage() {
               My Friends ({acceptedFriends.length})
             </h2>
             <ul className="space-y-3">
-              {acceptedFriends.map((entry) => (
+              {acceptedFriends.map((entry: (typeof acceptedFriends)[number]) => (
                 <li key={entry.friendshipId}>
                   <FriendCard
                     friend={entry.friend}

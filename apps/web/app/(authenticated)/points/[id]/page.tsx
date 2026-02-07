@@ -46,7 +46,7 @@ export default async function PointsProgramDetailPage({
     updatedAt: rawAccount.updatedAt.toISOString(),
   };
 
-  const transactions: PointsTransaction[] = rawAccount.transactions.map((t) => ({
+  const transactions: PointsTransaction[] = rawAccount.transactions.map((t: (typeof rawAccount.transactions)[number]) => ({
     id: t.id,
     type: t.type as PointsTransaction['type'],
     amount: t.amount,

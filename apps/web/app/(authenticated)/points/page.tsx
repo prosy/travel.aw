@@ -14,7 +14,7 @@ export default async function PointsPage() {
     orderBy: { programName: 'asc' },
   });
 
-  const accounts: PointsAccount[] = rawAccounts.map((account) => ({
+  const accounts: PointsAccount[] = rawAccounts.map((account: (typeof rawAccounts)[number]) => ({
     id: account.id,
     programType: account.programType as PointsAccount['programType'],
     programName: account.programName,
