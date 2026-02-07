@@ -1,0 +1,8 @@
+# CODEOWNERS file — specify reviewers for paths
+# Replace `blackcat` with your GitHub team or username as needed
+
+/apps/web/ @blackcat
+/packages/contracts/ @blackcat
+/prisma/ @blackcat
+/TASKS/ @blackcat
+* @blackcat

@@ -1,0 +1,27 @@
+# AuthZ mapping: Auth0 roles -> app permissions (scopes)
+# Edit to match your Auth0 tenant roles and app permissions
+
+roles:
+  admin:
+    description: "Full administrative access"
+    scopes:
+      - trips:read
+      - trips:write
+      - users:read
+      - users:write
+      - admin:all
+
+  user:
+    description: "Standard authenticated user"
+    scopes:
+      - trips:read
+      - trips:write
+      - media:read
+      - documents:read
+      - documents:write
+
+  guest:
+    description: "Unauthenticated or minimal access"
+    scopes:
+      - media:read
+      - trips:read
