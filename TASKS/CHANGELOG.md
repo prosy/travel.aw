@@ -2,6 +2,14 @@
 
 All edits to the `TASKS/` directory and related session tooling.
 
+## 2026-02-07 — Trips Page Enhancements
+
+- Renamed "My Trips" to "Trips and Events"
+- Added Zootown Festival 2026 seed data (The Lumineers, The Chicks - June 19-20, Missoula)
+- Split trips into upcoming and past sections based on endDate
+- Extracted reusable TripCard component
+- Added task file `2026-02-07-trips-page-enhancements.md`
+
 ## 2026-02-07 — Standardize TASKS & add scaffolding
 
 - Added `SESSION_TEMPLATE.md` (canonical session template)
