@@ -269,6 +269,50 @@ async function main() {
   console.log(`Created trip: ${italyTrip.name} with ${6} items`);
 
   // ============================================================================
+  // Trip 3: Zootown Festival 2026
+  // ============================================================================
+  const zootownTrip = await prisma.trip.create({
+    data: {
+      name: 'Zootown Festival 2026',
+      description: 'The Lumineers, The Chicks and many more - 2 Day Pass',
+      startDate: '2026-06-19',
+      endDate: '2026-06-20',
+      destination: 'Missoula, Montana',
+      status: 'booked',
+      items: {
+        create: [
+          {
+            type: 'activity',
+            title: 'Zootown Festival - Day 1',
+            description: 'The Lumineers, The Chicks and more',
+            startDateTime: new Date('2026-06-19T12:00:00-06:00'),
+            endDateTime: new Date('2026-06-19T23:00:00-06:00'),
+            locationName: 'Missoula County Fairgrounds',
+            locationAddress: '1101 South Ave W, Missoula, MT 59801',
+            locationLat: 46.8579,
+            locationLng: -114.0252,
+            status: 'confirmed'
+          },
+          {
+            type: 'activity',
+            title: 'Zootown Festival - Day 2',
+            description: 'Festival continues',
+            startDateTime: new Date('2026-06-20T12:00:00-06:00'),
+            endDateTime: new Date('2026-06-20T23:00:00-06:00'),
+            locationName: 'Missoula County Fairgrounds',
+            locationAddress: '1101 South Ave W, Missoula, MT 59801',
+            locationLat: 46.8579,
+            locationLng: -114.0252,
+            status: 'confirmed'
+          }
+        ]
+      }
+    }
+  });
+
+  console.log(`Created trip: ${zootownTrip.name} with ${2} items`);
+
+  // ============================================================================
   // Sample Cached Media
   // ============================================================================
   await prisma.cachedMedia.create({
