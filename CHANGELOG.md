@@ -6,6 +6,30 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+#### Trips Page Enhancements (Session 7)
+- Renamed "My Trips" to "Trips and Events"
+- Added "Past Trips and Events" section with collapsible UI
+- Seed data: Zootown Festival 2026, NYC New Year's (past event)
+- Context labels on search chips ("Search {destination}")
+- Removed Expedia chip to prevent wrapping
+
+#### AI-Powered Loyalty Program Import (Session 8)
+- `POST /api/points/parse` — Claude Vision endpoint for parsing screenshots/text
+- `ImportModal` — Upload image or paste text of loyalty programs
+- `ImportReviewTable` — Editable table for reviewing extracted programs
+- Bulk save support in `POST /api/points`
+- Added `car_rental` program type
+- Big spinning loader during AI processing
+- Success screen with checkmark after import
+
+#### Points Detail Page (Session 8)
+- Edit Balance button with inline form
+- Delete Program with confirmation dialog
+- Add Transaction form (type, amount, description)
+- Transaction history display
+
 ## [0.1.0] - 2026-02-06
 
 ### Added
