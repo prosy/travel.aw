@@ -42,6 +42,10 @@ All edits to the `TASKS/` directory and related session tooling.
 - Regenerated Prisma client to resolve missing type exports
 - Consolidated repository from `~/Downloads/travel.aw` to `~/Projects/travel.aw`
 - Auth0 authentication fully configured and working
+ 
+## 2026-02-07 — Repository cleanup
+
+- Removed duplicate working copies in `~/Downloads/travel.aw` and `~/Documents/travel.aw`; canonical repo is `~/Projects/travel.aw`.
 
 ## 2026-02-07 — Governance & AuthZ
 
