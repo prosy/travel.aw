@@ -28,6 +28,15 @@ All edits to the `TASKS/` directory and related session tooling.
 - Use `scripts/new-session.sh <slug>` to create new session files consistently.
 - Files use YAML frontmatter: `title`, `date`, `branch`, `scope`, `estimate`.
 
+## 2026-02-07 — TypeScript Fixes & Repository Consolidation
+
+- Fixed TypeScript strict mode errors across 10 page components
+- Added explicit type annotations for map/filter callbacks using `(typeof array)[number]` pattern
+- Added `leaflet` and `@types/leaflet` dependencies for map functionality
+- Regenerated Prisma client to resolve missing type exports
+- Consolidated repository from `~/Downloads/travel.aw` to `~/Projects/travel.aw`
+- Auth0 authentication fully configured and working
+
 ## 2026-02-07 — Governance & AuthZ
 
 - Added `CODEOWNERS`, `CONTRIBUTING.md`, and `SECURITY.md` to formalize repo governance.
