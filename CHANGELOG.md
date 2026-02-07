@@ -29,6 +29,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Delete Program with confirmation dialog
 - Add Transaction form (type, amount, description)
 - Transaction history display
+- Edit button on each program card in list view
+
+### Fixed
+- Points detail page API response parsing (data at root level)
+- Nested anchor tag hydration error in PointsAccountCard
 
 ## [0.1.0] - 2026-02-06
 
