@@ -9,7 +9,7 @@ interface ImportModalProps {
   onImport: (programs: ParsedProgram[]) => Promise<void>;
 }
 
-type Step = 'upload' | 'review';
+type Step = 'upload' | 'review' | 'success';
 
 export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
   const [step, setStep] = useState<Step>('upload');
@@ -38,7 +38,7 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to parse image');
+        throw new Error(data.details || data.error || 'Failed to parse image');
       }
 
       setPrograms(data.programs);
@@ -66,7 +66,7 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to parse text');
+        throw new Error(data.details || data.error || 'Failed to parse text');
       }
 
       setPrograms(data.programs);
@@ -88,6 +88,8 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
     setPrograms((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const [importedCount, setImportedCount] = useState(0);
+
   const handleImport = async () => {
     if (programs.length === 0) return;
 
@@ -95,8 +97,13 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
     setError(null);
 
     try {
+      setImportedCount(programs.length);
       await onImport(programs);
-      handleClose();
+      setStep('success');
+      // Auto-close after showing success
+      setTimeout(() => {
+        handleClose();
+      }, 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to import programs');
     } finally {
@@ -125,7 +132,9 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
         {/* Header */}
         <div className="flex items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-700">
           <h2 className="text-lg font-semibold">
-            {step === 'upload' ? 'Import Loyalty Programs' : 'Review & Edit Programs'}
+            {step === 'upload' && 'Import Loyalty Programs'}
+            {step === 'review' && 'Review & Edit Programs'}
+            {step === 'success' && 'Complete'}
           </h2>
           <button
             onClick={handleClose}
@@ -145,7 +154,20 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
             </div>
           )}
 
-          {step === 'upload' && (
+          {/* Loading Overlay */}
+          {isLoading && step === 'upload' && (
+            <div className="flex flex-col items-center justify-center py-16">
+              <div className="h-16 w-16 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
+              <p className="mt-4 text-lg font-medium text-zinc-700 dark:text-zinc-300">
+                Analyzing your loyalty programs...
+              </p>
+              <p className="mt-1 text-sm text-zinc-500">
+                This may take a few seconds
+              </p>
+            </div>
+          )}
+
+          {step === 'upload' && !isLoading && (
             <div className="space-y-6">
               {/* Upload Section */}
               <div>
@@ -224,9 +246,26 @@ Hilton Honors 987654321"
               />
             </div>
           )}
+
+          {step === 'success' && (
+            <div className="flex flex-col items-center justify-center py-16">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
+                <svg className="h-10 w-10 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 className="mt-4 text-xl font-semibold text-zinc-900 dark:text-white">
+                Import Successful!
+              </h3>
+              <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">
+                {importedCount} loyalty program{importedCount !== 1 ? 's' : ''} imported
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Footer */}
+        {step !== 'success' && (
         <div className="flex items-center justify-between border-t border-zinc-200 px-6 py-4 dark:border-zinc-700">
           <div>
             {step === 'review' && (
@@ -258,6 +297,7 @@ Hilton Honors 987654321"
             )}
           </div>
         </div>
+        )}
       </div>
     </div>
   );
