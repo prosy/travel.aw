@@ -313,6 +313,72 @@ async function main() {
   console.log(`Created trip: ${zootownTrip.name} with ${2} items`);
 
   // ============================================================================
+  // Trip 4: Past Trip - New Year's in NYC (for testing Past section)
+  // ============================================================================
+  const nycTrip = await prisma.trip.create({
+    data: {
+      name: 'New Year\'s in NYC',
+      description: 'Ring in 2026 in Times Square',
+      startDate: '2025-12-30',
+      endDate: '2026-01-02',
+      destination: 'New York City',
+      status: 'completed',
+      items: {
+        create: [
+          {
+            type: 'flight',
+            title: 'SFO → JFK',
+            description: 'Delta Airlines DL123',
+            startDateTime: new Date('2025-12-30T08:00:00Z'),
+            endDateTime: new Date('2025-12-30T16:30:00Z'),
+            locationName: 'San Francisco International Airport',
+            confirmationNumber: 'DL123ABC',
+            priceAmount: 420.00,
+            priceCurrency: 'USD',
+            status: 'confirmed',
+            offerData: JSON.stringify({
+              type: 'flight',
+              airline: 'Delta Airlines',
+              flightNumber: 'DL123',
+              departureAirport: 'SFO',
+              arrivalAirport: 'JFK'
+            })
+          },
+          {
+            type: 'hotel',
+            title: 'The Plaza Hotel',
+            description: 'Iconic luxury hotel on Central Park',
+            startDateTime: new Date('2025-12-30T15:00:00-05:00'),
+            endDateTime: new Date('2026-01-02T11:00:00-05:00'),
+            locationName: 'The Plaza Hotel',
+            locationAddress: '768 5th Ave, New York, NY 10019',
+            locationLat: 40.7645,
+            locationLng: -73.9744,
+            confirmationNumber: 'PLAZA2026',
+            priceAmount: 1800.00,
+            priceCurrency: 'USD',
+            status: 'confirmed'
+          },
+          {
+            type: 'activity',
+            title: 'Times Square Ball Drop',
+            description: 'New Year\'s Eve celebration',
+            startDateTime: new Date('2025-12-31T20:00:00-05:00'),
+            endDateTime: new Date('2026-01-01T01:00:00-05:00'),
+            locationName: 'Times Square',
+            locationAddress: 'Manhattan, NY 10036',
+            locationLat: 40.7580,
+            locationLng: -73.9855,
+            status: 'confirmed'
+          }
+        ]
+      }
+    }
+  });
+
+  console.log(`Created trip: ${nycTrip.name} with ${3} items`);
+
+  // ============================================================================
   // Sample Cached Media
   // ============================================================================
   await prisma.cachedMedia.create({
