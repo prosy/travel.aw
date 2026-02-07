@@ -5,3 +5,5 @@ dist
 .env.local
 .DS_Store
 prisma/dev.db
+apps/web/dev.db
+*.db
