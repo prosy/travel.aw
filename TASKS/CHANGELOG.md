@@ -28,6 +28,12 @@ All edits to the `TASKS/` directory and related session tooling.
 - Use `scripts/new-session.sh <slug>` to create new session files consistently.
 - Files use YAML frontmatter: `title`, `date`, `branch`, `scope`, `estimate`.
 
+## 2026-02-07 — GitHub Actions CI
+
+- Added `.github/workflows/ci.yml` for automated build checks
+- Runs on push/PR to master: install, prisma generate, build
+- Validates authz.yml syntax as policy-as-code check
+
 ## 2026-02-07 — TypeScript Fixes & Repository Consolidation
 
 - Fixed TypeScript strict mode errors across 10 page components
