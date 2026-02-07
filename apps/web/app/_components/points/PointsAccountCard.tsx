@@ -1,11 +1,13 @@
 'use client';
 
+import Link from 'next/link';
 import type { PointsAccount } from '@travel/contracts';
 
 interface PointsAccountCardProps {
   account: PointsAccount;
   onEdit?: () => void;
   onDelete?: () => void;
+  editHref?: string;
 }
 
 const programTypeIcons: Record<string, string> = {
@@ -31,7 +33,7 @@ function formatDate(dateStr: string | null): string {
   return new Date(dateStr).toLocaleDateString();
 }
 
-export function PointsAccountCard({ account, onEdit, onDelete }: PointsAccountCardProps) {
+export function PointsAccountCard({ account, onEdit, onDelete, editHref }: PointsAccountCardProps) {
   const tierColorClass = account.membershipTier
     ? tierColors[account.membershipTier] || tierColors.default
     : tierColors.default;
@@ -64,7 +66,19 @@ export function PointsAccountCard({ account, onEdit, onDelete }: PointsAccountCa
           </div>
         </div>
         <div className="flex gap-2">
-          {onEdit && (
+          {editHref && (
+            <Link
+              href={editHref}
+              onClick={(e) => e.stopPropagation()}
+              className="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+              aria-label="Edit account"
+            >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </Link>
+          )}
+          {onEdit && !editHref && (
             <button
               onClick={onEdit}
               className="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"

@@ -38,9 +38,11 @@ export default function PointsProgramDetailPage({ params }: PageProps) {
           throw new Error('Failed to load');
         }
         const data = await res.json();
-        setAccount(data.account);
-        setTransactions(data.transactions || []);
-        setEditBalance(data.account.currentBalance);
+        // API returns account data at root level with transactions nested
+        const { transactions: txns, ...accountData } = data;
+        setAccount(accountData);
+        setTransactions(txns || []);
+        setEditBalance(accountData.currentBalance);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load');
       } finally {
@@ -104,10 +106,11 @@ export default function PointsProgramDetailPage({ params }: PageProps) {
 
       // Reload data
       const accountRes = await fetch(`/api/points/${account.id}`);
-      const data = await accountRes.json();
-      setAccount(data.account);
-      setTransactions(data.transactions || []);
-      setEditBalance(data.account.currentBalance);
+      const reloadData = await accountRes.json();
+      const { transactions: reloadTxns, ...reloadAccount } = reloadData;
+      setAccount(reloadAccount);
+      setTransactions(reloadTxns || []);
+      setEditBalance(reloadAccount.currentBalance);
 
       // Reset form
       setShowAddTransaction(false);

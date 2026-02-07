@@ -62,7 +62,10 @@ export default async function PointsPage() {
           {accounts.map((account) => (
             <li key={account.id}>
               <Link href={`/points/${account.id}`}>
-                <PointsAccountCard account={account} />
+                <PointsAccountCard
+                  account={account}
+                  editHref={`/points/${account.id}`}
+                />
               </Link>
             </li>
           ))}
