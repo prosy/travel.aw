@@ -18,6 +18,7 @@ export default async function PointsPage() {
     id: account.id,
     programType: account.programType as PointsAccount['programType'],
     programName: account.programName,
+    accountNumber: account.accountNumber,
     membershipTier: account.membershipTier,
     currentBalance: account.currentBalance,
     pendingPoints: account.pendingPoints,

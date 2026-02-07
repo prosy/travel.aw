@@ -59,8 +59,13 @@ export function PointsAccountCard({ account, onEdit, onDelete, editHref }: Point
             <h3 className="font-semibold text-gray-900 dark:text-white">
               {account.programName}
             </h3>
+            {account.accountNumber && (
+              <p className="font-mono text-sm text-gray-600 dark:text-gray-300">
+                {account.accountNumber}
+              </p>
+            )}
             {account.membershipTier && (
-              <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${tierColorClass}`}>
+              <span className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${tierColorClass}`}>
                 {account.membershipTier}
               </span>
             )}
