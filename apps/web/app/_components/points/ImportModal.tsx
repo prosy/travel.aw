@@ -14,10 +14,23 @@ type Step = 'upload' | 'review' | 'success';
 export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
   const [step, setStep] = useState<Step>('upload');
   const [programs, setPrograms] = useState<ParsedProgram[]>([]);
+  const [existingProgramNames, setExistingProgramNames] = useState<string[]>([]);
   const [textInput, setTextInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const fetchExistingPrograms = async () => {
+    try {
+      const res = await fetch('/api/points');
+      if (res.ok) {
+        const data = await res.json();
+        setExistingProgramNames(data.map((p: { programName: string }) => p.programName));
+      }
+    } catch {
+      // Ignore errors - duplicate detection is optional
+    }
+  };
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -42,6 +55,7 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
       }
 
       setPrograms(data.programs);
+      await fetchExistingPrograms();
       setStep('review');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to parse image');
@@ -70,6 +84,7 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
       }
 
       setPrograms(data.programs);
+      await fetchExistingPrograms();
       setStep('review');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to parse text');
@@ -114,6 +129,7 @@ export function ImportModal({ isOpen, onClose, onImport }: ImportModalProps) {
   const handleClose = () => {
     setStep('upload');
     setPrograms([]);
+    setExistingProgramNames([]);
     setTextInput('');
     setError(null);
     onClose();
@@ -241,6 +257,7 @@ Hilton Honors 987654321"
               </p>
               <ImportReviewTable
                 programs={programs}
+                existingProgramNames={existingProgramNames}
                 onUpdate={handleUpdateProgram}
                 onRemove={handleRemoveProgram}
               />
