@@ -160,9 +160,6 @@ export function PointsAccountCard({ account, onEdit, onDelete, editHref }: Point
         </div>
       )}
 
-      {account.notes && (
-        <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">{account.notes}</p>
-      )}
     </div>
   );
 }
