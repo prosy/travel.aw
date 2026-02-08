@@ -15,6 +15,7 @@ export interface PointsAccount {
   id: string;
   programType: PointsProgramType;
   programName: string;
+  accountNumber?: string | null;
   membershipTier: string | null;
   currentBalance: number;
   pendingPoints: number;
