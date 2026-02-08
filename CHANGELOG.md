@@ -23,6 +23,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Added `car_rental` program type
 - Big spinning loader during AI processing
 - Success screen with checkmark after import
+- Duplicate detection with warning badges for existing programs
+- Clear user consent messaging (import creates new entries, won't overwrite)
 
 #### Points Detail Page (Session 8)
 - Edit Balance button with inline form
@@ -30,10 +32,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Add Transaction form (type, amount, description)
 - Transaction history display
 - Edit button on each program card in list view
+- Account number displayed prominently (monospace font for easy reading)
+- Removed notes/email display from cards (privacy)
 
 ### Fixed
 - Points detail page API response parsing (data at root level)
 - Nested anchor tag hydration error in PointsAccountCard
+- Cancel button in ImportModal now works during loading
+- Added `accountNumber` to PointsAccount type (was missing)
 
 ## [0.1.0] - 2026-02-06
 
