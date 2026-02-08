@@ -36,6 +36,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Removed notes/email display from cards (privacy)
 
 #### Documentation & Tooling (Session 8)
+- Added `CLAUDE.md` project instructions (auto-loads in Claude Code sessions)
 - Created `MEMORY.md` for Claude Code session persistence
 - Consolidated session files in `TASKS/` folder (git-tracked)
 - Cleaned up empty Downloads folders
