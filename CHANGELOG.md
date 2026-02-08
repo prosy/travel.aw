@@ -35,6 +35,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Account number displayed prominently (monospace font for easy reading)
 - Removed notes/email display from cards (privacy)
 
+#### Documentation & Tooling (Session 8)
+- Created `MEMORY.md` for Claude Code session persistence
+- Consolidated session files in `TASKS/` folder (git-tracked)
+- Cleaned up empty Downloads folders
+
 ### Fixed
 - Points detail page API response parsing (data at root level)
 - Nested anchor tag hydration error in PointsAccountCard
