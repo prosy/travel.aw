@@ -44,6 +44,12 @@ pnpm db:studio    # Open Prisma Studio
 - Update CHANGELOG.md with notable changes
 - Session docs go in `TASKS/` folder
 
+## Agent Handoff Protocol
+Before ending any session or switching branches, you MUST update `.agent_state.md` with:
+1. Current progress (check off completed items)
+2. Any blockers encountered
+3. Exact command or instructions for the next agent to pick up
+
 ## Git
 - Repository: github.com/prosy/travel.aw
 - Branch: master
