@@ -258,14 +258,14 @@ Capabilities describe **what a node does** independent of its provider type or j
 
 | ID | Decision | Status |
 |----|----------|--------|
-| DD-01 | Toolchain (TS validation + Python queries vs. monolang) | Open |
+| DD-01 | Toolchain | Resolved — full TypeScript monolang |
 | DD-02 | Bootstrap scope | Resolved (phased) |
 | DD-03 | Spec completion order | Resolved (v0.2) |
-| DD-04 | Journey stage labels (J0-J8) | Open — lock when registry written |
-| DD-05 | Starter C-codes | Open — review before registry |
+| DD-04 | Journey stage labels (J0-J8) | Resolved — lock as-is |
+| DD-05 | Starter C-codes (24) | Resolved — lock all 24 |
 | DD-06 | REPLACES/MIGRATES_TO edge types | Deferred (post-MVP) |
-| DD-07 | SUPER_APP providerType | Open |
-| DD-08 | Agent architecture: three-layer model | Open — see A19 |
+| DD-07 | SUPER_APP providerType | Resolved — keep, add guardrail |
+| DD-08 | Agent architecture: three-layer model | Resolved — accept, start M0 parallel. See A19 |
 
 ---
 

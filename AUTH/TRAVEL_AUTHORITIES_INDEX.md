@@ -277,16 +277,18 @@ reports/validation/
 
 ---
 
-## 9. Open Decisions (Pending)
+## 9. Design Decisions
 
-| ID | Decision | Options | Status |
-|----|----------|---------|--------|
-| DD-01 | Toolchain | TS validation + Python queries / All-TS / All-Python | **Open** |
-| DD-02 | Bootstrap scope | Phased (this doc) | **Resolved: phased** |
-| DD-03 | Spec completion order | §1–5 before registries | **Open — next session** |
-| DD-04 | Journey stage labels | Confirm J0–J8 before locking | **Open** |
-| DD-05 | Starter C-codes | Agree ~15–20 seed capabilities | **Open** |
-| DD-08 | Agent architecture | Three-layer / Monolith / Defer | **Open** |
+| ID | Decision | Resolution | Status |
+|----|----------|-----------|--------|
+| DD-01 | Toolchain | Full TypeScript monolang | **Resolved** (2026-02-23) |
+| DD-02 | Bootstrap scope | Phased | **Resolved** (2026-02-22) |
+| DD-03 | Spec completion order | Spec §1–5 first | **Resolved** (2026-02-22) |
+| DD-04 | Journey stage labels | Lock J0–J8 as-is | **Resolved** (2026-02-23) |
+| DD-05 | Starter C-codes | Lock 24 codes | **Resolved** (2026-02-23) |
+| DD-06 | REPLACES/MIGRATES_TO edge types | Defer | **Deferred** (post-MVP) |
+| DD-07 | SUPER_APP providerType | Keep, add guardrail | **Resolved** (2026-02-23) |
+| DD-08 | Agent architecture | Accept three-layer, start M0 parallel | **Resolved** (2026-02-23) |
 
 ---
 

@@ -1,8 +1,8 @@
 {
   "_authority": "A7",
-  "_version": "0.2.0",
-  "_status": "candidate",
-  "_note": "Changes require DD entry + version bump. See DD-06 for deferred types.",
+  "_version": "1.0.0",
+  "_status": "locked",
+  "_note": "Locked (2026-02-23). Changes require DD entry + version bump. See DD-06 for deferred types (REPLACES/MIGRATES_TO).",
   "relationshipTypes": [
     {
       "type": "INTEGRATES_WITH",

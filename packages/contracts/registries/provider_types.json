@@ -1,8 +1,8 @@
 {
   "_authority": "A6",
-  "_version": "0.2.0",
-  "_status": "candidate",
-  "_note": "Changes require DD entry + version bump.",
+  "_version": "1.0.0",
+  "_status": "locked",
+  "_note": "Locked per DD-07 resolution (2026-02-23). Changes require DD entry + version bump.",
   "providerTypes": [
     {
       "code": "OTA",
@@ -82,7 +82,8 @@
     {
       "code": "SUPER_APP",
       "label": "Super App",
-      "description": "Multi-function platform spanning many stages (e.g., Google, Grab). See DD-07."
+      "description": "Multi-function platform spanning many stages (e.g., Google, Grab). See DD-07.",
+      "guardrail": "Nodes using SUPER_APP must declare ≥4 journeyStages and ≥3 capabilities. If fewer, use a more specific provider type."
     }
   ]
 }

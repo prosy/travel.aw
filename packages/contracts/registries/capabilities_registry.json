@@ -1,8 +1,8 @@
 {
   "_authority": "A5",
-  "_version": "0.2.0",
-  "_status": "candidate",
-  "_note": "Lock after DD-05 resolved. 24 seed codes (22 original + C-AI-AGENT + C-API-PLATFORM per HK-3). Changes require DD entry + version bump.",
+  "_version": "1.0.0",
+  "_status": "locked",
+  "_note": "Locked per DD-05 resolution (2026-02-23). 24 codes (22 original + C-AI-AGENT + C-API-PLATFORM). Changes require DD entry + version bump.",
   "capabilities": [
     {
       "code": "C-SOCIAL-INSPIRATION",
@@ -141,14 +141,14 @@
       "label": "AI Travel Agent",
       "description": "Autonomous or semi-autonomous AI agent that plans, books, or manages travel on behalf of the user.",
       "defaultJourneyStages": ["J1", "J2", "J3", "J6"],
-      "status": "candidate"
+      "status": "locked"
     },
     {
       "code": "C-API-PLATFORM",
       "label": "API / GDS Platform",
       "description": "Backend infrastructure platform providing programmatic access to travel inventory (flights, hotels, cars) via API or GDS protocols.",
       "defaultJourneyStages": ["J3"],
-      "status": "candidate"
+      "status": "locked"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "_authority": "A4",
-  "_version": "0.2.0",
-  "_status": "candidate",
-  "_note": "Lock after DD-04 resolved. Changes require DD entry + version bump.",
+  "_version": "1.0.0",
+  "_status": "locked",
+  "_note": "Locked per DD-04 resolution (2026-02-23). Changes require DD entry + version bump.",
   "stages": [
     {
       "code": "J0",
