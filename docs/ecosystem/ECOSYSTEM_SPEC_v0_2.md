@@ -266,6 +266,7 @@ Capabilities describe **what a node does** independent of its provider type or j
 | DD-06 | REPLACES/MIGRATES_TO edge types | Deferred (post-MVP) |
 | DD-07 | SUPER_APP providerType | Resolved — keep, add guardrail |
 | DD-08 | Agent architecture: three-layer model | Resolved — accept, start M0 parallel. See A19 |
+| DD-09 | Edge ID delimiter | Resolved — double underscore `__`. See ID_POLICY.md (A13) |
 
 ---
 

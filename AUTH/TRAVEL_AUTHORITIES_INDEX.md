@@ -289,6 +289,7 @@ reports/validation/
 | DD-06 | REPLACES/MIGRATES_TO edge types | Defer | **Deferred** (post-MVP) |
 | DD-07 | SUPER_APP providerType | Keep, add guardrail | **Resolved** (2026-02-23) |
 | DD-08 | Agent architecture | Accept three-layer, start M0 parallel | **Resolved** (2026-02-23) |
+| DD-09 | Edge ID delimiter | Double underscore `__` for edge IDs | **Resolved** (2026-02-23) |
 
 ---
 
@@ -299,6 +300,7 @@ reports/validation/
 | 2026-02-22 | v0.1 | Initial draft (ChatGPT) | Human |
 | 2026-02-22 | v0.2 | Rewrite: phased bootstrap, dependency graph, trimmed deferred files, added open decisions table | Human + Claude |
 | 2026-02-23 | v0.2.1 | Housekeeping: fix A1 path (v0_1→v0_2), add A18–A20 (prod_plans/), add DD-08, reconcile C-codes (24) | Human + Claude |
+| 2026-02-23 | v0.2.2 | WP-1: schemas (A9, A10), policies (A11, A13), validator (A12), changelog (A17), DD-09, TS infrastructure | Human + Claude |
 
 ---
 
