@@ -14,3 +14,4 @@
 | DD-05 | Starter C-codes | Agree ~20 seed capabilities | **Open** — proposed in Spec v0.2 section 5.2 (~22 codes) | 2026-02-22 | |
 | DD-06 | REPLACES/MIGRATES_TO edge types | Add now / Defer | **Deferred** to post-MVP | 2026-02-22 | |
 | DD-07 | SUPER_APP providerType | Keep / Remove / Multi-type nodes | **Open** — see Spec v0.2 section 7 note | 2026-02-22 | |
+| DD-08 | Agent architecture: accept three-layer model (travel.aw web front-door + private StopCrabs-vetted skills registry + NanoClaw container-isolated runtime)? | Three-layer / Monolith / Defer | **Open** — Proposed in PRD v0.1 (prod_plans/). Three security gates. See SESSION_KICKOFF_2026-02-22.md. | 2026-02-23 | |

@@ -265,6 +265,7 @@ Capabilities describe **what a node does** independent of its provider type or j
 | DD-05 | Starter C-codes | Open — review before registry |
 | DD-06 | REPLACES/MIGRATES_TO edge types | Deferred (post-MVP) |
 | DD-07 | SUPER_APP providerType | Open |
+| DD-08 | Agent architecture: three-layer model | Open — see A19 |
 
 ---
 

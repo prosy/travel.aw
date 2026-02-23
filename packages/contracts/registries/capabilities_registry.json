@@ -2,7 +2,7 @@
   "_authority": "A5",
   "_version": "0.2.0",
   "_status": "candidate",
-  "_note": "Lock after DD-05 resolved. ~22 seed codes. Changes require DD entry + version bump.",
+  "_note": "Lock after DD-05 resolved. 24 seed codes (22 original + C-AI-AGENT + C-API-PLATFORM per HK-3). Changes require DD entry + version bump.",
   "capabilities": [
     {
       "code": "C-SOCIAL-INSPIRATION",
@@ -135,6 +135,20 @@
       "label": "Loyalty Program Management",
       "description": "Track points, miles, status, and rewards across programs.",
       "defaultJourneyStages": ["J3", "J7"]
+    },
+    {
+      "code": "C-AI-AGENT",
+      "label": "AI Travel Agent",
+      "description": "Autonomous or semi-autonomous AI agent that plans, books, or manages travel on behalf of the user.",
+      "defaultJourneyStages": ["J1", "J2", "J3", "J6"],
+      "status": "candidate"
+    },
+    {
+      "code": "C-API-PLATFORM",
+      "label": "API / GDS Platform",
+      "description": "Backend infrastructure platform providing programmatic access to travel inventory (flights, hotels, cars) via API or GDS protocols.",
+      "defaultJourneyStages": ["J3"],
+      "status": "candidate"
     }
   ]
 }

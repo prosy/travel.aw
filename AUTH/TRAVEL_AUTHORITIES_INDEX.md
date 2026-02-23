@@ -45,7 +45,7 @@ These are required before any data or code work begins.
 
 | # | Path | Owns | Phase |
 |---|------|------|-------|
-| A1 | `docs/ecosystem/ECOSYSTEM_SPEC_v0_1.md` | Product scope, user journey, MVP, non-goals | WP-0 |
+| A1 | `docs/ecosystem/ECOSYSTEM_SPEC_v0_2.md` | Product scope, user journey, MVP, non-goals | WP-0 |
 | A2 | `docs/ecosystem/DECISIONS.md` | Design decisions (DD-01…) with rationale | WP-0 |
 | A3 | `docs/ecosystem/GLOSSARY.md` | Canonical term definitions | WP-0 |
 | A4 | `packages/contracts/registries/journey_stages.json` | J0–J8 labels + descriptions | WP-0 |
@@ -72,6 +72,16 @@ These are required before any data or code work begins.
 | A15 | `data/ecosystem/edges.jsonl` | Canonical edge dataset (append-only) | WP-2 |
 | A16 | `docs/ecosystem/QUERY_COOKBOOK.md` | MVP queries + deterministic answers | WP-3 |
 | A17 | `AUTH/CHANGELOG.md` | Authority/contract change log | WP-2 |
+
+### Reference — Planning Documents (WP-0)
+
+PRDs sit at **Spec-level precedence** — they describe intent but registries and schemas override on conflict.
+
+| # | Path | Owns | Phase |
+|---|------|------|-------|
+| A18 | `prod_plans/TRAVEL_ECOSYSTEM_NODES_RESEARCH_v0_1.csv` | Ecosystem research data (92 ranked nodes, 24 C-codes, 70+ sources). Seeds WP-2 nodes.jsonl. | WP-2 |
+| A19 | `prod_plans/PRD_TravelAW_Secure_Agent_Architecture_v0_1.md` | Agent architecture PRD — three-layer model, M0–M5 milestones, Track C scope. | WP-0 ref |
+| A20 | `prod_plans/TRAVEL_aw_COMBINED_PRD_2026-02-23.md` | Combined PRD — Track A (ecosystem graph) + Track B (V1 web app security). B1–B6 requirements. | WP-0 ref |
 
 ### Deferred (create when needed)
 
@@ -215,7 +225,7 @@ AUTH/
   TRAVEL_AUTHORITIES_INDEX.md       ← this file
 
 docs/ecosystem/
-  ECOSYSTEM_SPEC_v0_1.md
+  ECOSYSTEM_SPEC_v0_2.md
   DECISIONS.md
   GLOSSARY.md
 
@@ -276,6 +286,7 @@ reports/validation/
 | DD-03 | Spec completion order | §1–5 before registries | **Open — next session** |
 | DD-04 | Journey stage labels | Confirm J0–J8 before locking | **Open** |
 | DD-05 | Starter C-codes | Agree ~15–20 seed capabilities | **Open** |
+| DD-08 | Agent architecture | Three-layer / Monolith / Defer | **Open** |
 
 ---
 
@@ -285,6 +296,7 @@ reports/validation/
 |------|---------|--------|--------|
 | 2026-02-22 | v0.1 | Initial draft (ChatGPT) | Human |
 | 2026-02-22 | v0.2 | Rewrite: phased bootstrap, dependency graph, trimmed deferred files, added open decisions table | Human + Claude |
+| 2026-02-23 | v0.2.1 | Housekeeping: fix A1 path (v0_1→v0_2), add A18–A20 (prod_plans/), add DD-08, reconcile C-codes (24) | Human + Claude |
 
 ---
 
