@@ -1,8 +1,8 @@
 {
   "_authority": "A6",
-  "_version": "1.0.0",
+  "_version": "1.1.0",
   "_status": "locked",
-  "_note": "Locked per DD-07 resolution (2026-02-23). Changes require DD entry + version bump.",
+  "_note": "Locked per DD-07 resolution (2026-02-23). v1.1.0: added AI_AGENT, API_PLATFORM per DD-10. Changes require DD entry + version bump.",
   "providerTypes": [
     {
       "code": "OTA",
@@ -78,6 +78,16 @@
       "code": "LOYALTY_PLATFORM",
       "label": "Loyalty Platform",
       "description": "Points, miles, status tracking (e.g., AwardWallet)."
+    },
+    {
+      "code": "AI_AGENT",
+      "label": "AI Travel Agent",
+      "description": "Autonomous or semi-autonomous AI agent that plans, books, or manages travel on behalf of the user (e.g., Expedia Romie, Google AI Mode)."
+    },
+    {
+      "code": "API_PLATFORM",
+      "label": "API / GDS Platform",
+      "description": "Backend infrastructure providing programmatic access to travel inventory via API or GDS protocols (e.g., Amadeus, Sabre, Travelport)."
     },
     {
       "code": "SUPER_APP",

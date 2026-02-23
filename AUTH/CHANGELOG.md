@@ -7,6 +7,14 @@ All changes to authority files (A1-A20), registries, and schemas are logged here
 
 ---
 
+## 2026-02-23 — DD-10: Add AI_AGENT and API_PLATFORM provider types
+
+- **A6** `packages/contracts/registries/provider_types.json` — Added AI_AGENT, API_PLATFORM. MINOR version bump 1.0.0 → 1.1.0. Now 18 types.
+- **A9** `packages/contracts/schemas/ecosystem_node.schema.json` — Updated providerType enum and ID pattern to include AI_AGENT, API_PLATFORM.
+- **A2** `docs/ecosystem/DECISIONS.md` — Added DD-10.
+- **A1** `docs/ecosystem/ECOSYSTEM_SPEC_v0_2.md` — Added AI_AGENT, API_PLATFORM to §7 provider types table, DD-10 to §8.
+- **A8** `AUTH/TRAVEL_AUTHORITIES_INDEX.md` — Added DD-10 to §9.
+
 ## 2026-02-23 — WP-1: Schemas, validator, policies
 
 - **A9** `packages/contracts/schemas/ecosystem_node.schema.json` — Created. Node schema with enums from locked registries (A4-A6).

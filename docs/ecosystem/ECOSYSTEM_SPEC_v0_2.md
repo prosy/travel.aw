@@ -250,6 +250,8 @@ Capabilities describe **what a node does** independent of its provider type or j
 | FINTECH | Travel Fintech | Expense, currency, payment, insurance |
 | TRANSIT_SERVICE | Transit Service | Ground transport, rideshare, public transit info |
 | LOYALTY_PLATFORM | Loyalty Platform | Points, miles, status tracking |
+| AI_AGENT | AI Travel Agent | Autonomous or semi-autonomous AI agent for travel planning/booking |
+| API_PLATFORM | API / GDS Platform | Backend infrastructure providing programmatic access to travel inventory |
 | SUPER_APP | Super App | Multi-function platform spanning many stages |
 
 ---
@@ -267,6 +269,7 @@ Capabilities describe **what a node does** independent of its provider type or j
 | DD-07 | SUPER_APP providerType | Resolved — keep, add guardrail |
 | DD-08 | Agent architecture: three-layer model | Resolved — accept, start M0 parallel. See A19 |
 | DD-09 | Edge ID delimiter | Resolved — double underscore `__`. See ID_POLICY.md (A13) |
+| DD-10 | AI_AGENT + API_PLATFORM provider types | Resolved — add both to A6. C-codes already in A5. |
 
 ---
 
