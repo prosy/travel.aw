@@ -1,0 +1,38 @@
+{
+  "_authority": "A7",
+  "_version": "0.2.0",
+  "_status": "candidate",
+  "_note": "Changes require DD entry + version bump. See DD-06 for deferred types.",
+  "relationshipTypes": [
+    {
+      "type": "INTEGRATES_WITH",
+      "directionality": "bidirectional",
+      "description": "Technical integration (API, data feed, import/export)."
+    },
+    {
+      "type": "FEEDS_INTO",
+      "directionality": "directed",
+      "description": "Output of A is input to B (e.g., review site -> booking decision)."
+    },
+    {
+      "type": "COMPETES_WITH",
+      "directionality": "bidirectional",
+      "description": "Overlapping capability in the same stage(s)."
+    },
+    {
+      "type": "SUPPLEMENTS",
+      "directionality": "directed",
+      "description": "A enhances B's value without replacing it."
+    },
+    {
+      "type": "AGGREGATES",
+      "directionality": "directed",
+      "description": "A collects/displays inventory or content from B."
+    },
+    {
+      "type": "OWNED_BY",
+      "directionality": "directed",
+      "description": "Corporate ownership (A is parent of B)."
+    }
+  ]
+}

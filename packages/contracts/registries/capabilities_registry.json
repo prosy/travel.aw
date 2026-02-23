@@ -1,0 +1,140 @@
+{
+  "_authority": "A5",
+  "_version": "0.2.0",
+  "_status": "candidate",
+  "_note": "Lock after DD-05 resolved. ~22 seed codes. Changes require DD entry + version bump.",
+  "capabilities": [
+    {
+      "code": "C-SOCIAL-INSPIRATION",
+      "label": "Social Inspiration",
+      "description": "User-generated travel inspiration via social platforms.",
+      "defaultJourneyStages": ["J0", "J8"]
+    },
+    {
+      "code": "C-CONTENT-PUBLISHING",
+      "label": "Content Publishing",
+      "description": "Editorial or creator-driven travel content and guides.",
+      "defaultJourneyStages": ["J0", "J1"]
+    },
+    {
+      "code": "C-ENCYCLOPEDIA-KNOWLEDGE",
+      "label": "Encyclopedia Knowledge",
+      "description": "General reference knowledge about destinations, culture, logistics.",
+      "defaultJourneyStages": ["J1"]
+    },
+    {
+      "code": "C-REVIEW-RATINGS",
+      "label": "Review & Ratings",
+      "description": "Traveler reviews and ratings of services and destinations.",
+      "defaultJourneyStages": ["J1", "J7"]
+    },
+    {
+      "code": "C-FORUM-COMMUNITY",
+      "label": "Forum / Community Q&A",
+      "description": "Discussion-based travel knowledge sharing.",
+      "defaultJourneyStages": ["J0", "J1", "J7"]
+    },
+    {
+      "code": "C-FLIGHT-SEARCH",
+      "label": "Flight Search",
+      "description": "Search, filter, and compare flight options.",
+      "defaultJourneyStages": ["J1", "J3"]
+    },
+    {
+      "code": "C-HOTEL-SEARCH",
+      "label": "Hotel Search",
+      "description": "Search, filter, and compare hotel/accommodation inventory.",
+      "defaultJourneyStages": ["J1", "J3"]
+    },
+    {
+      "code": "C-ACTIVITY-SEARCH",
+      "label": "Activity Search",
+      "description": "Search and discover tours, experiences, and activities.",
+      "defaultJourneyStages": ["J1", "J2", "J6"]
+    },
+    {
+      "code": "C-PRICE-COMPARE",
+      "label": "Price Comparison",
+      "description": "Compare prices across multiple providers for the same product.",
+      "defaultJourneyStages": ["J1", "J3"]
+    },
+    {
+      "code": "C-METASEARCH",
+      "label": "Metasearch Aggregation",
+      "description": "Aggregate and display inventory/pricing from multiple sources.",
+      "defaultJourneyStages": ["J1", "J3"]
+    },
+    {
+      "code": "C-BOOKING-TXN",
+      "label": "Booking Transaction",
+      "description": "Complete a reservation or purchase transaction.",
+      "defaultJourneyStages": ["J3"]
+    },
+    {
+      "code": "C-TICKETING",
+      "label": "Ticketing",
+      "description": "Issue and manage tickets for events, transport, or activities.",
+      "defaultJourneyStages": ["J3", "J6"]
+    },
+    {
+      "code": "C-INSURANCE",
+      "label": "Travel Insurance",
+      "description": "Offer or manage travel insurance products.",
+      "defaultJourneyStages": ["J3", "J4"]
+    },
+    {
+      "code": "C-ITINERARY-MGMT",
+      "label": "Itinerary Management",
+      "description": "Organize, view, and manage trip plans and schedules.",
+      "defaultJourneyStages": ["J2", "J4", "J5", "J6"]
+    },
+    {
+      "code": "C-EMAIL-PARSING",
+      "label": "Email / Confirmation Parsing",
+      "description": "Extract structured travel data from emails and confirmations.",
+      "defaultJourneyStages": ["J4"]
+    },
+    {
+      "code": "C-CALENDAR-SYNC",
+      "label": "Calendar Sync",
+      "description": "Sync travel events with calendar applications.",
+      "defaultJourneyStages": ["J2", "J4"]
+    },
+    {
+      "code": "C-MAPPING-NAV",
+      "label": "Mapping & Navigation",
+      "description": "Maps, directions, and turn-by-turn navigation.",
+      "defaultJourneyStages": ["J5", "J6"]
+    },
+    {
+      "code": "C-LOCAL-DISCOVERY",
+      "label": "Local Discovery",
+      "description": "Find nearby services, restaurants, and attractions (nearby now).",
+      "defaultJourneyStages": ["J6"]
+    },
+    {
+      "code": "C-EVENT-DISCOVERY",
+      "label": "Event Discovery",
+      "description": "Find upcoming events, festivals, and performances.",
+      "defaultJourneyStages": ["J2", "J6"]
+    },
+    {
+      "code": "C-TRANSIT-INFO",
+      "label": "Transit / Transport Info",
+      "description": "Public transit schedules, rideshare, ground transport information.",
+      "defaultJourneyStages": ["J5", "J6"]
+    },
+    {
+      "code": "C-EXPENSE-MGMT",
+      "label": "Expense Management",
+      "description": "Track, categorize, and reconcile travel expenses.",
+      "defaultJourneyStages": ["J7"]
+    },
+    {
+      "code": "C-LOYALTY-MGMT",
+      "label": "Loyalty Program Management",
+      "description": "Track points, miles, status, and rewards across programs.",
+      "defaultJourneyStages": ["J3", "J7"]
+    }
+  ]
+}

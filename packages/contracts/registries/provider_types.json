@@ -1,0 +1,88 @@
+{
+  "_authority": "A6",
+  "_version": "0.2.0",
+  "_status": "candidate",
+  "_note": "Changes require DD entry + version bump.",
+  "providerTypes": [
+    {
+      "code": "OTA",
+      "label": "Online Travel Agency",
+      "description": "Books across multiple suppliers (e.g., Booking.com, Expedia)."
+    },
+    {
+      "code": "METASEARCH",
+      "label": "Metasearch Engine",
+      "description": "Aggregates prices from OTAs and direct suppliers (e.g., Google Flights, Kayak)."
+    },
+    {
+      "code": "DIRECT_SUPPLIER",
+      "label": "Direct Supplier",
+      "description": "Airlines, hotel chains, car rental cos selling direct."
+    },
+    {
+      "code": "CONTENT_PLATFORM",
+      "label": "Content Platform",
+      "description": "Travel content, blogs, guides (e.g., Lonely Planet, Nomadic Matt)."
+    },
+    {
+      "code": "SOCIAL_PLATFORM",
+      "label": "Social Platform",
+      "description": "User-generated inspiration and sharing (e.g., Instagram, TikTok, Reddit)."
+    },
+    {
+      "code": "REVIEW_PLATFORM",
+      "label": "Review Platform",
+      "description": "Traveler reviews and ratings (e.g., TripAdvisor, Yelp)."
+    },
+    {
+      "code": "ITINERARY_MANAGER",
+      "label": "Itinerary Manager",
+      "description": "Trip organization tools (e.g., TripIt, Wanderlog)."
+    },
+    {
+      "code": "MAPPING_SERVICE",
+      "label": "Mapping Service",
+      "description": "Maps, navigation, local search (e.g., Google Maps, Apple Maps)."
+    },
+    {
+      "code": "EVENT_PLATFORM",
+      "label": "Event Platform",
+      "description": "Event discovery and ticketing (e.g., Eventbrite, Dice)."
+    },
+    {
+      "code": "DMO",
+      "label": "Destination Marketing Org",
+      "description": "Tourism bureaus, CVBs, national tourism boards."
+    },
+    {
+      "code": "ENCYCLOPEDIA",
+      "label": "Encyclopedia",
+      "description": "General knowledge reference (e.g., Wikipedia, Wikivoyage)."
+    },
+    {
+      "code": "FORUM",
+      "label": "Forum / Community",
+      "description": "Q&A and discussion (e.g., Reddit travel subs, Flyertalk)."
+    },
+    {
+      "code": "FINTECH",
+      "label": "Travel Fintech",
+      "description": "Expense, currency, payment, insurance (e.g., Revolut, Wise)."
+    },
+    {
+      "code": "TRANSIT_SERVICE",
+      "label": "Transit Service",
+      "description": "Ground transport, rideshare, public transit info."
+    },
+    {
+      "code": "LOYALTY_PLATFORM",
+      "label": "Loyalty Platform",
+      "description": "Points, miles, status tracking (e.g., AwardWallet)."
+    },
+    {
+      "code": "SUPER_APP",
+      "label": "Super App",
+      "description": "Multi-function platform spanning many stages (e.g., Google, Grab). See DD-07."
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "_authority": "A4",
+  "_version": "0.2.0",
+  "_status": "candidate",
+  "_note": "Lock after DD-04 resolved. Changes require DD entry + version bump.",
+  "stages": [
+    {
+      "code": "J0",
+      "label": "Inspiration",
+      "description": "Passive discovery — social media, content, word-of-mouth, ads. The traveler doesn't have a specific trip in mind yet."
+    },
+    {
+      "code": "J1",
+      "label": "Research",
+      "description": "Active information gathering — reading reviews, comparing destinations, checking conditions, budgeting."
+    },
+    {
+      "code": "J2",
+      "label": "Planning",
+      "description": "Structuring the trip — building itineraries, selecting dates, coordinating with travel companions."
+    },
+    {
+      "code": "J3",
+      "label": "Booking",
+      "description": "Committing and transacting — reserving flights, hotels, activities, car rentals."
+    },
+    {
+      "code": "J4",
+      "label": "Pre-Trip",
+      "description": "Between booking and departure — document prep, packing, last-mile logistics, confirmation management."
+    },
+    {
+      "code": "J5",
+      "label": "Transit",
+      "description": "Getting there and between — airport, flight, ground transport, transfers, border crossings."
+    },
+    {
+      "code": "J6",
+      "label": "In-Destination",
+      "description": "On the ground — local discovery, navigation, dining, activities, events, nearby now."
+    },
+    {
+      "code": "J7",
+      "label": "Post-Trip",
+      "description": "After return — reviews, expense reconciliation, photo organization, loyalty management."
+    },
+    {
+      "code": "J8",
+      "label": "Reflection & Re-Inspiration",
+      "description": "Longer-term — sharing stories, revisiting memories, planning the next trip. The loop back to J0."
+    }
+  ]
+}

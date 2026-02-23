@@ -1,7 +1,7 @@
 # TRAVEL.aw
 
 > **Claude Code reads this file automatically at session start.**
-> Last updated: 2026-02-23 (initial setup)
+> Last updated: 2026-02-23 (WP-0 bootstrap: authorities, registries, spec, glossary, decisions)
 
 ---
 
@@ -19,7 +19,7 @@
 |------|----------|---------|
 | `TRAVEL_AUTHORITIES_INDEX.md` | `AUTH/` | Master authority index + precedence rules |
 | `SESSION_CLOSE_PROTOCOL.md` | `AUTH/` | Mandatory session close checklist |
-| `ECOSYSTEM_SPEC_v0_1.md` | `docs/ecosystem/` | Product scope, user journey, MVP (WP-0) |
+| `ECOSYSTEM_SPEC_v0_2.md` | `docs/ecosystem/` | Product scope, user journey, MVP (WP-0) |
 | `DECISIONS.md` | `docs/ecosystem/` | Design decisions registry (WP-0) |
 | `GLOSSARY.md` | `docs/ecosystem/` | Canonical term definitions (WP-0) |
 
@@ -43,17 +43,28 @@
 
 ## Current State (2026-02-23)
 
-**Phase:** WP-0 Bootstrap — building authority files
-**Status:** Directory skeleton created, authority pack placed at canonical path
+**Phase:** WP-0 Bootstrap
+**Status:** WP-0 COMPLETE — all 8 authority files created (A1-A8)
+
+### WP-0 Deliverables
+
+- [x] A1: `docs/ecosystem/ECOSYSTEM_SPEC_v0_2.md`
+- [x] A2: `docs/ecosystem/DECISIONS.md`
+- [x] A3: `docs/ecosystem/GLOSSARY.md`
+- [x] A4: `packages/contracts/registries/journey_stages.json` (9 stages, candidate)
+- [x] A5: `packages/contracts/registries/capabilities_registry.json` (22 C-codes, candidate)
+- [x] A6: `packages/contracts/registries/provider_types.json` (16 types, candidate)
+- [x] A7: `packages/contracts/registries/relationship_types.json` (6 types, candidate)
+- [x] A8: `AUTH/TRAVEL_AUTHORITIES_INDEX.md`
 
 ### Open Decisions
 
 | ID | Decision | Status |
 |----|----------|--------|
 | DD-01 | Toolchain (TS vs Python vs hybrid) | Open |
-| DD-03 | Spec completion order | Open |
-| DD-04 | Journey stage labels (J0-J8) | Open |
-| DD-05 | Starter C-codes (~15-20 seed capabilities) | Open |
+| DD-04 | Journey stage labels (J0-J8) | Open — review registries before locking |
+| DD-05 | Starter C-codes (~22 seed capabilities) | Open — review registries before locking |
+| DD-07 | SUPER_APP providerType | Open |
 
 ---
 
@@ -86,7 +97,7 @@ Commit:         <sha> | NO COMMIT
 ## Directory Structure
 
 ```
-travel_aw/
+travel.aw/
 ├── AUTH/
 │   ├── TRAVEL_AUTHORITIES_INDEX.md    <- master index (A8)
 │   └── SESSION_CLOSE_PROTOCOL.md
