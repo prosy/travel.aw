@@ -141,6 +141,7 @@ model InboundEmail {
   // Raw email storage
   rawHeaders      String?  // JSON of all headers
   attachments     String?  // JSON array of attachment metadata
+  attachmentsParsed String? // JSON tracking which attachments were processed
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -148,6 +149,39 @@ model InboundEmail {
   @@index([from])
   @@index([receivedAt])
   @@index([extractionStatus])
+}
+
+model AttachmentParseJob {
+  id              String   @id @default(cuid())
+
+  inboundEmailId  String?  // Link to InboundEmail if from email
+  uploadJobId     String?  // Link to UploadParseJob if from file upload
+
+  fileName        String
+  contentType     String   // image/jpeg, application/pdf, etc.
+  fileSize        Int      // in bytes
+  filePath        String   // Temporary storage path
+
+  // Parsing status
+  status          String   @default("pending") // pending, processing, completed, failed
+  error           String?
+
+  // Parsed result
+  parsedData      String?  // JSON of ParsedTripItem
+  confidence      Float?   // 0-1 confidence score
+
+  // Processing metadata
+  queuedAt        DateTime @default(now())
+  processedAt     DateTime?
+  expiresAt       DateTime // 24hr TTL
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([status])
+  @@index([inboundEmailId])
+  @@index([uploadJobId])
+  @@index([expiresAt])
 }
 
 // ============================================================================
