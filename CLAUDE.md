@@ -43,28 +43,33 @@
 
 ## Current State (2026-02-23)
 
-**Phase:** WP-0 Bootstrap
-**Status:** WP-0 COMPLETE — all 8 authority files created (A1-A8)
+**Phase:** WP-0 Complete → WP-1 Ready
+**Status:** All authority files created (A1-A8, A18-A20). All registries locked. All DDs resolved.
 
 ### WP-0 Deliverables
 
 - [x] A1: `docs/ecosystem/ECOSYSTEM_SPEC_v0_2.md`
 - [x] A2: `docs/ecosystem/DECISIONS.md`
 - [x] A3: `docs/ecosystem/GLOSSARY.md`
-- [x] A4: `packages/contracts/registries/journey_stages.json` (9 stages, candidate)
-- [x] A5: `packages/contracts/registries/capabilities_registry.json` (22 C-codes, candidate)
-- [x] A6: `packages/contracts/registries/provider_types.json` (16 types, candidate)
-- [x] A7: `packages/contracts/registries/relationship_types.json` (6 types, candidate)
+- [x] A4: `packages/contracts/registries/journey_stages.json` (9 stages, **locked**)
+- [x] A5: `packages/contracts/registries/capabilities_registry.json` (24 C-codes, **locked**)
+- [x] A6: `packages/contracts/registries/provider_types.json` (16 types, **locked**, SUPER_APP guardrail)
+- [x] A7: `packages/contracts/registries/relationship_types.json` (6 types, **locked**)
 - [x] A8: `AUTH/TRAVEL_AUTHORITIES_INDEX.md`
+- [x] A18-A20: `prod_plans/` planning docs indexed
 
-### Open Decisions
+### Design Decisions
 
 | ID | Decision | Status |
 |----|----------|--------|
-| DD-01 | Toolchain (TS vs Python vs hybrid) | Open |
-| DD-04 | Journey stage labels (J0-J8) | Open — review registries before locking |
-| DD-05 | Starter C-codes (~22 seed capabilities) | Open — review registries before locking |
-| DD-07 | SUPER_APP providerType | Open |
+| DD-01 | Toolchain | **Resolved** — full TypeScript monolang |
+| DD-02 | Bootstrap scope | **Resolved** — phased |
+| DD-03 | Spec completion order | **Resolved** — v0.2 |
+| DD-04 | Journey stage labels (J0-J8) | **Resolved** — locked as-is |
+| DD-05 | Starter C-codes (24) | **Resolved** — locked all 24 |
+| DD-06 | REPLACES/MIGRATES_TO edge types | **Deferred** — post-MVP |
+| DD-07 | SUPER_APP providerType | **Resolved** — keep, add guardrail |
+| DD-08 | Agent architecture | **Resolved** — accept three-layer, start M0 parallel |
 
 ---
 
