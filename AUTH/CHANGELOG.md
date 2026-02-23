@@ -7,6 +7,13 @@ All changes to authority files (A1-A20), registries, and schemas are logged here
 
 ---
 
+## 2026-02-23 — WP-2: Seed dataset — 59 nodes, 118 edges
+
+- **A14** `data/ecosystem/nodes.jsonl` — Created. 59 nodes across 18 provider types, all J0-J8 covered, all 24 capabilities represented.
+- **A15** `data/ecosystem/edges.jsonl` — Created. 118 edges across 6 relationship types. Includes AGGREGATES, COMPETES_WITH, FEEDS_INTO, INTEGRATES_WITH, SUPPLEMENTS, OWNED_BY.
+- Validator passes: 0 errors. Deterministic output confirmed.
+- 1 node added manually (DMO_VISIT_CALIFORNIA) — research CSV had no DMO entries.
+
 ## 2026-02-23 — DD-10: Add AI_AGENT and API_PLATFORM provider types
 
 - **A6** `packages/contracts/registries/provider_types.json` — Added AI_AGENT, API_PLATFORM. MINOR version bump 1.0.0 → 1.1.0. Now 18 types.
