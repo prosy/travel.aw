@@ -154,3 +154,4 @@ travel.aw/
 - StopCrabs config file is `stopcrabs.yaml` (no dot prefix, `.yaml` not `.yml`). No `.stopcrabs` dotfile convention.
 - StopCrabs has no `--rules-dir` flag — rules are baked into the package. Custom rules require a separate validation step.
 - StopCrabs `none_of` rules flag absence of safety patterns in any Python file — template skills must include `ALLOWED_PATHS`, `ALLOWED_DOMAINS`, `validate_checksum()` to pass clean.
+- StopCrabs is NOT on public PyPI — `pip install stopcrabs>=0.2.0` fails in GitHub Actions CI. Works locally (installed from private source). CI needs private index URL, vendoring, or package publish.

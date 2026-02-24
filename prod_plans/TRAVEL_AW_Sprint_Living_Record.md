@@ -195,6 +195,25 @@ Sprint levers:
 - Agent prompt's "pre-flight" file references (SUBMISSION_GUIDE.md, SKILL_MANIFEST_SPEC.md) were already created in B3
 - "book" as standalone TRAVEL-003 keyword would false-positive on comments like "booking" — used word boundary regex
 
+### 2026-02-24 — Session 3: M0 DoD End-to-End CI Test
+**What happened**
+- Created PR #1 on prosy/travel-aw-skills with 2 test skills for e2e CI gate validation.
+- `test-echo` (clean skill): passes all gates locally and in CI.
+- `test-echo-bad` (deliberately bad): triggers TRAVEL-001 (hardcoded email) + TRAVEL-003 (booking capability + low risk).
+- CI results: manifest validation PASS, travel-rules FAIL (expected — per-skill output confirms test-echo clean, test-echo-bad blocked). StopCrabs FAIL (infrastructure — package not on public PyPI).
+- M0 DoD partially met: 2 of 3 gates proven in CI. StopCrabs gate logic verified locally but CI install fails.
+
+**CI run:** https://github.com/prosy/travel-aw-skills/actions/runs/22334992847
+
+**Commits (prosy/travel-aw-skills repo)**
+
+| SHA | Description |
+|-----|-------------|
+| `05a114d` | feat(m0-dod): e2e test skills — test-echo (pass) + test-echo-bad (fail) |
+
+**Issues caught during execution (by CC)**
+- StopCrabs is not on public PyPI — `pip install stopcrabs>=0.2.0` fails in CI with "No matching distribution found". Works locally (installed from private source). Needs either PyPI publish, private index config, or vendoring.
+
 ---
 
 ## 6) Decisions (all resolved)
@@ -256,7 +275,7 @@ Sprint levers:
 
 ## 10) Abbreviations / future work (explicit list)
 - ~~WP-3 query cookbook~~ ✅ Complete (Track A MVP done)
-- ~~M0 agent foundation~~ (Track C) — B1 ✅, B3 ✅, B4 ✅, B2 deferred (NanoClaw fork — mechanical)
+- ~~M0 agent foundation~~ (Track C) — B1 ✅, B3 ✅, B4 ✅, B2 deferred (NanoClaw fork — mechanical), DoD PR #1 submitted (2/3 gates proven in CI, StopCrabs needs PyPI fix)
 - Track B security hardening (B1–B6 from Combined PRD A20)
 - Formalize dual-agent workflow as a repeatable process doc
 - Add pre-commit guardrail preventing direct edits to locked registries without DD entry
