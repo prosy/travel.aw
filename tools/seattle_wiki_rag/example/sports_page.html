@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Travel.aw Sports (Example)</title>
+    <style>
+      body {
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+          "Apple Color Emoji", "Segoe UI Emoji";
+        margin: 24px;
+      }
+      #wiki {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 16px;
+      }
+      .meta {
+        color: #6b7280;
+        font-size: 12px;
+        margin-bottom: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Sports in Seattle (from stored query)</h1>
+    <div id="wiki">
+      <div class="meta" id="meta">Loading…</div>
+      <div id="content"></div>
+    </div>
+
+    <script>
+      async function load() {
+        const res = await fetch("http://127.0.0.1:8787/api/stored-query/seattle_sports");
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "Request failed");
+        document.getElementById("meta").textContent =
+          `Wikipedia: ${data.attribution.page}#${data.attribution.section} (oldid ${data.attribution.oldid})`;
+        document.getElementById("content").innerHTML = data.html;
+      }
+      load().catch((e) => {
+        document.getElementById("meta").textContent = String(e);
+      });
+    </script>
+  </body>
+</html>
+

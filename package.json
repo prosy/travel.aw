@@ -5,7 +5,11 @@
   "description": "TRAVEL.aw — structured knowledge graph of the travel ecosystem",
   "scripts": {
     "validate": "tsx tools/validate_ecosystem/validate_ecosystem.ts",
-    "query": "tsx tools/query_ecosystem/query_cookbook.ts"
+    "query": "tsx tools/query_ecosystem/query_cookbook.ts",
+    "seattle:query": "tsx tools/seattle_categories/query_seattle.ts",
+    "web:dev": "pnpm --dir apps/web dev",
+    "web:build": "pnpm --dir apps/web build",
+    "web:start": "pnpm --dir apps/web start"
   },
   "devDependencies": {
     "ajv": "^8.17.0",

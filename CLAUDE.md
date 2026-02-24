@@ -44,7 +44,7 @@
 ## Current State (2026-02-24)
 
 **Phase:** Track A MVP done, M0 Agent Foundation done
-**Status:** WP-0 bootstrap, WP-1 schemas/validation, WP-2 seed dataset, WP-3 query cookbook all complete. 59 nodes, 118 edges, 5 deterministic queries, validator passes. M0 complete: B1 (StopCrabs investigation) ✅, B2 (NanoClaw fork) ✅, B3 (skills repo + CI) ✅, B4 (travel rules) ✅, DoD proven via PR #1.
+**Status:** WP-0 bootstrap, WP-1 schemas/validation, WP-2 seed dataset, WP-3 query cookbook all complete. 59 nodes, 118 edges, 5 deterministic queries, validator passes. M0 complete: B1 (StopCrabs investigation) ✅, B2 (NanoClaw fork) ✅, B3 (skills repo + CI) ✅, B4 (travel rules) ✅, DoD proven via PR #1. Seattle deterministic planning scaffold added (`data/seattle`, `tools/seattle_categories`, `apps/web` Seattle pages + APIs, stored-query sports flow).
 
 ### Authorities Created
 
@@ -155,3 +155,4 @@ travel.aw/
 - StopCrabs has no `--rules-dir` flag — rules are baked into the package. Custom rules require a separate validation step.
 - StopCrabs `none_of` rules flag absence of safety patterns in any Python file — template skills must include `ALLOWED_PATHS`, `ALLOWED_DOMAINS`, `validate_checksum()` to pass clean.
 - StopCrabs is NOT on public PyPI and has a wheel packaging bug (`data/` not included). CI must use `git clone + pip install -e` (editable install) — normal `pip install git+...` crashes with `FileNotFoundError: Data directory not found`.
+- Next.js 16 app routes expose `searchParams` as async in server components — access without awaiting causes runtime warning/errors. Resolve params first, then read fields.

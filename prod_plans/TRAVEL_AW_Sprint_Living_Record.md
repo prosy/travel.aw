@@ -257,6 +257,23 @@ Sprint levers:
 
 **Blockers:** None — M0 complete. Next work is Track B (web app security) or M1 (first travel skills).
 
+### 2026-02-24 — Session 5: Seattle deterministic MVP scaffold
+**What happened**
+- Added Seattle deterministic data/query scaffold: `data/seattle/*` catalogs + triggers and `tools/seattle_categories/*` query layer.
+- Bootstrapped `apps/web` as runnable Next.js app and added Seattle routes + APIs for planning/while-in-city/sports.
+- Implemented stored-query sports flow: page-open trigger on `/seattle/while-in-seattle/sports` calling `/api/seattle/sports`.
+- Updated UI to align with current app patterns: active top nav, tabbed intents, card layout, sticky query-state side panel.
+- Reduced sports render to concise summary + selected table content instead of full raw section blob.
+- Fixed Next.js 16 runtime issue on Seattle pages by resolving async `searchParams` before property reads.
+
+**Decisions made or deferred**
+- Made: deterministic non-vector retrieval remains primary mode (catalog filters + stored query trigger execution).
+- Deferred: full integration into broader travel.aw IA/auth flow pending next planning pass.
+
+**Blockers encountered**
+- Local runtime requires two services running together (`Seattle_wikidata` + `apps/web`) and using port `3010` when `3000` is occupied.
+- Sandbox-restricted runs can fail on `tsx` IPC; local smoke tests require unsandboxed terminal execution.
+
 ---
 
 ## 6) Decisions (all resolved)

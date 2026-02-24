@@ -1,0 +1,11 @@
+[
+  {
+    "id": "sea_trigger_sports_page_open",
+    "phaseId": "while_in_seattle",
+    "intentId": "what_to_do",
+    "pageContext": "seattle_sports",
+    "storedQueryName": "seattle_sports",
+    "description": "When Sports context opens, fire deterministic Seattle sports stored query."
+  }
+]
+
