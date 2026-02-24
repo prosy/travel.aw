@@ -43,20 +43,30 @@
 
 ## Current State (2026-02-23)
 
-**Phase:** WP-0 Complete → WP-1 Ready
-**Status:** All authority files created (A1-A8, A18-A20). All registries locked. All DDs resolved.
+**Phase:** WP-2 Complete → WP-3 Ready
+**Status:** WP-0 bootstrap, WP-1 schemas/validation, WP-2 seed dataset all complete. 59 nodes, 118 edges, validator passes.
 
-### WP-0 Deliverables
+### Authorities Created
 
-- [x] A1: `docs/ecosystem/ECOSYSTEM_SPEC_v0_2.md`
-- [x] A2: `docs/ecosystem/DECISIONS.md`
-- [x] A3: `docs/ecosystem/GLOSSARY.md`
-- [x] A4: `packages/contracts/registries/journey_stages.json` (9 stages, **locked**)
-- [x] A5: `packages/contracts/registries/capabilities_registry.json` (24 C-codes, **locked**)
-- [x] A6: `packages/contracts/registries/provider_types.json` (16 types, **locked**, SUPER_APP guardrail)
-- [x] A7: `packages/contracts/registries/relationship_types.json` (6 types, **locked**)
-- [x] A8: `AUTH/TRAVEL_AUTHORITIES_INDEX.md`
-- [x] A18-A20: `prod_plans/` planning docs indexed
+| # | Path | Status |
+|---|------|--------|
+| A1 | `docs/ecosystem/ECOSYSTEM_SPEC_v0_2.md` | Created |
+| A2 | `docs/ecosystem/DECISIONS.md` | Created (DD-01 through DD-10) |
+| A3 | `docs/ecosystem/GLOSSARY.md` | Created |
+| A4 | `packages/contracts/registries/journey_stages.json` | 9 stages, **locked** |
+| A5 | `packages/contracts/registries/capabilities_registry.json` | 24 C-codes, **locked** |
+| A6 | `packages/contracts/registries/provider_types.json` | 18 types, **locked** (v1.1.0) |
+| A7 | `packages/contracts/registries/relationship_types.json` | 6 types, **locked** |
+| A8 | `AUTH/TRAVEL_AUTHORITIES_INDEX.md` | Created |
+| A9 | `packages/contracts/schemas/ecosystem_node.schema.json` | Created (WP-1) |
+| A10 | `packages/contracts/schemas/ecosystem_edge.schema.json` | Created (WP-1) |
+| A11 | `packages/contracts/CONTRACT_VERSIONING.md` | Created (WP-1) |
+| A12 | `tools/validate_ecosystem/VALIDATION_CONTRACT.md` | Created (WP-1) |
+| A13 | `data/ecosystem/ID_POLICY.md` | Created (WP-1) |
+| A14 | `data/ecosystem/nodes.jsonl` | 59 nodes (WP-2) |
+| A15 | `data/ecosystem/edges.jsonl` | 118 edges (WP-2) |
+| A17 | `AUTH/CHANGELOG.md` | Created (WP-1) |
+| A18-A20 | `prod_plans/` planning docs | Indexed |
 
 ### Design Decisions
 
@@ -70,6 +80,8 @@
 | DD-06 | REPLACES/MIGRATES_TO edge types | **Deferred** — post-MVP |
 | DD-07 | SUPER_APP providerType | **Resolved** — keep, add guardrail |
 | DD-08 | Agent architecture | **Resolved** — accept three-layer, start M0 parallel |
+| DD-09 | Edge ID delimiter | **Resolved** — double underscore `__` |
+| DD-10 | AI_AGENT + API_PLATFORM provider types | **Resolved** — added to A6 (v1.1.0) |
 
 ---
 
@@ -112,7 +124,7 @@ travel.aw/
 │   └── schemas/                        <- JSON Schema contracts (WP-1)
 ├── apps/web/                           <- Next.js app
 ├── .claude/rules/                      <- symlinks to authority files
-├── Product Planning/                   <- non-authoritative planning docs
+├── prod_plans/                         <- non-authoritative planning docs (A18-A20 indexed)
 └── CLAUDE.md                           <- this file
 ```
 
@@ -130,4 +142,8 @@ travel.aw/
 
 ## Known Gotchas
 
-(none yet)
+- ajv@8 default only supports draft-07 — using `$schema: "https://json-schema.org/draft/2020-12/schema"` causes "no schema with key or ref" error. Use `"http://json-schema.org/draft-07/schema#"` or import `Ajv2020`.
+- CC agent prompts from ChatGPT/claude.ai frequently have wrong file paths — always cross-check against Authority Index (A8) before executing. Paths for A11 and A13 were wrong in the WP-1 prompt.
+- Research CSV has commas inside quoted fields — `cut -d','` will silently mangle columns. Use python3 `csv.reader` for parsing.
+- Research CSV has 4 provider types (AI_AGENT, API_PLATFORM, AGENT_RUNTIME, SECURITY_TOOL) not in the original locked registry — need DD entry + version bump before creating nodes with those types.
+- `pnpm validate -- --fixtures` passes `--` as a literal argv element — filter it out when parsing args.
