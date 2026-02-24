@@ -214,6 +214,25 @@ Sprint levers:
 **Issues caught during execution (by CC)**
 - StopCrabs is not on public PyPI — `pip install stopcrabs>=0.2.0` fails in CI with "No matching distribution found". Works locally (installed from private source). Needs either PyPI publish, private index config, or vendoring.
 
+### 2026-02-24 — Session 3 (cont): Fix StopCrabs CI Install
+**What happened**
+- First fix (`pip install git+...`) installed successfully but crashed at runtime: `FileNotFoundError: Data directory not found`.
+- Root cause: StopCrabs `pyproject.toml` wheel target only packages `src/stopcrabs/`, not `data/`. Code resolves data dir via `Path(__file__).parent.parent.parent.parent / "data"` — only works from repo checkout.
+- Fixed with `git clone --depth 1` + `pip install -e` (editable install preserves repo structure).
+- **All 3 CI gates now work:** StopCrabs PASS, manifest validation PASS, travel-rules FAIL (expected).
+- **M0 DoD fully met.**
+
+**CI run:** https://github.com/prosy/travel-aw-skills/actions/runs/22335665571
+
+**Commits (prosy/travel-aw-skills repo, m0-dod-e2e-test branch)**
+
+| SHA | Description |
+|-----|-------------|
+| `33c1480` | fix(ci): install StopCrabs from GitHub repo (editable install) |
+
+**Issues caught during execution (by CC)**
+- StopCrabs has a packaging bug: `data/` directory is in sdist include but not in wheel targets. `Path(__file__)`-based resolution only works with editable installs or running from repo checkout. Should be fixed upstream.
+
 ---
 
 ## 6) Decisions (all resolved)
