@@ -149,6 +149,7 @@ travel.aw/
 - Research CSV has commas inside quoted fields — `cut -d','` will silently mangle columns. Use python3 `csv.reader` for parsing.
 - Research CSV has 4 provider types (AI_AGENT, API_PLATFORM, AGENT_RUNTIME, SECURITY_TOOL) not in the original locked registry — need DD entry + version bump before creating nodes with those types.
 - `pnpm validate -- --fixtures` passes `--` as a literal argv element — filter it out when parsing args.
+- Agent prompts reference capability codes that don't exist in locked A5 registry (e.g., C-PAYMENT, C-FLIGHT-BOOKING) — always cross-check against `packages/contracts/registries/capabilities_registry.json` before using any C-code in implementation.
 - StopCrabs `-c` config flag is a **global** option (before subcommand): `stopcrabs -c config.yaml scan ...` not `stopcrabs scan ... -c config.yaml`.
 - StopCrabs config file is `stopcrabs.yaml` (no dot prefix, `.yaml` not `.yml`). No `.stopcrabs` dotfile convention.
 - StopCrabs has no `--rules-dir` flag — rules are baked into the package. Custom rules require a separate validation step.

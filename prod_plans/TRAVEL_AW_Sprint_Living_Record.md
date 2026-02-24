@@ -61,7 +61,7 @@ Sprint levers:
 | B1 | StopCrabs Supabase investigation | ✅ Complete | — | No Supabase dep; paused project is for web app |
 | B2 | Fork NanoClaw → prosy/nanoclaw | ⏳ Deferred | — | Mechanical, non-blocking |
 | B3 | Skills repo + StopCrabs CI gate | ✅ Complete | `b738498` | prosy/travel-aw-skills, 37 DSAL rules |
-| B4 | Travel-specific rules (TRAVEL-001/002/003) | ⏳ Next | — | Separate travel-rules-check.py step |
+| B4 | Travel-specific rules (TRAVEL-001/002/003) | ✅ Complete | `c86e17f` | 3 rules, 4 fixtures, CI job added |
 
 ### Track B — V1 Web App Security
 | Req | Description | Status | Notes |
@@ -174,6 +174,27 @@ Sprint levers:
 - Config file is `stopcrabs.yaml` (no dot prefix, `.yaml` not `.yml`)
 - Manifest wildcard check used naive `grep '*'` which matches any asterisk — replaced with YAML parser targeting egress section only
 
+### 2026-02-24 — Session 2 (cont): M0-B4 Travel Rules
+**What happened**
+- B4 complete: 3 travel-specific rules (TRAVEL-001/002/003) implemented as `scripts/travel-rules-check.py` in prosy/travel-aw-skills.
+- Analyzed agent prompt (M0_B4_TRAVEL_RULES_AGENT_INSTRUCTIONS.md), caught 6 errors: non-existent capability codes (C-PAYMENT etc → only C-BOOKING-TXN in locked A5), missing bad-pii fixture, nonexistent pre-flight files, CHANGED_SKILLS inconsistency, "book" keyword false positives, missing fetch-depth.
+- All 4 test fixtures pass: good-skill (exit 0), bad-pii/bad-egress/bad-booking (exit 1 with correct violations).
+- CI workflow updated: `travel-rules` job runs parallel with `security-scan` and `manifest-validation`.
+- SECURITY_POLICY.md and README.md updated with full rule documentation.
+
+**Commits (prosy/travel-aw-skills repo)**
+
+| SHA | Description |
+|-----|-------------|
+| `c86e17f` | feat: add travel-specific security rules TRAVEL-001/002/003 (M0-B4) |
+
+**Issues caught during execution (by CC)**
+- Agent prompt referenced C-PAYMENT, C-FLIGHT-BOOKING, C-HOTEL-BOOKING, C-CAR-RENTAL-BOOKING — none exist in locked A5 registry. Only C-BOOKING-TXN is valid.
+- Agent prompt omitted skill.yaml fixture for bad-pii test case — created manually
+- Python regex `(?i)` embedded mid-pattern causes DeprecationWarning — moved to `re.IGNORECASE` flag parameter
+- Agent prompt's "pre-flight" file references (SUBMISSION_GUIDE.md, SKILL_MANIFEST_SPEC.md) were already created in B3
+- "book" as standalone TRAVEL-003 keyword would false-positive on comments like "booking" — used word boundary regex
+
 ---
 
 ## 6) Decisions (all resolved)
@@ -203,6 +224,7 @@ Sprint levers:
 - **RISK-3:** CSV version drift — uploaded copies may differ from repo copies. **Mitigation:** always use repo copy as authoritative; verify counts before processing.
 - **RISK-4:** Validator draft compatibility — ajv@8 doesn't natively support JSON Schema 2020-12. **Mitigation:** use draft-07 for all schemas. Documented in known gotchas.
 - **RISK-5:** WP-3 query determinism — MVP queries must be byte-identical across runs. `graphology` or custom traversal must use stable sort at every step. **Mitigation:** determinism test (run twice, diff) is mandatory acceptance criterion.
+- **RISK-6:** Agent prompt accuracy — B4 agent prompt referenced 4 non-existent capability codes (C-PAYMENT, C-FLIGHT-BOOKING, C-HOTEL-BOOKING, C-CAR-RENTAL-BOOKING). Only C-BOOKING-TXN exists in locked A5. **Mitigation:** always cross-check agent prompt references against locked registries before implementing.
 
 ---
 
@@ -234,7 +256,7 @@ Sprint levers:
 
 ## 10) Abbreviations / future work (explicit list)
 - ~~WP-3 query cookbook~~ ✅ Complete (Track A MVP done)
-- M0 agent foundation (Track C — NanoClaw fork, skills repo, StopCrabs CI, travel rules)
+- ~~M0 agent foundation~~ (Track C) — B1 ✅, B3 ✅, B4 ✅, B2 deferred (NanoClaw fork — mechanical)
 - Track B security hardening (B1–B6 from Combined PRD A20)
 - Formalize dual-agent workflow as a repeatable process doc
 - Add pre-commit guardrail preventing direct edits to locked registries without DD entry
