@@ -4,7 +4,8 @@
   "private": true,
   "description": "TRAVEL.aw — structured knowledge graph of the travel ecosystem",
   "scripts": {
-    "validate": "tsx tools/validate_ecosystem/validate_ecosystem.ts"
+    "validate": "tsx tools/validate_ecosystem/validate_ecosystem.ts",
+    "query": "tsx tools/query_ecosystem/query_cookbook.ts"
   },
   "devDependencies": {
     "ajv": "^8.17.0",

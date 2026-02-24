@@ -291,6 +291,7 @@ reports/validation/
 | DD-08 | Agent architecture | Accept three-layer, start M0 parallel | **Resolved** (2026-02-23) |
 | DD-09 | Edge ID delimiter | Double underscore `__` for edge IDs | **Resolved** (2026-02-23) |
 | DD-10 | AI_AGENT + API_PLATFORM provider types | Add both to A6 (MINOR bump) | **Resolved** (2026-02-23) |
+| DD-11 | Graph library for WP-3 queries | Custom adjacency maps, no graphology | **Resolved** (2026-02-24) |
 
 ---
 

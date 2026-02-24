@@ -7,6 +7,14 @@ All changes to authority files (A1-A20), registries, and schemas are logged here
 
 ---
 
+## 2026-02-24 — WP-3: Query Cookbook — 5 MVP queries
+
+- **A16** `docs/ecosystem/QUERY_COOKBOOK.md` — Created. 5 deterministic queries (Q1–Q5) with verified expected results.
+- **A2** `docs/ecosystem/DECISIONS.md` — Added DD-11 (custom adjacency maps, no graphology).
+- **A8** `AUTH/TRAVEL_AUTHORITIES_INDEX.md` — Added DD-11 to §9.
+- `tools/query_ecosystem/` — Created. CLI entry point + lib (types, graph, queries). Follows validator pattern.
+- Fixtures pass: all 5 queries deterministic. Validator still passes (0 errors).
+
 ## 2026-02-23 — WP-2: Seed dataset — 59 nodes, 118 edges
 
 - **A14** `data/ecosystem/nodes.jsonl` — Created. 59 nodes across 18 provider types, all J0-J8 covered, all 24 capabilities represented.

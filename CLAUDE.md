@@ -41,10 +41,10 @@
 
 ---
 
-## Current State (2026-02-23)
+## Current State (2026-02-24)
 
-**Phase:** WP-2 Complete → WP-3 Ready
-**Status:** WP-0 bootstrap, WP-1 schemas/validation, WP-2 seed dataset all complete. 59 nodes, 118 edges, validator passes.
+**Phase:** WP-3 Complete (Track A MVP done)
+**Status:** WP-0 bootstrap, WP-1 schemas/validation, WP-2 seed dataset, WP-3 query cookbook all complete. 59 nodes, 118 edges, 5 deterministic queries, validator passes.
 
 ### Authorities Created
 
@@ -65,6 +65,7 @@
 | A13 | `data/ecosystem/ID_POLICY.md` | Created (WP-1) |
 | A14 | `data/ecosystem/nodes.jsonl` | 59 nodes (WP-2) |
 | A15 | `data/ecosystem/edges.jsonl` | 118 edges (WP-2) |
+| A16 | `docs/ecosystem/QUERY_COOKBOOK.md` | 5 queries (WP-3) |
 | A17 | `AUTH/CHANGELOG.md` | Created (WP-1) |
 | A18-A20 | `prod_plans/` planning docs | Indexed |
 
@@ -82,6 +83,7 @@
 | DD-08 | Agent architecture | **Resolved** — accept three-layer, start M0 parallel |
 | DD-09 | Edge ID delimiter | **Resolved** — double underscore `__` |
 | DD-10 | AI_AGENT + API_PLATFORM provider types | **Resolved** — added to A6 (v1.1.0) |
+| DD-11 | Graph library for WP-3 | **Resolved** — custom adjacency maps, no graphology |
 
 ---
 

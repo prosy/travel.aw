@@ -52,7 +52,7 @@ Sprint levers:
 | WP-0 | Bootstrap (A1–A8) | ✅ Complete | pre-existing | 8 authority files |
 | WP-1 | Schemas & Validation (A9–A13, A17) | ✅ Complete | `9bc880d` | 10 integrity checks, ajv, deterministic |
 | WP-2 | Seed Dataset (A14–A15) | ✅ Complete | `1b64020`, `7a494c0` | 59 nodes, 118 edges, 24/24 C-codes |
-| WP-3 | Query Cookbook | ⏳ Next | — | 5 MVP queries from Spec §6.2 |
+| WP-3 | Query Cookbook (A16) | ✅ Complete | (pending) | 5 deterministic queries, DD-11 |
 | WP-4 | Graph Export (optional) | ⏳ Post-MVP | — | Neo4j/CSV export, browse UI |
 
 ### Track C — Agent Foundation (M0)
@@ -95,6 +95,7 @@ Sprint levers:
 | A12 | tools/validate_ecosystem/VALIDATION_CONTRACT.md | Validator contract |
 | A13 | data/ecosystem/ID_POLICY.md | ID format rules |
 | A14–A15 | data/ecosystem/nodes.jsonl, edges.jsonl | Seed dataset |
+| A16 | docs/ecosystem/QUERY_COOKBOOK.md | Query definitions + expected results |
 | A17 | AUTH/CHANGELOG.md | Authority change log |
 | A18–A20 | prod_plans/*.md, *.csv | Research data + PRDs (reference) |
 
@@ -140,6 +141,22 @@ Sprint levers:
 - ⚠️ Watch-out: adding a C-code doesn't auto-create the matching provider type. Registries are independent. Check both when adding to either.
 - 📌 Next: WP-3 (query cookbook) to complete Track A MVP. M0 (agent foundation) can run in parallel.
 
+### 2026-02-24 — Session 2: WP-3 Query Cookbook
+**What happened**
+- WP-3 complete: 5 deterministic queries (Q1–Q5) implemented as TS functions.
+- DD-11 resolved: custom adjacency maps over graphology (59 nodes too small for library).
+- A16 (QUERY_COOKBOOK.md) created with verified expected results from actual query runs.
+- All acceptance criteria met: `--all` JSON output, `--fixtures` determinism, validator still passes.
+
+**Query results summary:**
+- Q1: 1 node (SUPER_APP_GOOGLE spans J0→J3)
+- Q2: 12 paths (4 social sources → 3 OTAs, depth 1-2)
+- Q3: 6 nodes (event discovery in-trip)
+- Q4: 3 itinerary managers with integration categories
+- Q5: 7 nearbyNow + 6 upcoming, 0 overlap
+
+**Track A MVP is complete.** WP-0/1/2/3 all done.
+
 ---
 
 ## 6) Decisions (all resolved)
@@ -156,8 +173,9 @@ Sprint levers:
 | DD-08 | Agent architecture | Accept three-layer, M0 parallel | 2026-02-23 | travel.aw + skills + NanoClaw |
 | DD-09 | Edge ID delimiter | Double underscore `__` | 2026-02-23 | Avoids ambiguity with node ID underscores |
 | DD-10 | AI_AGENT + API_PLATFORM types | Added to A6 + A9 | 2026-02-23 | MINOR version bump |
+| DD-11 | Graph library for WP-3 | Custom adjacency maps, no graphology | 2026-02-24 | 59 nodes too small for library |
 
-**No open decisions remain.** New decisions should be filed as DD-11+.
+**No open decisions remain.** New decisions should be filed as DD-12+.
 
 ---
 
@@ -198,12 +216,12 @@ Sprint levers:
 ---
 
 ## 10) Abbreviations / future work (explicit list)
-- WP-3 query cookbook (Track A MVP completion)
+- ~~WP-3 query cookbook~~ ✅ Complete (Track A MVP done)
 - M0 agent foundation (Track C — NanoClaw fork, skills repo, StopCrabs CI, travel rules)
 - Track B security hardening (B1–B6 from Combined PRD A20)
 - Formalize dual-agent workflow as a repeatable process doc
 - Add pre-commit guardrail preventing direct edits to locked registries without DD entry
-- Investigate graphology vs custom TS traversal for WP-3 (lightweight spike)
+- ~~Investigate graphology vs custom TS traversal for WP-3~~ ✅ DD-11: custom maps
 - WP-4 graph export (post-MVP optional — Neo4j/CSV, browse UI)
 
 ---
