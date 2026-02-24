@@ -43,8 +43,8 @@
 
 ## Current State (2026-02-24)
 
-**Phase:** WP-3 Complete (Track A MVP done)
-**Status:** WP-0 bootstrap, WP-1 schemas/validation, WP-2 seed dataset, WP-3 query cookbook all complete. 59 nodes, 118 edges, 5 deterministic queries, validator passes.
+**Phase:** Track A MVP done, M0 Agent Foundation done
+**Status:** WP-0 bootstrap, WP-1 schemas/validation, WP-2 seed dataset, WP-3 query cookbook all complete. 59 nodes, 118 edges, 5 deterministic queries, validator passes. M0 complete: B1 (StopCrabs investigation) ✅, B2 (NanoClaw fork) ✅, B3 (skills repo + CI) ✅, B4 (travel rules) ✅, DoD proven via PR #1.
 
 ### Authorities Created
 

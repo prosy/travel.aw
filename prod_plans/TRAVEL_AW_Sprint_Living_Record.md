@@ -246,6 +246,17 @@ Sprint levers:
 |-----|-------------|
 | `593344d` | feat(m0-b2): fork NanoClaw to prosy/nanoclaw |
 
+### Session 3+4 combined summary (this conversation)
+**Completed work:**
+- Fixed StopCrabs CI install — editable install from GitHub clone (pip install from git crashes due to missing `data/` in wheel)
+- M0 DoD fully proven: all 3 CI gates (StopCrabs, manifest validation, travel-rules) work on PR #1
+- M0-B2: forked qwibitai/nanoclaw → prosy/nanoclaw, build + 375/378 tests pass
+- **M0 Agent Foundation is fully complete** — B1 ✅ B2 ✅ B3 ✅ B4 ✅
+
+**Decisions:** None new (no DD-12 needed)
+
+**Blockers:** None — M0 complete. Next work is Track B (web app security) or M1 (first travel skills).
+
 ---
 
 ## 6) Decisions (all resolved)
