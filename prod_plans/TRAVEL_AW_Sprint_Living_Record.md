@@ -58,10 +58,10 @@ Sprint levers:
 ### Track C — Agent Foundation (M0)
 | Story | Description | Status | Commit(s) | Notes |
 |---:|---|---|---|---|
-| B1 | StopCrabs Supabase investigation | ⏳ Next | — | Discovery; timebox 2hr |
-| B2 | Fork NanoClaw → travel-aw/nanoclaw | ⏳ Pending | — | Clean fork, verify builds |
-| B3 | Skills repo + StopCrabs CI gate | ⏳ Pending | — | Depends on B1 |
-| B4 | Travel-specific rules (TRAVEL-001/002/003) | ⏳ Pending | — | Depends on B1, B3 |
+| B1 | StopCrabs Supabase investigation | ✅ Complete | — | No Supabase dep; paused project is for web app |
+| B2 | Fork NanoClaw → prosy/nanoclaw | ⏳ Deferred | — | Mechanical, non-blocking |
+| B3 | Skills repo + StopCrabs CI gate | ✅ Complete | `b738498` | prosy/travel-aw-skills, 37 DSAL rules |
+| B4 | Travel-specific rules (TRAVEL-001/002/003) | ⏳ Next | — | Separate travel-rules-check.py step |
 
 ### Track B — V1 Web App Security
 | Req | Description | Status | Notes |
@@ -156,6 +156,23 @@ Sprint levers:
 - Q5: 7 nearbyNow + 6 upcoming, 0 overlap
 
 **Track A MVP is complete.** WP-0/1/2/3 all done.
+
+### 2026-02-24 — Session 2 (cont): M0-B1 + M0-B3
+**What happened**
+- B1 resolved: StopCrabs has zero Supabase dependency. Paused Supabase project (festoiadrbantlykemmd) is for travel.aw web app (Auth + Storage), not StopCrabs.
+- B3 complete: `prosy/travel-aw-skills` repo created with StopCrabs CI gate.
+- Analyzed agent prompt (M0_B2_SKILLS_REPO_AGENT_INSTRUCTIONS.md), caught 9 errors: wrong story number, wrong config filename, wrong config schema, wrong CLI flag positions, wrong --output flag, no --rules-dir support, naive wildcard grep, SARIF overwrite bug, wrong GitHub org.
+- All corrected before implementing. StopCrabs v0.2.0 CLI verified hands-on.
+- Template skill passes clean (exit 0). Bad test skill blocked (exit 1, 13 findings).
+- B2 (NanoClaw fork) deferred — mechanical, non-blocking.
+- B4 decision: travel-specific rules will be separate `travel-rules-check.py` step, not StopCrabs plugin (no --rules-dir support).
+
+**Issues caught during execution (by CC)**
+- StopCrabs `-c` config flag is global (before subcommand), not a scan option — all examples in agent prompt were wrong
+- StopCrabs writes `scan_report.sarif` to output dir (not custom filenames) — CI workflow needed separate output dirs per skill
+- StopCrabs `none_of` rules flag absence of safety patterns — template skills must include `ALLOWED_PATHS`, `ALLOWED_DOMAINS`, `validate_checksum()`, `REQUIRES_USER_CONFIRMATION`
+- Config file is `stopcrabs.yaml` (no dot prefix, `.yaml` not `.yml`)
+- Manifest wildcard check used naive `grep '*'` which matches any asterisk — replaced with YAML parser targeting egress section only
 
 ---
 
