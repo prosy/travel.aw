@@ -15,7 +15,13 @@ Before ending any session or running `/compact`, complete these steps in order.
    - Skip if the gotcha is already documented
    - Ask yourself: *"Did I learn something non-obvious that the next agent should know?"*
 
-3. **`CLAUDE.md`** — Update ONLY if durable state changed:
+3. **`prod_plans/TRAVEL_AW_Sprint_Living_Record.md`** — Update with:
+   - Work completed this session (bullets, concise)
+   - Decisions made or deferred
+   - Blockers encountered
+   - Skip if no meaningful progress was made (e.g., research-only session)
+
+4. **`CLAUDE.md`** — Update ONLY if durable state changed:
    - Status transitions (e.g., "WP-0 in progress" -> "WP-0 COMPLETE")
    - New authority files created (add to authority table)
    - Registry/schema changes
@@ -23,13 +29,13 @@ Before ending any session or running `/compact`, complete these steps in order.
 
 ### Tier 2 — When Authorities Change
 
-4. **`AUTH/CHANGELOG.md`** — Add entry if this session changed authority files:
+5. **`AUTH/CHANGELOG.md`** — Add entry if this session changed authority files:
    - New authorities created, registry updates, schema changes
    - Format: `## YYYY-MM-DD | commit_sha | one-line summary`
    - Skip for: docs-only commits, formatting changes
    - One entry per logical change (not per commit)
 
-5. **`AUTH/TRAVEL_AUTHORITIES_INDEX.md`** — Update if:
+6. **`AUTH/TRAVEL_AUTHORITIES_INDEX.md`** — Update if:
    - New authority files were created (add to index table)
    - Authority paths changed
    - Do NOT update for edits to existing authorities
@@ -75,11 +81,12 @@ After completing all steps, print to screen:
 
 ```
 --- SESSION CLOSE RECEIPT ---
-agent_state.md: UPDATED | NO CHANGES
-known_gotchas:  ADDED "<one-line>" | NONE
-CLAUDE.md:      UPDATED "<what changed>" | NO CHANGES
-Tier 2 files:   UPDATED "<which>" | N/A
-Commit:         <sha> | NO COMMIT
+agent_state.md:    UPDATED | NO CHANGES
+living_record.md:  UPDATED | NO CHANGES | SKIPPED (no progress)
+known_gotchas:     ADDED "<one-line>" | NONE
+CLAUDE.md:         UPDATED "<what changed>" | NO CHANGES
+Tier 2 files:      UPDATED "<which>" | N/A
+Commit:            <sha> | NO COMMIT
 ---
 ```
 
