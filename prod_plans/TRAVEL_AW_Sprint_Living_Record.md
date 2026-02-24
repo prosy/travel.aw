@@ -59,7 +59,7 @@ Sprint levers:
 | Story | Description | Status | Commit(s) | Notes |
 |---:|---|---|---|---|
 | B1 | StopCrabs Supabase investigation | ✅ Complete | — | No Supabase dep; paused project is for web app |
-| B2 | Fork NanoClaw → prosy/nanoclaw | ⏳ Deferred | — | Mechanical, non-blocking |
+| B2 | Fork NanoClaw → prosy/nanoclaw | ✅ Complete | `593344d` | Fork live, build passes, 375/378 tests pass (3 pre-existing upstream failures) |
 | B3 | Skills repo + StopCrabs CI gate | ✅ Complete | `b738498` | prosy/travel-aw-skills, 37 DSAL rules |
 | B4 | Travel-specific rules (TRAVEL-001/002/003) | ✅ Complete | `c86e17f` | 3 rules, 4 fixtures, CI job added |
 
@@ -233,6 +233,19 @@ Sprint levers:
 **Issues caught during execution (by CC)**
 - StopCrabs has a packaging bug: `data/` directory is in sdist include but not in wheel targets. `Path(__file__)`-based resolution only works with editable installs or running from repo checkout. Should be fixed upstream.
 
+### 2026-02-24 — Session 4: M0-B2 Fork NanoClaw
+**What happened**
+- Forked `qwibitai/nanoclaw` (MIT, 13.4K stars) → `prosy/nanoclaw`.
+- Added fork notice to README.md, upstream remote auto-configured by `gh repo clone`.
+- Build verification: `tsc` compiles clean, 375/378 vitest tests pass. 3 failures in `fetch-upstream.test.ts` are pre-existing (test assumes `origin` points to `qwibitai/nanoclaw`, but on a fork it points to `prosy/nanoclaw`).
+- **M0-B2 complete. All 4 M0 stories now done (B1–B4).**
+
+**Commits (prosy/nanoclaw repo)**
+
+| SHA | Description |
+|-----|-------------|
+| `593344d` | feat(m0-b2): fork NanoClaw to prosy/nanoclaw |
+
 ---
 
 ## 6) Decisions (all resolved)
@@ -294,7 +307,7 @@ Sprint levers:
 
 ## 10) Abbreviations / future work (explicit list)
 - ~~WP-3 query cookbook~~ ✅ Complete (Track A MVP done)
-- ~~M0 agent foundation~~ (Track C) — B1 ✅, B3 ✅, B4 ✅, B2 deferred (NanoClaw fork — mechanical), DoD PR #1 submitted (2/3 gates proven in CI, StopCrabs needs PyPI fix)
+- ~~M0 agent foundation~~ (Track C) — B1 ✅, B2 ✅, B3 ✅, B4 ✅, DoD PR #1 proven (all 3 CI gates working)
 - Track B security hardening (B1–B6 from Combined PRD A20)
 - Formalize dual-agent workflow as a repeatable process doc
 - Add pre-commit guardrail preventing direct edits to locked registries without DD entry
