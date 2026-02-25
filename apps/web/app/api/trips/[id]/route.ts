@@ -25,15 +25,24 @@ export async function GET(
       return NextResponse.json({ error: 'Trip not found' }, { status: 404 });
     }
 
-    // Check access: owner, has userId match, or is a member
-    const hasAccess = user && (
-      trip.userId === user.id ||
-      trip.members.some(m => m.userId === user.id && m.acceptedAt)
-    );
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    // For now, allow public access to trips without userId (legacy/orphaned trips)
-    // This enables the claim flow for existing data
-    if (!hasAccess && trip.userId !== null) {
+    // Orphan trips (userId=null) are not publicly readable — require a claim flow (out of scope)
+    if (trip.userId === null) {
+      return NextResponse.json(
+        { error: 'This trip has no owner. Contact support to claim it.' },
+        { status: 403 }
+      );
+    }
+
+    // Check access: owner or accepted member
+    const hasAccess =
+      trip.userId === user.id ||
+      trip.members.some(m => m.userId === user.id && m.acceptedAt);
+
+    if (!hasAccess) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 

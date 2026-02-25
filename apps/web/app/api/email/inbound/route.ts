@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/app/_lib/prisma';
 
+const MAX_PAYLOAD_BYTES = parseInt(
+  process.env.WEBHOOK_MAX_PAYLOAD_BYTES || '10485760',
+  10
+); // default 10MB
+const MAX_FIELD_BYTES = 1_048_576; // 1MB per text field
+
 /**
  * SendGrid-style inbound email payload (subset of fields we care about).
  * See: https://docs.sendgrid.com/for-developers/parsing-email/setting-up-the-inbound-parse-webhook
@@ -38,15 +44,54 @@ function extractName(raw: string | undefined): string {
   return match ? match[1].replace(/^["']|["']$/g, '').trim() : '';
 }
 
+/** Truncate a string field to maxBytes, logging if truncation occurs */
+function truncateField(value: string | null, fieldName: string): string | null {
+  if (!value) return null;
+  if (value.length <= MAX_FIELD_BYTES) return value;
+  console.warn(
+    `Webhook: truncating ${fieldName} from ${value.length} to ${MAX_FIELD_BYTES} bytes`
+  );
+  return value.slice(0, MAX_FIELD_BYTES);
+}
+
 /**
  * POST /api/email/inbound
  *
- * Accepts a SendGrid-style inbound email payload:
- * 1. Stores the raw payload in InboundEmail
- * 2. Creates a TripItem (type="note") with evidence.kind=email
- *    linked to the first available trip (or none if no trips exist)
+ * Accepts a SendGrid-style inbound email payload.
+ * Requires WEBHOOK_EMAIL_SECRET via Authorization: Bearer header.
+ * Stores the raw payload in InboundEmail (no auto-linking to trips).
  */
 export async function POST(request: NextRequest) {
+  // FIX-1: Shared secret authentication (before any payload parsing)
+  const secret = process.env.WEBHOOK_EMAIL_SECRET;
+  if (!secret) {
+    return NextResponse.json(
+      { error: 'Webhook not configured' },
+      { status: 503 }
+    );
+  }
+
+  const authHeader = request.headers.get('authorization') ?? '';
+  const token = authHeader.startsWith('Bearer ')
+    ? authHeader.slice(7)
+    : '';
+
+  if (!token || token !== secret) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // FIX-3: Payload size check via Content-Length header
+  const contentLength = parseInt(
+    request.headers.get('content-length') ?? '0',
+    10
+  );
+  if (contentLength > MAX_PAYLOAD_BYTES) {
+    return NextResponse.json(
+      { error: 'Payload too large' },
+      { status: 413 }
+    );
+  }
+
   let body: InboundPayload;
 
   try {
@@ -84,17 +129,17 @@ export async function POST(request: NextRequest) {
   const receivedAt = new Date();
 
   try {
-    // 1. Store raw inbound email
+    // Store raw inbound email (no auto-linking — linkedTripId stays null)
     const inboundEmail = await prisma.inboundEmail.create({
       data: {
         messageId,
         from: fromEmail,
         to: extractEmail(toRaw) || 'inbox@travel.aw',
         subject,
-        bodyText: textBody,
-        bodyHtml: htmlBody,
-        rawHeaders,
-        attachments,
+        bodyText: truncateField(textBody, 'bodyText'),
+        bodyHtml: truncateField(htmlBody, 'bodyHtml'),
+        rawHeaders: truncateField(rawHeaders, 'rawHeaders'),
+        attachments: truncateField(attachments, 'attachments'),
         extractionStatus: 'completed',
         receivedAt,
         processedAt: new Date(),
@@ -107,55 +152,11 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // 2. Find the first trip to link to (safe default)
-    const trip = await prisma.trip.findFirst({
-      orderBy: { updatedAt: 'desc' },
-    });
-
-    let tripItemId: string | null = null;
-
-    if (trip) {
-      // 3. Create a TripItem (type=note) with evidence.kind=email
-      const tripItem = await prisma.tripItem.create({
-        data: {
-          tripId: trip.id,
-          type: 'note',
-          title: subject || `Email from ${fromName || fromEmail}`,
-          description: textBody
-            ? textBody.length > 500
-              ? textBody.slice(0, 497) + '...'
-              : textBody
-            : null,
-          startDateTime: receivedAt,
-          status: 'pending',
-          // Store evidence reference in offerData as JSON
-          offerData: JSON.stringify({
-            evidence: {
-              kind: 'email',
-              inboundEmailId: inboundEmail.id,
-              from: fromEmail,
-              fromName,
-              subject,
-              receivedAt: receivedAt.toISOString(),
-            },
-          }),
-        },
-      });
-
-      tripItemId = tripItem.id;
-
-      // Update the inbound email with the linked trip
-      await prisma.inboundEmail.update({
-        where: { id: inboundEmail.id },
-        data: { linkedTripId: trip.id },
-      });
-    }
+    // TODO: implement user-initiated trip linking (requires sender→user resolution)
 
     return NextResponse.json({
       ok: true,
       inboundEmailId: inboundEmail.id,
-      tripItemId,
-      linkedTripId: trip?.id ?? null,
     });
   } catch (err) {
     // Unique constraint violation (duplicate messageId) → 409

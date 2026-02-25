@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/app/_lib/auth';
 import { prisma } from '@/app/_lib/prisma';
+import { encryptForDb, decryptFromDb, isEncryptionConfigured } from '@/app/_lib/encryption';
 
 export async function GET() {
   try {
     const authUser = await getCurrentUser();
     if (!authUser) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    if (!isEncryptionConfigured()) {
+      return NextResponse.json({ error: 'Encryption not configured' }, { status: 503 });
     }
 
     const contacts = await prisma.emergencyContact.findMany({
@@ -19,8 +24,12 @@ export async function GET() {
         id: contact.id,
         name: contact.name,
         relationship: contact.relationship,
-        phone: contact.phone, // Note: Should be encrypted in production
-        email: contact.email,
+        phone: contact.phoneIV
+          ? decryptFromDb(contact.phone, contact.phoneIV)
+          : contact.phone, // backwards compat: raw if no IV yet
+        email: contact.email && contact.emailIV
+          ? decryptFromDb(contact.email, contact.emailIV)
+          : contact.email,
         isPrimary: contact.isPrimary,
         notifyOnTripStart: contact.notifyOnTripStart,
         notifyOnDelay: contact.notifyOnDelay,
@@ -41,6 +50,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    if (!isEncryptionConfigured()) {
+      return NextResponse.json({ error: 'Encryption not configured' }, { status: 503 });
+    }
+
     const body = await request.json();
 
     // Validate required fields
@@ -59,13 +72,19 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Encrypt PII fields
+    const phoneEnc = encryptForDb(body.phone);
+    const emailEnc = body.email ? encryptForDb(body.email) : null;
+
     const contact = await prisma.emergencyContact.create({
       data: {
         userId: authUser.id,
         name: body.name,
         relationship: body.relationship,
-        phone: body.phone,
-        email: body.email ?? null,
+        phone: phoneEnc.encrypted,
+        phoneIV: phoneEnc.iv,
+        email: emailEnc?.encrypted ?? null,
+        emailIV: emailEnc?.iv ?? null,
         isPrimary: body.isPrimary ?? false,
         notifyOnTripStart: body.notifyOnTripStart ?? false,
         notifyOnDelay: body.notifyOnDelay ?? false,
@@ -77,8 +96,8 @@ export async function POST(request: NextRequest) {
         id: contact.id,
         name: contact.name,
         relationship: contact.relationship,
-        phone: contact.phone,
-        email: contact.email,
+        phone: body.phone, // return plaintext to the creating user
+        email: body.email ?? null,
         isPrimary: contact.isPrimary,
         notifyOnTripStart: contact.notifyOnTripStart,
         notifyOnDelay: contact.notifyOnDelay,

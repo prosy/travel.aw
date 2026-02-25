@@ -4,12 +4,44 @@ import { getCurrentUser } from '@/app/_lib/auth';
 import { anthropic, LOYALTY_PROGRAM_PARSE_PROMPT } from '@/app/_lib/anthropic';
 import type { PointsProgramType } from '@travel/contracts';
 
+// FIX-1: Configurable model
+const LLM_MODEL = process.env.LLM_MODEL || 'claude-sonnet-4-5-20250929';
+
+// FIX-2: Configurable size limits
+const MAX_IMAGE_BYTES = parseInt(process.env.LLM_MAX_IMAGE_BYTES || '5242880', 10); // 5MB
+const MAX_IMAGE_BASE64_CHARS = Math.ceil(MAX_IMAGE_BYTES * 4 / 3); // ~6.67M chars for 5MB
+const MAX_TEXT_CHARS = parseInt(process.env.LLM_MAX_TEXT_CHARS || '50000', 10);
+
+const VALID_TYPES: PointsProgramType[] = ['airline', 'hotel', 'car_rental', 'credit_card', 'other'];
+
 export interface ParsedProgram {
   programName: string;
   programType: PointsProgramType;
   accountNumber: string | null;
   membershipTier: string | null;
   notes: string | null;
+}
+
+/** Validate and strip a single parsed program object, returning null if invalid */
+function validateProgram(raw: unknown): ParsedProgram | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const obj = raw as Record<string, unknown>;
+
+  const programName = typeof obj.programName === 'string' ? obj.programName : '';
+  if (!programName) return null; // programName is required
+
+  const rawType = typeof obj.programType === 'string' ? obj.programType : '';
+  const programType = VALID_TYPES.includes(rawType as PointsProgramType)
+    ? (rawType as PointsProgramType)
+    : 'other';
+
+  return {
+    programName,
+    programType,
+    accountNumber: typeof obj.accountNumber === 'string' ? obj.accountNumber : null,
+    membershipTier: typeof obj.membershipTier === 'string' ? obj.membershipTier : null,
+    notes: typeof obj.notes === 'string' ? obj.notes : null,
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -29,6 +61,13 @@ export async function POST(request: NextRequest) {
       const text = formData.get('text') as string | null;
 
       if (file) {
+        // FIX-2: Check file size before converting to base64
+        if (file.size > MAX_IMAGE_BYTES) {
+          return NextResponse.json(
+            { error: `Image exceeds ${MAX_IMAGE_BYTES / 1_048_576}MB limit` },
+            { status: 413 }
+          );
+        }
         const buffer = await file.arrayBuffer();
         imageBase64 = Buffer.from(buffer).toString('base64');
       }
@@ -37,6 +76,22 @@ export async function POST(request: NextRequest) {
       const body = await request.json();
       imageBase64 = body.image || null;
       textInput = body.text || null;
+
+      // FIX-2: Check base64 image string length
+      if (imageBase64 && imageBase64.length > MAX_IMAGE_BASE64_CHARS) {
+        return NextResponse.json(
+          { error: `Image exceeds ${MAX_IMAGE_BYTES / 1_048_576}MB limit` },
+          { status: 413 }
+        );
+      }
+    }
+
+    // FIX-2: Check text input length
+    if (textInput && textInput.length > MAX_TEXT_CHARS) {
+      return NextResponse.json(
+        { error: `Text exceeds ${MAX_TEXT_CHARS.toLocaleString()} character limit` },
+        { status: 413 }
+      );
     }
 
     if (!imageBase64 && !textInput) {
@@ -82,9 +137,10 @@ export async function POST(request: NextRequest) {
       text: LOYALTY_PROGRAM_PARSE_PROMPT,
     });
 
-    // Call Claude
+    // FIX-1: Use configurable model
+    console.info(`points/parse: using model ${LLM_MODEL}`);
     const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5-20250929',
+      model: LLM_MODEL,
       max_tokens: 4096,
       messages: [
         {
@@ -104,38 +160,47 @@ export async function POST(request: NextRequest) {
     }
 
     // Parse JSON from response
-    let programs: ParsedProgram[];
+    let rawParsed: unknown;
     try {
       // Handle potential markdown code blocks
       let jsonText = textBlock.text.trim();
       if (jsonText.startsWith('```')) {
         jsonText = jsonText.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
       }
-      programs = JSON.parse(jsonText);
-    } catch (parseError) {
-      console.error('Failed to parse AI response:', textBlock.text);
+      rawParsed = JSON.parse(jsonText);
+    } catch {
+      // FIX-3: Log raw output server-side, return safe error to client
+      console.warn('points/parse: failed to parse model JSON output:', textBlock.text);
       return NextResponse.json(
-        { error: 'Failed to parse AI response', raw: textBlock.text },
-        { status: 500 }
+        { error: 'Failed to parse loyalty program data', code: 'PARSE_ERROR' },
+        { status: 422 }
       );
     }
 
-    // Validate and normalize
-    const validTypes: PointsProgramType[] = ['airline', 'hotel', 'car_rental', 'credit_card', 'other'];
-    programs = programs.map((p) => ({
-      programName: p.programName || 'Unknown Program',
-      programType: validTypes.includes(p.programType) ? p.programType : 'other',
-      accountNumber: p.accountNumber || null,
-      membershipTier: p.membershipTier || null,
-      notes: p.notes || null,
-    }));
+    // FIX-4: Validate and strip model output against schema
+    const rawArray = Array.isArray(rawParsed) ? rawParsed : [rawParsed];
+    const programs: ParsedProgram[] = [];
+
+    for (const item of rawArray) {
+      const validated = validateProgram(item);
+      if (validated) {
+        programs.push(validated);
+      }
+    }
+
+    if (programs.length === 0) {
+      console.warn('points/parse: model output had no valid programs:', JSON.stringify(rawParsed));
+      return NextResponse.json(
+        { error: 'Failed to parse loyalty program data', code: 'PARSE_ERROR' },
+        { status: 422 }
+      );
+    }
 
     return NextResponse.json({ programs });
   } catch (err) {
     console.error('POST /api/points/parse error:', err);
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Internal server error', details: errorMessage },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
