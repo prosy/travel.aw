@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/app/_lib/auth';
 import { prisma } from '@/app/_lib/prisma';
+import { encryptForDb, decryptFromDb, isEncryptionConfigured } from '@/app/_lib/encryption';
 
 type RouteParams = { params: Promise<{ id: string }> };
 
@@ -9,6 +10,10 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     const authUser = await getCurrentUser();
     if (!authUser) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    if (!isEncryptionConfigured()) {
+      return NextResponse.json({ error: 'Encryption not configured' }, { status: 503 });
     }
 
     const { id } = await params;
@@ -31,10 +36,16 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
+    // Decrypt full account number for single-resource view (owner only)
+    const decryptedAccountNumber = account.accountNumber && account.accountNumberIV
+      ? decryptFromDb(account.accountNumber, account.accountNumberIV)
+      : account.accountNumber; // backwards compat: raw if no IV yet
+
     return NextResponse.json({
       id: account.id,
       programType: account.programType,
       programName: account.programName,
+      accountNumber: decryptedAccountNumber,
       membershipTier: account.membershipTier,
       currentBalance: account.currentBalance,
       pendingPoints: account.pendingPoints,
@@ -85,12 +96,39 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     const body = await request.json();
 
+    // Encrypt updated account number if provided
+    let acctFields: {
+      accountNumber?: string | null;
+      accountNumberIV?: string | null;
+      accountNumberLast4?: string | null;
+    } = {};
+
+    if (body.accountNumber !== undefined) {
+      if (body.accountNumber && !isEncryptionConfigured()) {
+        return NextResponse.json({ error: 'Encryption not configured' }, { status: 503 });
+      }
+      if (body.accountNumber) {
+        const enc = encryptForDb(body.accountNumber);
+        acctFields = {
+          accountNumber: enc.encrypted,
+          accountNumberIV: enc.iv,
+          accountNumberLast4: body.accountNumber.slice(-4),
+        };
+      } else {
+        acctFields = {
+          accountNumber: null,
+          accountNumberIV: null,
+          accountNumberLast4: null,
+        };
+      }
+    }
+
     const account = await prisma.pointsAccount.update({
       where: { id },
       data: {
         programType: body.programType ?? existing.programType,
         programName: body.programName ?? existing.programName,
-        accountNumber: body.accountNumber !== undefined ? body.accountNumber : existing.accountNumber,
+        ...acctFields,
         membershipTier: body.membershipTier !== undefined ? body.membershipTier : existing.membershipTier,
         currentBalance: body.currentBalance ?? existing.currentBalance,
         pendingPoints: body.pendingPoints ?? existing.pendingPoints,
@@ -106,10 +144,14 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       },
     });
 
+    // Return masked in PATCH response (consistent with list view)
     return NextResponse.json({
       id: account.id,
       programType: account.programType,
       programName: account.programName,
+      accountNumber: account.accountNumberLast4
+        ? `••••${account.accountNumberLast4}`
+        : null,
       membershipTier: account.membershipTier,
       currentBalance: account.currentBalance,
       pendingPoints: account.pendingPoints,

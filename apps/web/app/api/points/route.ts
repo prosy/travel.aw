@@ -1,6 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/app/_lib/auth';
 import { prisma } from '@/app/_lib/prisma';
+import { encryptForDb, isEncryptionConfigured } from '@/app/_lib/encryption';
+
+/** Encrypt an account number, returning ciphertext + IV + last4 */
+function encryptAccountNumber(plain: string): {
+  accountNumber: string;
+  accountNumberIV: string;
+  accountNumberLast4: string;
+} {
+  const enc = encryptForDb(plain);
+  return {
+    accountNumber: enc.encrypted,
+    accountNumberIV: enc.iv,
+    accountNumberLast4: plain.slice(-4),
+  };
+}
 
 export async function GET() {
   try {
@@ -19,6 +34,10 @@ export async function GET() {
         id: account.id,
         programType: account.programType,
         programName: account.programName,
+        // Masked: show last4 only, never decrypted full number in list
+        accountNumber: account.accountNumberLast4
+          ? `••••${account.accountNumberLast4}`
+          : null,
         membershipTier: account.membershipTier,
         currentBalance: account.currentBalance,
         pendingPoints: account.pendingPoints,
@@ -55,6 +74,7 @@ function mapAccountToResponse(account: {
   id: string;
   programType: string;
   programName: string;
+  accountNumberLast4: string | null;
   membershipTier: string | null;
   currentBalance: number;
   pendingPoints: number;
@@ -70,6 +90,9 @@ function mapAccountToResponse(account: {
     id: account.id,
     programType: account.programType,
     programName: account.programName,
+    accountNumber: account.accountNumberLast4
+      ? `••••${account.accountNumberLast4}`
+      : null,
     membershipTier: account.membershipTier,
     currentBalance: account.currentBalance,
     pendingPoints: account.pendingPoints,
@@ -92,6 +115,15 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
+    // Fail closed if encryption not configured and account numbers are provided
+    const hasAccountNumber = body.programs
+      ? body.programs.some((p: ProgramInput) => p.accountNumber)
+      : !!body.accountNumber;
+
+    if (hasAccountNumber && !isEncryptionConfigured()) {
+      return NextResponse.json({ error: 'Encryption not configured' }, { status: 503 });
+    }
+
     // Check if bulk import (array of programs)
     if (body.programs && Array.isArray(body.programs)) {
       const programs: ProgramInput[] = body.programs;
@@ -106,15 +138,18 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // Bulk create
+      // Bulk create with encrypted account numbers
       const accounts = await prisma.$transaction(
-        programs.map((p) =>
-          prisma.pointsAccount.create({
+        programs.map((p) => {
+          const acctEnc = p.accountNumber ? encryptAccountNumber(p.accountNumber) : null;
+          return prisma.pointsAccount.create({
             data: {
               userId: authUser.id,
               programType: p.programType,
               programName: p.programName,
-              accountNumber: p.accountNumber ?? null,
+              accountNumber: acctEnc?.accountNumber ?? null,
+              accountNumberIV: acctEnc?.accountNumberIV ?? null,
+              accountNumberLast4: acctEnc?.accountNumberLast4 ?? null,
               membershipTier: p.membershipTier ?? null,
               currentBalance: p.currentBalance ?? 0,
               pendingPoints: p.pendingPoints ?? 0,
@@ -124,8 +159,8 @@ export async function POST(request: NextRequest) {
               nextFeeDate: p.nextFeeDate ? new Date(p.nextFeeDate) : null,
               notes: p.notes ?? null,
             },
-          })
-        )
+          });
+        })
       );
 
       return NextResponse.json(
@@ -142,12 +177,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const acctEnc = body.accountNumber ? encryptAccountNumber(body.accountNumber) : null;
+
     const account = await prisma.pointsAccount.create({
       data: {
         userId: authUser.id,
         programType: body.programType,
         programName: body.programName,
-        accountNumber: body.accountNumber ?? null,
+        accountNumber: acctEnc?.accountNumber ?? null,
+        accountNumberIV: acctEnc?.accountNumberIV ?? null,
+        accountNumberLast4: acctEnc?.accountNumberLast4 ?? null,
         membershipTier: body.membershipTier ?? null,
         currentBalance: body.currentBalance ?? 0,
         pendingPoints: body.pendingPoints ?? 0,

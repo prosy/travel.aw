@@ -280,8 +280,10 @@ model PointsAccount {
 
   programType     String   // airline, hotel, credit_card, other
   programName     String   // "Delta SkyMiles", "Marriott Bonvoy", etc.
-  accountNumber   String?  // Encrypted
-  membershipTier  String?  // Gold, Platinum, etc.
+  accountNumber      String?  // Encrypted (AES-256-GCM ciphertext)
+  accountNumberIV    String?  // IV for accountNumber decryption
+  accountNumberLast4 String?  // Last 4 chars for masked display
+  membershipTier     String?  // Gold, Platinum, etc.
 
   currentBalance  Int      @default(0)
   pendingPoints   Int      @default(0)
@@ -379,8 +381,10 @@ model EmergencyContact {
 
   name         String
   relationship String   // spouse, parent, friend, etc.
-  phone        String   // Encrypted
-  email        String?  // Encrypted
+  phone        String   // Encrypted (AES-256-GCM ciphertext)
+  phoneIV      String?  // IV for phone decryption
+  email        String?  // Encrypted (AES-256-GCM ciphertext)
+  emailIV      String?  // IV for email decryption
   isPrimary    Boolean  @default(false)
 
   // Auto-notify settings
