@@ -32,15 +32,18 @@ Rule: **Append-only mindset** (edit for clarity, but preserve history via dated 
 
 ---
 
-## 2) Current diagnosis (end of 2026-02-23 session)
-- **Track A is 1 WP from MVP complete.** WP-0/1/2 done. WP-3 (query cookbook) is the only remaining deliverable.
-- **Track C has not started.** M0 stories (B1–B4) are defined but unexecuted. No cross-dependency with WP-3.
-- **Track B is scoped but deferred.** Combined PRD (A20) defines B1–B6 security requirements. Independent of Track A/C.
+## 2) Current diagnosis (end of 2026-02-24 session 6)
+- **Track A is MVP complete.** WP-0/1/2/3 done (59 nodes, 118 edges, 5 deterministic queries).
+- **Track C (M0) is fully closed.** B1–B4 done. DoD proven via PR #1 (3 CI gates discriminating correctly). PR #1 pending merge.
+- **Track B is complete.** All 6 security hardening requirements (B1–B6) implemented. PR #4 submitted, build passing. Pending: merge + Auth0 e2e verification + encryption migration on production data.
+- **Session 5 Seattle scaffold** exists in `apps/web/src/` (prosy/travel.aw) — intentional Codex test, outside PRD scope. Not tracked as sprint work.
 
-Sprint levers:
-1. WP-3 query cookbook → completes Track A MVP
-2. M0 agent foundation → parallel, unblocks M1 first skills
-3. Track B security → independent, highest shipped-value potential
+Sprint levers (remaining):
+1. Merge PR #1 (travel-aw-skills, M0 DoD) — mechanical
+2. Merge PR #4 (travel.aw, Track B) — requires Auth0 e2e verification first
+3. Production deploy: set env vars (`WEBHOOK_EMAIL_SECRET`, `ENCRYPTION_KEY`), run encryption migration
+4. M1 first skills — unblocked by M0 completion
+5. WP-4 graph export — optional post-MVP
 
 ---
 
@@ -64,14 +67,13 @@ Sprint levers:
 | B4 | Travel-specific rules (TRAVEL-001/002/003) | ✅ Complete | `c86e17f` | 3 rules, 4 fixtures, CI job added |
 
 ### Track B — V1 Web App Security
-| Req | Description | Status | Notes |
-|---:|---|---|---|
-| B1 | Auth & authz consistency | ⏳ Not started | All user routes gated |
-| B2 | Trips with userId=null | ⏳ Not started | No public read default |
-| B3 | Inbound email webhook auth | ⏳ Not started | Shared secret + payload limits |
-| B4 | PII encryption at rest | ⏳ Not started | IV management, fail closed |
-| B5 | LLM endpoint hardening | ⏳ Not started | Size limits, schema validation |
-| B6 | Repo drift / CI alignment | ⏳ Not started | Middleware + pnpm version |
+| Req | Description | Status | Commit(s) | Notes |
+|---:|---|---|---|---|
+| B1+B2 | Auth & authz + null userId trips | ✅ Complete | `bdb1d4b` | 3 gaps fixed, media marked intentionally public |
+| B3 | Inbound email webhook auth | ✅ Complete | `086bd12` | Shared secret, auto-link removed, 10MB limit |
+| B4 | PII encryption at rest | ✅ Complete | `30ad68f` | Contacts + points encrypted, migration script created |
+| B5 | LLM endpoint hardening | ✅ Complete | `f587cab` | Configurable model, size limits, safe errors, schema validation |
+| B6 | Repo drift / CI alignment | ✅ Complete | `568648e` | proxy.ts→middleware.ts, deploy docs fixed |
 
 **Legend:** ✅ complete · ⏳ next/pending · 🧪 in progress · 🛑 blocked
 
@@ -274,6 +276,44 @@ Sprint levers:
 - Local runtime requires two services running together (`Seattle_wikidata` + `apps/web`) and using port `3010` when `3000` is occupied.
 - Sandbox-restricted runs can fail on `tsx` IPC; local smoke tests require unsandboxed terminal execution.
 
+### 2026-02-24 — Session 6: Track B Security Hardening (all stories)
+**What happened**
+- Executed all 5 Track B stories (B6 → B1B2 → B3 → B5 → B4) via CC on `track-b-security` branch.
+- Codex recon task ran first (good output — line numbers, explicit missing-file calls). Second Codex run (B4/B6) correctly gated on repo path mismatch (prosy/travel.aw vs augmented-worlds/travel.aw). Redirected to correct repo.
+- CC completed all stories. Build passed at every checkpoint. Zero files outside file plans.
+- PR #4 submitted: https://github.com/prosy/travel.aw/pull/4
+
+**Commits (augmented-worlds/travel.aw repo, track-b-security branch)**
+
+| SHA | Description |
+|-----|-------------|
+| `568648e` | fix(track-b): B6 — rename proxy.ts to middleware.ts, align packageManager |
+| `bdb1d4b` | fix(track-b): B1B2 — auth consistency + null userId trips |
+| `086bd12` | fix(track-b): B3 — webhook auth + safe storage + payload limits |
+| `f587cab` | fix(track-b): B5 — LLM endpoint hardening |
+| `30ad68f` | fix(track-b): B4 — PII encryption at rest for contacts + points |
+
+**Deviations from instructions**
+- B3: `.env.example` was gitignored — `git add -f` used (template values, not secrets)
+- B4: `prisma db push` instead of `prisma migrate dev` (SQLite dev DB — production needs real migration)
+- B4: Stray branch created during prisma op — resolved via fast-forward merge
+
+**Issues caught during execution**
+- Codex correctly stopped when file paths didn't match repo (prosy/travel.aw has Seattle scaffold, not V1 app). Redirected to augmented-worlds/travel.aw.
+- `proxy.ts` was never being invoked by Next.js — middleware was effectively disabled since initial commit. Now active.
+
+**Post-merge actions required**
+1. Set `WEBHOOK_EMAIL_SECRET` in production/staging
+2. Run encryption migration: `npx tsx scripts/migrate-encrypt-existing.ts --execute`
+3. Verify Auth0 login → callback → session → protected route flow (middleware now active)
+4. Monitor for 503s on contacts/points routes if `ENCRYPTION_KEY` not set
+
+**Orchestrator notes**
+- ✅ Codex recon-then-execute pattern works well. Recon report with line numbers prevented the M0-era "phantom file" errors entirely.
+- ✅ Codex gating on path mismatch is correct behavior — proves the "STOP and report" instruction works.
+- ⚠️ Two-repo problem: V1 app lives in augmented-worlds/travel.aw, ecosystem/governance in prosy/travel.aw. Agent prompts must specify full paths.
+- 📌 Next: merge PR #1 (M0 DoD) + PR #4 (Track B). Then M1 first skills or WP-4.
+
 ---
 
 ## 6) Decisions (all resolved)
@@ -304,6 +344,9 @@ Sprint levers:
 - **RISK-4:** Validator draft compatibility — ajv@8 doesn't natively support JSON Schema 2020-12. **Mitigation:** use draft-07 for all schemas. Documented in known gotchas.
 - **RISK-5:** WP-3 query determinism — MVP queries must be byte-identical across runs. `graphology` or custom traversal must use stable sort at every step. **Mitigation:** determinism test (run twice, diff) is mandatory acceptance criterion.
 - **RISK-6:** Agent prompt accuracy — B4 agent prompt referenced 4 non-existent capability codes (C-PAYMENT, C-FLIGHT-BOOKING, C-HOTEL-BOOKING, C-CAR-RENTAL-BOOKING). Only C-BOOKING-TXN exists in locked A5. **Mitigation:** always cross-check agent prompt references against locked registries before implementing.
+- **RISK-7:** Middleware was never running before B6. Enabling it may surface auth issues in routes that were previously "accidentally public." **Mitigation:** Auth0 e2e verification before merging PR #4 to main.
+- **RISK-8:** `prisma db push` used for dev — production migration needs `prisma migrate dev`. **Mitigation:** tracked in post-merge actions. Migration script has dry-run mode.
+- **RISK-9:** Two-repo split (prosy/travel.aw for governance, augmented-worlds/travel.aw for V1 app) causes agent path confusion. **Mitigation:** all agent prompts must specify full absolute repo path. Codex gating proves this works.
 
 ---
 
@@ -334,13 +377,17 @@ Sprint levers:
 ---
 
 ## 10) Abbreviations / future work (explicit list)
-- ~~WP-3 query cookbook~~ ✅ Complete (Track A MVP done)
-- ~~M0 agent foundation~~ (Track C) — B1 ✅, B2 ✅, B3 ✅, B4 ✅, DoD PR #1 proven (all 3 CI gates working)
-- Track B security hardening (B1–B6 from Combined PRD A20)
+- ~~WP-3 query cookbook~~ ✅ Complete
+- ~~M0 agent foundation~~ ✅ Complete (B1–B4, DoD PR #1 proven)
+- ~~Track B security hardening~~ ✅ Complete (B1–B6, PR #4 submitted)
+- Merge PR #1 (travel-aw-skills, M0 DoD)
+- Merge PR #4 (travel.aw, Track B) — requires Auth0 e2e verification
+- Production deploy: env vars + encryption migration
+- M1: First travel skills (flight-search, hotel-search)
+- WP-4 graph export (post-MVP optional)
 - Formalize dual-agent workflow as a repeatable process doc
 - Add pre-commit guardrail preventing direct edits to locked registries without DD entry
-- ~~Investigate graphology vs custom TS traversal for WP-3~~ ✅ DD-11: custom maps
-- WP-4 graph export (post-MVP optional — Neo4j/CSV, browse UI)
+- Consolidate two-repo split or document the boundary formally
 
 ---
 End.

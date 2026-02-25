@@ -1,7 +1,7 @@
 # TRAVEL.aw
 
 > **Claude Code reads this file automatically at session start.**
-> Last updated: 2026-02-23 (WP-0 bootstrap: authorities, registries, spec, glossary, decisions)
+> Last updated: 2026-02-24 (Track B security hardening complete, PR #4 submitted)
 
 ---
 
@@ -43,8 +43,8 @@
 
 ## Current State (2026-02-24)
 
-**Phase:** Track A MVP done, M0 Agent Foundation done
-**Status:** WP-0 bootstrap, WP-1 schemas/validation, WP-2 seed dataset, WP-3 query cookbook all complete. 59 nodes, 118 edges, 5 deterministic queries, validator passes. M0 complete: B1 (StopCrabs investigation) ✅, B2 (NanoClaw fork) ✅, B3 (skills repo + CI) ✅, B4 (travel rules) ✅, DoD proven via PR #1. Seattle deterministic planning scaffold added (`data/seattle`, `tools/seattle_categories`, `apps/web` Seattle pages + APIs, stored-query sports flow).
+**Phase:** Track A MVP done, M0 Agent Foundation done, Track B Security done
+**Status:** WP-0 bootstrap, WP-1 schemas/validation, WP-2 seed dataset, WP-3 query cookbook all complete. 59 nodes, 118 edges, 5 deterministic queries, validator passes. M0 complete: B1–B4 ✅, DoD proven via PR #1. Track B complete: all 6 security requirements (B1–B6) implemented on `track-b-security` branch in `augmented-worlds/travel.aw`, PR #4 submitted. Seattle deterministic planning scaffold added (`data/seattle`, `tools/seattle_categories`, `apps/web` Seattle pages + APIs, stored-query sports flow).
 
 ### Authorities Created
 
@@ -156,3 +156,5 @@ travel.aw/
 - StopCrabs `none_of` rules flag absence of safety patterns in any Python file — template skills must include `ALLOWED_PATHS`, `ALLOWED_DOMAINS`, `validate_checksum()` to pass clean.
 - StopCrabs is NOT on public PyPI and has a wheel packaging bug (`data/` not included). CI must use `git clone + pip install -e` (editable install) — normal `pip install git+...` crashes with `FileNotFoundError: Data directory not found`.
 - Next.js 16 app routes expose `searchParams` as async in server components — access without awaiting causes runtime warning/errors. Resolve params first, then read fields.
+- V1 web app lives in `augmented-worlds/travel.aw`, ecosystem/governance in `prosy/travel.aw` — agent prompts must specify full absolute repo path or agents will edit the wrong repo.
+- Next.js only auto-invokes middleware from a file named `middleware.ts` (or `.js`) at the app root — any other name (e.g., `proxy.ts`) is silently ignored. The V1 app had no running middleware until B6 fixed this.
