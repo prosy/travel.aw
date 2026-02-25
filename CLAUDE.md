@@ -1,7 +1,7 @@
 # TRAVEL.aw
 
 > **Claude Code reads this file automatically at session start.**
-> Last updated: 2026-02-24 (Track B security hardening complete, PR #4 submitted)
+> Last updated: 2026-02-25 (Session close update: Track B B4/B6 completion reports + migration gotcha)
 
 ---
 
@@ -158,3 +158,4 @@ travel.aw/
 - Next.js 16 app routes expose `searchParams` as async in server components — access without awaiting causes runtime warning/errors. Resolve params first, then read fields.
 - V1 web app lives in `augmented-worlds/travel.aw`, ecosystem/governance in `prosy/travel.aw` — agent prompts must specify full absolute repo path or agents will edit the wrong repo.
 - Next.js only auto-invokes middleware from a file named `middleware.ts` (or `.js`) at the app root — any other name (e.g., `proxy.ts`) is silently ignored. The V1 app had no running middleware until B6 fixed this.
+- Prisma `migrate dev` can fail with `P3006` on legacy SQLite DBs without migration history — baseline migrations first, or use `migrate diff`/`db execute` only for local verification.
