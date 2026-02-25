@@ -63,8 +63,8 @@ TURSO_AUTH_TOKEN="YOUR_TOKEN"
 # Run dev server
 pnpm dev
 
-# Verify data loads from Turso
-curl http://localhost:3000/api/trips
+# Verify data loads from Turso (public endpoint, no auth required)
+curl http://localhost:3000/api/support/faq
 ```
 
 ## 7. Deploy to Vercel
@@ -106,11 +106,11 @@ vercel --prod
 ## Verify Deployment
 
 ```bash
-# Replace with your Vercel URL
-curl https://your-app.vercel.app/api/trips
+# Replace with your Vercel URL (public endpoint, no auth required)
+curl https://your-app.vercel.app/api/support/faq
 ```
 
-Should return JSON with Tokyo Adventure and Italian Summer trips.
+Should return JSON with FAQ articles. Auth-protected endpoints (e.g., `/api/trips`) require a valid session — test those via the browser after logging in.
 
 ---
 
