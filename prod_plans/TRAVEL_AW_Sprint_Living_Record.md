@@ -34,16 +34,15 @@ Rule: **Append-only mindset** (edit for clarity, but preserve history via dated 
 
 ## 2) Current diagnosis (end of 2026-02-24 session 6)
 - **Track A is MVP complete.** WP-0/1/2/3 done (59 nodes, 118 edges, 5 deterministic queries).
-- **Track C (M0) is fully closed.** B1–B4 done. DoD proven via PR #1 (3 CI gates discriminating correctly). PR #1 pending merge.
-- **Track B is complete.** All 6 security hardening requirements (B1–B6) implemented. PR #4 submitted, build passing. Pending: merge + Auth0 e2e verification + encryption migration on production data.
+- **Track C (M0) is fully closed.** B1–B4 done. DoD proven via PR #1 (3 CI gates discriminating). PR #1 merged.
+- **Track B is complete.** All 6 security hardening requirements (B1–B6) implemented and merged via PR #4. Post-merge fix applied (B6 proxy.ts revert, `e21692c`).
+- **Three human gates remain:** Auth0 e2e browser test, production env vars, encryption migration.
 - **Session 5 Seattle scaffold** exists in `apps/web/src/` (prosy/travel.aw) — intentional Codex test, outside PRD scope. Not tracked as sprint work.
 
 Sprint levers (remaining):
-1. Merge PR #1 (travel-aw-skills, M0 DoD) — mechanical
-2. Merge PR #4 (travel.aw, Track B) — requires Auth0 e2e verification first
-3. Production deploy: set env vars (`WEBHOOK_EMAIL_SECRET`, `ENCRYPTION_KEY`), run encryption migration
-4. M1 first skills — unblocked by M0 completion
-5. WP-4 graph export — optional post-MVP
+1. Human gates: Auth0 e2e test → set production env vars → run encryption migration
+2. M1: First travel skills (flight-search, hotel-search) — unblocked by M0
+3. WP-4 graph export — optional post-MVP
 
 ---
 
@@ -73,7 +72,7 @@ Sprint levers (remaining):
 | B3 | Inbound email webhook auth | ✅ Complete | `086bd12` | Shared secret, auto-link removed, 10MB limit |
 | B4 | PII encryption at rest | ✅ Complete | `30ad68f` | Contacts + points encrypted, migration script created |
 | B5 | LLM endpoint hardening | ✅ Complete | `f587cab` | Configurable model, size limits, safe errors, schema validation |
-| B6 | Repo drift / CI alignment | ✅ Complete | `568648e` | proxy.ts→middleware.ts, deploy docs fixed |
+| B6 | Repo drift / CI alignment | ✅ Complete | `568648e`, `e21692c` | Matcher config fixed, DEPLOY.md fixed, proxy.ts reverted (Next.js 16 convention) |
 
 **Legend:** ✅ complete · ⏳ next/pending · 🧪 in progress · 🛑 blocked
 
@@ -314,6 +313,50 @@ Sprint levers (remaining):
 - ⚠️ Two-repo problem: V1 app lives in augmented-worlds/travel.aw, ecosystem/governance in prosy/travel.aw. Agent prompts must specify full paths.
 - 📌 Next: merge PR #1 (M0 DoD) + PR #4 (Track B). Then M1 first skills or WP-4.
 
+### 2026-02-24 — Session 6: Track B Security Hardening (all stories)
+**What happened**
+- Executed all 5 Track B stories (B6 → B1B2 → B3 → B5 → B4) via CC on `track-b-security` branch.
+- Codex recon task ran first (good output — line numbers, explicit missing-file calls). Codex B4/B6 correctly gated on repo path mismatch, redirected to correct repo.
+- CC completed all stories. Build passed at every checkpoint. Zero files outside file plans.
+- PR #4 merged. PR #1 (M0 DoD, travel-aw-skills) also merged.
+- Post-merge fix: B6 proxy.ts revert (`e21692c`). Next.js 16 uses `proxy.ts` not `middleware.ts` — CC had renamed it based on old convention. Codex B6 report caught the deprecation warning. Confirmed and reverted.
+
+**Commits (augmented-worlds/travel.aw repo)**
+
+| SHA | Description |
+|-----|-------------|
+| `568648e` | fix(track-b): B6 — matcher config, DEPLOY.md fixes |
+| `bdb1d4b` | fix(track-b): B1B2 — auth consistency + null userId trips |
+| `086bd12` | fix(track-b): B3 — webhook auth + safe storage + payload limits |
+| `f587cab` | fix(track-b): B5 — LLM endpoint hardening |
+| `30ad68f` | fix(track-b): B4 — PII encryption at rest for contacts + points |
+| `e21692c` | fix(track-b): B6 revert — use proxy.ts per Next.js 16 convention |
+
+**Codex parallel results**
+
+| Branch | Codex Finding | Value Added |
+|--------|--------------|-------------|
+| `track-b-b6-repo-drift` | `packageManager` field missing; Next.js 16 deprecation warning on `middleware.ts` | Caught the proxy.ts revert need |
+| `track-b-b4-encryption` | Route encryption already done by CC; migration SQL needed manual scoping (P3006 shadow DB failure) | Migration SQL cleanup, script dry-run validation (37 accounts found) |
+
+**Deviations from instructions**
+- B3: `.env.example` was gitignored — `git add -f` used (template values, not secrets)
+- B4: `prisma db push` used instead of `prisma migrate dev` (SQLite dev DB)
+- B6: proxy.ts renamed to middleware.ts then reverted — Next.js 16 uses proxy.ts
+
+**Post-merge human gates (not yet completed)**
+1. Auth0 e2e browser test (pnpm dev → login → protected route → public route)
+2. Set production env vars: `WEBHOOK_EMAIL_SECRET`, `ENCRYPTION_KEY`, `LLM_MODEL` (optional)
+3. Run encryption migration: `npx tsx scripts/migrate-encrypt-existing.ts --execute`
+
+**Orchestrator notes**
+- ✅ Codex recon-then-execute pattern works. Recon report with line numbers prevented M0-era "phantom file" errors.
+- ✅ Codex gating on path mismatch is correct behavior — proves "STOP and report" instruction works.
+- ✅ Codex parallel execution surfaced the Next.js 16 convention issue that CC missed. Dual-agent cross-checking has value.
+- ⚠️ Two-repo problem: V1 app in augmented-worlds/travel.aw, ecosystem/governance in prosy/travel.aw. All agent prompts must specify full absolute repo path.
+- ⚠️ Next.js 16 convention change: `proxy.ts` replaces `middleware.ts`. All future references must use `proxy.ts`.
+- 📌 Next: complete human gates, then M1 first skills or WP-4.
+
 ---
 
 ## 6) Decisions (all resolved)
@@ -347,6 +390,7 @@ Sprint levers (remaining):
 - **RISK-7:** Middleware was never running before B6. Enabling it may surface auth issues in routes that were previously "accidentally public." **Mitigation:** Auth0 e2e verification before merging PR #4 to main.
 - **RISK-8:** `prisma db push` used for dev — production migration needs `prisma migrate dev`. **Mitigation:** tracked in post-merge actions. Migration script has dry-run mode.
 - **RISK-9:** Two-repo split (prosy/travel.aw for governance, augmented-worlds/travel.aw for V1 app) causes agent path confusion. **Mitigation:** all agent prompts must specify full absolute repo path. Codex gating proves this works.
+- **RISK-10:** Next.js 16 uses `proxy.ts` convention, not `middleware.ts`. Our agent instructions assumed the old convention. CC renamed incorrectly, Codex caught the deprecation warning, CC reverted. **Mitigation:** all future middleware/proxy references must use `proxy.ts`. Add to CLAUDE.md known gotchas.
 
 ---
 
@@ -378,16 +422,15 @@ Sprint levers (remaining):
 
 ## 10) Abbreviations / future work (explicit list)
 - ~~WP-3 query cookbook~~ ✅ Complete
-- ~~M0 agent foundation~~ ✅ Complete (B1–B4, DoD PR #1 proven)
-- ~~Track B security hardening~~ ✅ Complete (B1–B6, PR #4 submitted)
-- Merge PR #1 (travel-aw-skills, M0 DoD)
-- Merge PR #4 (travel.aw, Track B) — requires Auth0 e2e verification
-- Production deploy: env vars + encryption migration
+- ~~M0 agent foundation~~ ✅ Complete (B1–B4, DoD PR #1 merged)
+- ~~Track B security hardening~~ ✅ Complete (B1–B6, PR #4 merged + revert)
+- Human gates: Auth0 e2e test → production env vars → encryption migration
 - M1: First travel skills (flight-search, hotel-search)
 - WP-4 graph export (post-MVP optional)
 - Formalize dual-agent workflow as a repeatable process doc
 - Add pre-commit guardrail preventing direct edits to locked registries without DD entry
 - Consolidate two-repo split or document the boundary formally
+- Add RISK-10 (Next.js 16 proxy.ts convention) to CLAUDE.md known gotchas
 
 ---
 End.
