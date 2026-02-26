@@ -84,10 +84,11 @@ pnpm db:studio    # Open Prisma Studio
 
 ## Current State (2026-02-26)
 
-**Phase:** Track A MVP done, M0 done, Track B done, M1 in progress
-**Status:** WP-0/1/2/3 complete. M0 B1-B4 done. Track B B1-B6 done. M1-A1 (SkillRunner), M1-A2 (egress enforcement), M1-A3 (integration tests), M1-B (first skills) all done — 83 tests passing. **M1-C (web app integration) is next.**
+**Phase:** Track A MVP done, M0 done, Track B done, **M1 complete**
+**Status:** WP-0/1/2/3 complete. M0 B1-B4 done. Track B B1-B6 done. M1 fully closed: A1 (SkillRunner), A2 (egress), A3 (integration tests), B (first skills), C (web app integration), D (security proof) — all done. 83 tests passing.
 
-**Repo consolidation:** On 2026-02-26, governance content (AUTH/, docs/ecosystem/, data/ecosystem/, tools/, prod_plans/, registries) was absorbed from the governance-only clone into this app repo. This is now the single canonical repo.
+**Repo split:** App code lives in `prosy/travel-app`. Governance/ecosystem in `prosy/travel.aw`. Skills in `prosy/travel-aw-skills`.
+**Repo consolidation:** On 2026-02-26, governance content was copied into app repo so both code and authorities live together.
 
 ### Design Decisions
 
@@ -166,12 +167,15 @@ travel.aw/
 - Docker network cleanup tests are flaky when run in parallel — use before/after snapshot pattern instead of absolute counts.
 - Next.js 16: `params` is a Promise in route handlers — must await before accessing properties.
 - Repo was consolidated on 2026-02-26 from two diverged clones (governance at ~/Documents/GitHub/travel.aw, app at ~/Projects/augmented-worlds/travel) into this single repo. Archived clone at ~/Documents/GitHub/_archived_travel-aw-governance.
+- Turbopack (Next.js bundler) cannot resolve `.js` extension imports in workspace package source files — use extension-less imports (`./module` not `./module.js`) when `moduleResolution: "Bundler"` is set in tsconfig. Fixed in skill-runner `src/index.ts` and all internal modules.
+- Two-repo problem: `prosy/travel.aw` (governance history) and `prosy/travel-app` (app history) have completely unrelated git histories — cannot rebase/merge. Created `prosy/travel-app` as separate remote for the app. Local `origin` remote still points to `prosy/travel.aw`; use `app` remote for pushes.
 
 ---
 
 ## Git
 
-- Repository: github.com/prosy/travel.aw
+- Repository: github.com/prosy/travel-app (app remote)
+- Governance: github.com/prosy/travel.aw (origin remote)
 - Branch: main
 - Co-author commits with: `Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>`
 
