@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://travel.aw/schemas/ecosystem_edge.schema.json",
+  "title": "Ecosystem Edge",
+  "description": "Schema for an edge in the TRAVEL.aw ecosystem graph. Authority A10. Conforms to Ecosystem Spec v0.2 §4. Edge ID uses double-underscore __ delimiter per DD-09.",
+  "type": "object",
+  "required": ["id", "fromId", "toId", "type", "addedVersion"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^E__[A-Z0-9_]+__[A-Z0-9_]+__(INTEGRATES_WITH|FEEDS_INTO|COMPETES_WITH|SUPPLEMENTS|AGGREGATES|OWNED_BY)$",
+      "description": "Edge ID. Format: E__{fromId}__{toId}__{type}. Double-underscore delimiter avoids ambiguity with underscores in node IDs (DD-09)."
+    },
+    "fromId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Source node ID. Must resolve to an existing node."
+    },
+    "toId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Target node ID. Must resolve to an existing node."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "INTEGRATES_WITH",
+        "FEEDS_INTO",
+        "COMPETES_WITH",
+        "SUPPLEMENTS",
+        "AGGREGATES",
+        "OWNED_BY"
+      ],
+      "description": "Relationship type from relationship_types.json (A7)."
+    },
+    "addedVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Spec version when edge was added (semver)."
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable explanation of this specific relationship."
+    },
+    "journeyContext": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": ["J0", "J1", "J2", "J3", "J4", "J5", "J6", "J7", "J8"]
+      },
+      "description": "Journey stages where this relationship is most relevant."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Editorial notes."
+    }
+  }
+}

@@ -14,8 +14,8 @@
 import { spawn } from "node:child_process";
 import { resolve4, resolve6 } from "node:dns/promises";
 import { v4 as uuidv4 } from "uuid";
-import { DnsResolutionError, NetworkError } from "./errors.js";
-import type { EgressRule } from "./types.js";
+import { DnsResolutionError, NetworkError } from "./errors";
+import type { EgressRule } from "./types";
 
 export interface ResolvedEgress {
   domain: string;

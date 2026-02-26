@@ -5,17 +5,17 @@
  *   createSkillRunner() → SkillRunner
  */
 
-export { loadManifest } from "./manifest.js";
-export { parseSkillOutput } from "./output-parser.js";
-export { runContainer, imageExists, buildImage, imageName, validateEnvVars } from "./docker.js";
-export { createNetwork, destroyNetwork, resolveEgressDomains, buildNetworkArgs } from "./network.js";
-export type { NetworkHandle, ResolvedEgress } from "./network.js";
-export * from "./types.js";
-export * from "./errors.js";
+export { loadManifest } from "./manifest";
+export { parseSkillOutput } from "./output-parser";
+export { runContainer, imageExists, buildImage, imageName, validateEnvVars } from "./docker";
+export { createNetwork, destroyNetwork, resolveEgressDomains, buildNetworkArgs } from "./network";
+export type { NetworkHandle, ResolvedEgress } from "./network";
+export * from "./types";
+export * from "./errors";
 
-import { loadManifest } from "./manifest.js";
-import { runContainer } from "./docker.js";
-import type { ExecutionConfig, SkillInput, SkillOutput, SkillRunner } from "./types.js";
+import { loadManifest } from "./manifest";
+import { runContainer } from "./docker";
+import type { ExecutionConfig, SkillInput, SkillOutput, SkillRunner } from "./types";
 
 /**
  * Create a SkillRunner instance with optional default config.

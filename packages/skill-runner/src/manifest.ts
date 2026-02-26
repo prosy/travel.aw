@@ -1,8 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
-import { ManifestValidationError } from "./errors.js";
-import type { EgressRule, RiskLevel, SkillManifest, SkillPermissions } from "./types.js";
+import { ManifestValidationError } from "./errors";
+import type { EgressRule, RiskLevel, SkillManifest, SkillPermissions } from "./types";
 
 const VALID_RISK_LEVELS: RiskLevel[] = ["low", "medium", "high"];
 const C_CODE_PATTERN = /^C-[A-Z][A-Z0-9-]*$/;

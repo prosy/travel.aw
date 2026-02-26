@@ -1,0 +1,34 @@
+{
+  "schema": "travel.aw/seattle-categories/v0.1",
+  "city": "Seattle, WA",
+  "phases": [
+    {
+      "id": "planning_upfront",
+      "label": "Planning",
+      "description": "Pre-trip planning phase for itinerary decisions before arrival."
+    },
+    {
+      "id": "while_in_seattle",
+      "label": "While in Seattle",
+      "description": "In-city phase for day-of decisions and local discovery."
+    }
+  ],
+  "intents": [
+    {
+      "id": "what_to_do",
+      "label": "What to do",
+      "description": "Activity and destination ideas by preference."
+    },
+    {
+      "id": "whats_going_on",
+      "label": "What's going on",
+      "description": "Time-sensitive happenings, games, and events."
+    },
+    {
+      "id": "whats_around",
+      "label": "What's around",
+      "description": "Nearby options based on current neighborhood context."
+    }
+  ]
+}
+

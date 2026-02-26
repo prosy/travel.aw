@@ -5,21 +5,21 @@ import {
   ContainerTimeoutError,
   ConfigError,
   ImageBuildError,
-} from "./errors.js";
+} from "./errors";
 import {
   createNetwork,
   resolveEgressDomains,
   buildNetworkArgs,
   type NetworkHandle,
-} from "./network.js";
-import { parseSkillOutput } from "./output-parser.js";
+} from "./network";
+import { parseSkillOutput } from "./output-parser";
 import type {
   EgressMode,
   ExecutionConfig,
   ExecutionMetadata,
   SkillManifest,
   SkillOutput,
-} from "./types.js";
+} from "./types";
 
 const DEFAULT_MEMORY_MB = 256;
 const DEFAULT_CPUS = 0.5;

@@ -1,4 +1,4 @@
-import { OutputParseError } from "./errors.js";
+import { OutputParseError } from "./errors";
 
 const START_MARKER = "---SKILL_OUTPUT_START---";
 const END_MARKER = "---SKILL_OUTPUT_END---";
