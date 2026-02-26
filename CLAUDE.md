@@ -3,6 +3,8 @@
 > **Claude Code reads this file automatically at session start.**
 > Last updated: 2026-02-26 (Repo consolidation — governance + app merged)
 
+> Canonical project manifest is `PROJECT_MANIFEST.md` in this repo root. Read it before any session work.
+
 ---
 
 ## Project Overview
