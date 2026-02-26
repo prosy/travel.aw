@@ -42,7 +42,8 @@ Rule: **Append-only mindset** (edit for clarity, but preserve history via dated 
 Sprint levers (remaining):
 1. Human gates: Auth0 e2e test → set production env vars → run encryption migration
 2. M1-C: Web app integration (invoke SkillRunner from apps/web routes)
-3. M1-B4/B5: Submit skills as PRs to travel-aw-skills, manual real-API test
+3. ~~M1-B4: Submit skills as PRs to travel-aw-skills~~ ✅ PR #2 merged (all 3 CI gates pass)
+4. M1-B5: Manual real-API test with Amadeus credentials
 4. WP-4 graph export — optional post-MVP
 
 ---
@@ -81,7 +82,7 @@ Sprint levers (remaining):
 | A1 | SkillRunner module (Docker spawn, typed I/O) | ✅ Complete | `277823e` | packages/skill-runner/, 40 unit+integration tests |
 | A2 | Egress enforcement (DNS-based allowlisting) | ✅ Complete | `277823e` | network.ts, --add-host + --dns=127.0.0.1, 15 tests |
 | A3 | Egress integration tests (PRD acceptance) | ✅ Complete | `277823e` | 18 tests, multi-egress-skill fixture |
-| B | First skills (flight-search, hotel-search) | ✅ Complete | `277823e`, `81a7721` | Amadeus API + mock fallback, 10 tests |
+| B | First skills (flight-search, hotel-search) | ✅ Complete | `277823e`, `da3dc48` | Amadeus API + mock fallback, 10 tests, PR #2 merged |
 | C | Web app integration | ⏳ Next | — | Invoke SkillRunner from apps/web routes |
 
 **Legend:** ✅ complete · ⏳ next/pending · 🧪 in progress · 🛑 blocked
@@ -381,7 +382,7 @@ Sprint levers (remaining):
 | Repo | SHA | Description |
 |------|-----|-------------|
 | augmented-worlds/travel | `277823e` | feat(m1): SkillRunner module + egress enforcement + first skills |
-| travel-aw-skills | `81a7721` | feat(m1-b): flight-search + hotel-search skills |
+| travel-aw-skills | `da3dc48` | feat(m1-b): flight-search + hotel-search skills (PR #2 merged) |
 | travel.aw (governance) | `470379e` | chore: session close — M1-A1/A2/A3/B complete |
 
 **Issues caught during execution**
