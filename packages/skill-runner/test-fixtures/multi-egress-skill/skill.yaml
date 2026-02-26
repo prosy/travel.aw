@@ -1,0 +1,26 @@
+name: multi-egress-skill
+version: "0.1.0"
+description: "Test skill with multiple declared egress domains."
+author: "travel-aw"
+
+capabilities:
+  - C-INFO
+
+journeyStages:
+  - J0
+
+permissions:
+  network:
+    egress:
+      - domain: "httpbin.org"
+        reason: "Test HTTP endpoint"
+      - domain: "example.com"
+        reason: "Second test endpoint"
+  filesystem:
+    read: []
+    write: []
+  env_vars:
+    required: []
+    optional: []
+
+risk_level: "low"

@@ -1,0 +1,22 @@
+name: timeout-skill
+version: "0.1.0"
+description: "Test skill that sleeps forever to test timeout handling."
+author: "travel-aw"
+
+capabilities:
+  - C-INFO
+
+journeyStages:
+  - J0
+
+permissions:
+  network:
+    egress: []
+  filesystem:
+    read: []
+    write: []
+  env_vars:
+    required: []
+    optional: []
+
+risk_level: "low"

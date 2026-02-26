@@ -1,0 +1,22 @@
+name: echo-skill
+version: "0.1.0"
+description: "Test skill that echoes input back as output."
+author: "travel-aw"
+
+capabilities:
+  - C-INFO
+
+journeyStages:
+  - J0
+
+permissions:
+  network:
+    egress: []
+  filesystem:
+    read: []
+    write: []
+  env_vars:
+    required: []
+    optional: []
+
+risk_level: "low"

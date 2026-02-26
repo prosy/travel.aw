@@ -1,0 +1,24 @@
+name: egress-skill
+version: "0.1.0"
+description: "Test skill that attempts HTTP requests to test egress filtering."
+author: "travel-aw"
+
+capabilities:
+  - C-INFO
+
+journeyStages:
+  - J0
+
+permissions:
+  network:
+    egress:
+      - domain: "httpbin.org"
+        reason: "Test HTTP endpoint"
+  filesystem:
+    read: []
+    write: []
+  env_vars:
+    required: []
+    optional: []
+
+risk_level: "low"

@@ -1,0 +1,27 @@
+name: flight-search
+version: "0.1.0"
+description: "Search flights via Amadeus API and return structured results."
+author: "travel-aw"
+
+capabilities:
+  - C-FLIGHT-SEARCH
+
+journeyStages:
+  - J1
+  - J3
+
+permissions:
+  network:
+    egress:
+      - domain: "api.amadeus.com"
+        reason: "Amadeus flight search API"
+  filesystem:
+    read: []
+    write: []
+  env_vars:
+    required:
+      - AMADEUS_API_KEY
+      - AMADEUS_API_SECRET
+    optional: []
+
+risk_level: "medium"
