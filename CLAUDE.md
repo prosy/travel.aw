@@ -43,8 +43,8 @@
 
 ## Current State (2026-02-24)
 
-**Phase:** Track A MVP done, M0 Agent Foundation done, Track B Security done
-**Status:** WP-0 bootstrap, WP-1 schemas/validation, WP-2 seed dataset, WP-3 query cookbook all complete. 59 nodes, 118 edges, 5 deterministic queries, validator passes. M0 complete: B1–B4 ✅, DoD proven via PR #1. Track B complete: all 6 security requirements (B1–B6) implemented on `track-b-security` branch in `augmented-worlds/travel.aw`, PR #4 submitted. Seattle deterministic planning scaffold added (`data/seattle`, `tools/seattle_categories`, `apps/web` Seattle pages + APIs, stored-query sports flow).
+**Phase:** Track A MVP done, M0 done, Track B done, **M1 in progress**
+**Status:** WP-0/1/2/3 complete. M0 B1–B4 ✅. Track B B1–B6 ✅ (PR #4 merged). M1-A1 (SkillRunner) ✅, M1-A2 (egress enforcement) ✅, M1-A3 (integration tests) ✅, M1-B (first skills) ✅ — 83 tests passing. SkillRunner lives in `augmented-worlds/travel/packages/skill-runner/`. Skills in `travel-aw-skills/skills/`.
 
 ### Authorities Created
 
@@ -159,3 +159,5 @@ travel.aw/
 - V1 web app lives in `augmented-worlds/travel.aw`, ecosystem/governance in `prosy/travel.aw` — agent prompts must specify full absolute repo path or agents will edit the wrong repo.
 - Next.js only auto-invokes middleware from a file named `middleware.ts` (or `.js`) at the app root — any other name (e.g., `proxy.ts`) is silently ignored. The V1 app had no running middleware until B6 fixed this.
 - Prisma `migrate dev` can fail with `P3006` on legacy SQLite DBs without migration history — baseline migrations first, or use `migrate diff`/`db execute` only for local verification.
+- SkillRunner `validateEnvVars` checks key *presence* in the envVars map, not actual values — skills that handle missing credentials internally (mock fallback) still need placeholder empty strings passed: `{ AMADEUS_API_KEY: "", AMADEUS_API_SECRET: "" }`.
+- Docker network cleanup tests are flaky when run in parallel with other integration tests — use before/after snapshot pattern (snapshot network list before test, check only *new* networks after) instead of absolute counts.

@@ -32,17 +32,18 @@ Rule: **Append-only mindset** (edit for clarity, but preserve history via dated 
 
 ---
 
-## 2) Current diagnosis (end of 2026-02-24 session 6)
+## 2) Current diagnosis (end of 2026-02-25 session 9)
 - **Track A is MVP complete.** WP-0/1/2/3 done (59 nodes, 118 edges, 5 deterministic queries).
 - **Track C (M0) is fully closed.** B1–B4 done. DoD proven via PR #1 (3 CI gates discriminating). PR #1 merged.
 - **Track B is complete.** All 6 security hardening requirements (B1–B6) implemented and merged via PR #4. Post-merge fix applied (B6 proxy.ts revert, `e21692c`).
+- **M1 core is complete.** M1-A1 (SkillRunner module), M1-A2 (egress enforcement), M1-A3 (integration tests), M1-B (first skills — flight-search + hotel-search) all done. 83 tests passing in `augmented-worlds/travel/packages/skill-runner/`.
 - **Three human gates remain:** Auth0 e2e browser test, production env vars, encryption migration.
-- **Session 5 Seattle scaffold** exists in `apps/web/src/` (prosy/travel.aw) — intentional Codex test, outside PRD scope. Not tracked as sprint work.
 
 Sprint levers (remaining):
 1. Human gates: Auth0 e2e test → set production env vars → run encryption migration
-2. M1: First travel skills (flight-search, hotel-search) — unblocked by M0
-3. WP-4 graph export — optional post-MVP
+2. M1-C: Web app integration (invoke SkillRunner from apps/web routes)
+3. M1-B4/B5: Submit skills as PRs to travel-aw-skills, manual real-API test
+4. WP-4 graph export — optional post-MVP
 
 ---
 
@@ -73,6 +74,15 @@ Sprint levers (remaining):
 | B4 | PII encryption at rest | ✅ Complete | `30ad68f` | Contacts + points encrypted, migration script created |
 | B5 | LLM endpoint hardening | ✅ Complete | `f587cab` | Configurable model, size limits, safe errors, schema validation |
 | B6 | Repo drift / CI alignment | ✅ Complete | `568648e`, `e21692c` | Matcher config fixed, DEPLOY.md fixed, proxy.ts reverted (Next.js 16 convention) |
+
+### M1 — SkillRunner + First Skills
+| Story | Description | Status | Commit(s) | Notes |
+|---:|---|---|---|---|
+| A1 | SkillRunner module (Docker spawn, typed I/O) | ✅ Complete | `277823e` | packages/skill-runner/, 40 unit+integration tests |
+| A2 | Egress enforcement (DNS-based allowlisting) | ✅ Complete | `277823e` | network.ts, --add-host + --dns=127.0.0.1, 15 tests |
+| A3 | Egress integration tests (PRD acceptance) | ✅ Complete | `277823e` | 18 tests, multi-egress-skill fixture |
+| B | First skills (flight-search, hotel-search) | ✅ Complete | `277823e`, `81a7721` | Amadeus API + mock fallback, 10 tests |
+| C | Web app integration | ⏳ Next | — | Invoke SkillRunner from apps/web routes |
 
 **Legend:** ✅ complete · ⏳ next/pending · 🧪 in progress · 🛑 blocked
 
@@ -357,6 +367,28 @@ Sprint levers (remaining):
 - ⚠️ Next.js 16 convention change: `proxy.ts` replaces `middleware.ts`. All future references must use `proxy.ts`.
 - 📌 Next: complete human gates, then M1 first skills or WP-4.
 
+### 2026-02-25 — Session 9: M1-A1/A2/A3/B SkillRunner + First Skills
+**What happened**
+- M1-A1: Built `packages/skill-runner/` in augmented-worlds/travel monorepo — manifest parser, Docker spawn, output parser, typed errors, public API. 40 tests passing.
+- M1-A2: DNS-based egress enforcement via `network.ts` — `--dns=127.0.0.1` + `--add-host=domain:ip` + `--cap-drop=ALL`. Works on macOS Docker Desktop (no iptables needed). 15 tests.
+- M1-A3: Comprehensive egress integration tests — 18 tests covering all PRD acceptance criteria (declared domain access, undeclared blocking, localhost blocking, cleanup guarantees).
+- M1-B: Created flight-search and hotel-search skills (Python, Amadeus API + mock fallback) in travel-aw-skills repo and as test-fixtures. 10 skill tests.
+- Fixed `validateEnvVars` blocking mock mode (pass placeholder empty strings) and flaky network cleanup test (before/after snapshot pattern).
+- **Full suite: 8 test files, 83 tests, all passing.**
+
+**Commits**
+
+| Repo | SHA | Description |
+|------|-----|-------------|
+| augmented-worlds/travel | `277823e` | feat(m1): SkillRunner module + egress enforcement + first skills |
+| travel-aw-skills | `81a7721` | feat(m1-b): flight-search + hotel-search skills |
+| travel.aw (governance) | `470379e` | chore: session close — M1-A1/A2/A3/B complete |
+
+**Issues caught during execution**
+- `validateEnvVars` throws ConfigError before Docker container spawns — skills with mock fallback need placeholder env var keys in the envVars map
+- Docker `localhost` DNS always resolves inside containers (baked into /etc/hosts) — test for undeclared *external* domains failing DNS instead
+- Network cleanup test flaky when parallel tests create `skill-net-*` networks — use before/after snapshot pattern
+
 ---
 
 ## 6) Decisions (all resolved)
@@ -425,7 +457,8 @@ Sprint levers (remaining):
 - ~~M0 agent foundation~~ ✅ Complete (B1–B4, DoD PR #1 merged)
 - ~~Track B security hardening~~ ✅ Complete (B1–B6, PR #4 merged + revert)
 - Human gates: Auth0 e2e test → production env vars → encryption migration
-- M1: First travel skills (flight-search, hotel-search)
+- ~~M1-A1/A2/A3/B: SkillRunner + egress + first skills~~ ✅ Complete (83 tests)
+- M1-C: Web app integration (invoke SkillRunner from routes)
 - WP-4 graph export (post-MVP optional)
 - Formalize dual-agent workflow as a repeatable process doc
 - Add pre-commit guardrail preventing direct edits to locked registries without DD entry
