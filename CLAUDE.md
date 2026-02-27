@@ -171,6 +171,7 @@ travel.aw/
 - Repo was consolidated on 2026-02-26 from two diverged clones (governance at ~/Documents/GitHub/travel.aw, app at ~/Projects/augmented-worlds/travel) into this single repo. Archived clone at ~/Documents/GitHub/_archived_travel-aw-governance.
 - Turbopack (Next.js bundler) cannot resolve `.js` extension imports in workspace package source files — use extension-less imports (`./module` not `./module.js`) when `moduleResolution: "Bundler"` is set in tsconfig. Fixed in skill-runner `src/index.ts` and all internal modules.
 - Two-repo problem: `prosy/travel.aw` (governance history) and `prosy/travel-app` (app history) have completely unrelated git histories — cannot rebase/merge. Created `prosy/travel-app` as separate remote for the app. Local `origin` remote still points to `prosy/travel.aw`; use `app` remote for pushes.
+- **RISK-10:** Next.js 16 renamed `proxy.ts` to `middleware.ts`. The framework only auto-invokes middleware from a file named `middleware.ts` at the app root. `proxy.ts` is silently ignored. This was fixed in Track B (B6) but any new middleware must use the correct filename.
 
 ---
 
