@@ -1,96 +1,94 @@
 # TRAVEL.aw
 
 > **Claude Code reads this file automatically at session start.**
-> Last updated: 2026-02-26 (Repo consolidation — governance + app merged)
+> Last updated: 2026-02-26
 
 > Canonical project manifest is `PROJECT_MANIFEST.md` in this repo root. Read it before any session work.
 
 ---
 
-## Project Overview
+## 1. Project Identity
 
-**What:** Travel ecosystem platform — deterministic, authority-driven travel planning
-**Stack:** Next.js 16 (App Router), TypeScript, Prisma + SQLite (dev) / Turso (prod), Tailwind CSS, Auth0, Anthropic Claude API
-**Design Pattern:** D-RAG governance (SSOT authorities + deterministic validation + bounded execution + audit trails)
-**Monorepo:** pnpm workspaces
+- **What:** Travel ecosystem platform — deterministic, authority-driven travel planning
+- **Design Pattern:** D-RAG governance (SSOT authorities + deterministic validation + bounded execution + audit trails)
 
----
-
-## Packages
-
-| Package | Path | Purpose |
-|---------|------|---------|
-| `apps/web` | `apps/web/` | Next.js 16 web app (Auth0, Prisma, Leaflet) |
-| `@travel/contracts` | `packages/contracts/` | Shared TypeScript types + ecosystem registries/schemas |
-| `@travel/ui` | `packages/ui/` | Shared UI components |
-| `@travel/adapters` | `packages/adapters/` | External service adapters |
-| `@travel/skill-runner` | `packages/skill-runner/` | Docker-based skill execution (M1-A1) |
+| Repo | Remote | Local Path | Role |
+|------|--------|------------|------|
+| **App** (this repo) | `prosy/travel-app` | `~/Projects/augmented-worlds/travel/` | Web app, SkillRunner, Track B security, search UI, governance content |
+| **Governance** | `prosy/travel.aw` | `~/Documents/GitHub/travel.aw/` | **READ-ONLY ARCHIVE** — do not commit here |
+| **Skills** | `prosy/travel-aw-skills` | `~/Documents/GitHub/travel-aw-skills/` | Skill source code, skill.yaml manifests, CI gates |
 
 ---
 
-## Common Commands
+## 2. Working Directory
 
-```bash
-pnpm dev          # Start dev server (localhost:3000)
-pnpm build        # Production build
-pnpm db:push      # Apply Prisma schema changes
-pnpm db:seed      # Seed database
-pnpm db:studio    # Open Prisma Studio
+- **ALWAYS** start sessions in: `~/Projects/augmented-worlds/travel/`
+- If your shell resets to a different directory, `cd` back before any git operations
+- **NEVER** commit to `~/Documents/GitHub/travel.aw/` — that is the archived governance repo
+
+---
+
+## 3. Repo Structure
+
+```
+~/Projects/augmented-worlds/travel/
+├── apps/web/                          # Next.js 16 web app (Auth0, Prisma, Leaflet)
+│   ├── app/
+│   │   ├── api/skills/invoke/         # Skill invocation endpoint (M1-C)
+│   │   ├── api/points/parse/          # LLM loyalty parsing (Track B)
+│   │   ├── api/email/inbound/         # Webhook ingestion (Track B)
+│   │   ├── api/trips/                 # Trip CRUD
+│   │   ├── (authenticated)/search/    # Flight + hotel search pages (M1-C)
+│   │   └── _lib/
+│   │       ├── prisma.ts              # Database client
+│   │       ├── auth.ts                # Auth utilities (getCurrentUser)
+│   │       ├── anthropic.ts           # Claude API client
+│   │       └── encryption.ts          # PII encryption utilities (Track B)
+│   └── prisma/schema.prisma
+├── packages/
+│   ├── skill-runner/                  # SkillRunner module (M1-A, 83 tests)
+│   │   └── src/
+│   │       ├── index.ts               # createSkillRunner(), execute()
+│   │       ├── types.ts               # SkillInput, SkillOutput, errors
+│   │       └── network.ts             # Egress enforcement (dead DNS + add-host)
+│   ├── contracts/                     # TypeScript types + ecosystem registries
+│   │   ├── src/                       # App-level types (trip, user, offer, citation)
+│   │   ├── registries/                # Ecosystem SSOT (journey_stages, capabilities, provider_types, relationship_types)
+│   │   └── CONTRACT_VERSIONING.md
+│   ├── ui/                            # Shared UI components
+│   └── adapters/                      # External service adapters
+├── AUTH/                              # Authority pack (copied from governance)
+│   ├── TRAVEL_AUTHORITIES_INDEX.md
+│   ├── CHANGELOG.md
+│   └── SESSION_CLOSE_PROTOCOL.md
+├── docs/ecosystem/                    # Ecosystem spec + supporting docs
+│   ├── ECOSYSTEM_SPEC_v0_2.md
+│   ├── DECISIONS.md
+│   ├── GLOSSARY.md
+│   └── QUERY_COOKBOOK.md
+├── data/ecosystem/                    # Ecosystem graph data (59 nodes, 118 edges)
+│   ├── nodes.jsonl
+│   ├── edges.jsonl
+│   └── ID_POLICY.md
+├── prod_plans/                        # Planning docs, PRDs, session records
+├── tools/                             # Validator, query tools
+├── prisma/                            # Database schema
+├── .claude/rules/                     # Symlinks to authority files
+├── CLAUDE.md                          # THIS FILE
+└── PROJECT_MANIFEST.md                # Canonical repo map
 ```
 
 ---
 
-## Key Files
+## 4. Current State
 
-- `apps/web/app/_lib/prisma.ts` — Database client
-- `apps/web/app/_lib/auth.ts` — Auth utilities (getCurrentUser)
-- `apps/web/app/_lib/anthropic.ts` — Claude API client
-- `packages/contracts/src/types/` — Shared type definitions
-- `packages/skill-runner/src/index.ts` — SkillRunner public API
-
----
-
-## Authoritative Files (Always Consult First)
-
-| File | Location | Purpose |
-|------|----------|---------|
-| `TRAVEL_AUTHORITIES_INDEX.md` | `AUTH/` | Master authority index + precedence rules |
-| `SESSION_CLOSE_PROTOCOL.md` | `AUTH/` | Mandatory session close checklist |
-| `ECOSYSTEM_SPEC_v0_2.md` | `docs/ecosystem/` | Product scope, user journey, MVP (WP-0) |
-| `DECISIONS.md` | `docs/ecosystem/` | Design decisions registry (WP-0) |
-| `GLOSSARY.md` | `docs/ecosystem/` | Canonical term definitions (WP-0) |
-
-### Registries (WP-0)
-
-| File | Location | Owns |
-|------|----------|------|
-| `journey_stages.json` | `packages/contracts/registries/` | J0-J8 labels |
-| `capabilities_registry.json` | `packages/contracts/registries/` | C-codes |
-| `provider_types.json` | `packages/contracts/registries/` | ProviderType enum |
-| `relationship_types.json` | `packages/contracts/registries/` | Edge types + constraints |
-
----
-
-## Conventions
-
-- API routes return data at root level (not wrapped in `{ data: ... }`)
-- Use `getCurrentUser()` for auth in API routes
-- Client components require `'use client'` directive
-- Next.js 16: `params` is a Promise in route handlers
-- No emojis in code or responses unless requested
-- Authority pack is law — consult `AUTH/TRAVEL_AUTHORITIES_INDEX.md` before changing contracts
-- Registries are SSOT — no new enums without registry update + DD entry
-- Schemas > Spec > Everything else — conflict resolution precedence
-
----
-
-## Current State (2026-02-26)
-
-**Phase:** Track A MVP done, M0 done, Track B done, **M1 complete**
-**Status:** WP-0/1/2/3 complete. M0 B1-B4 done. Track B B1-B6 done. M1 fully closed: A1 (SkillRunner), A2 (egress), A3 (integration tests), B (first skills), C (web app integration), D (security proof) — all done. 83 tests passing.
-
-**Repo split:** App code lives in `prosy/travel-app`. Governance/ecosystem in `prosy/travel.aw`. Skills in `prosy/travel-aw-skills`.
-**Repo consolidation:** On 2026-02-26, governance content was copied into app repo so both code and authorities live together.
+| Track | Status | Details |
+|-------|--------|---------|
+| Track A (Ecosystem Graph) | **COMPLETE** | 59 nodes, 118 edges, 5 queries, 0 validation errors |
+| Track B (Security Hardening) | **COMPLETE** | B1-B6 all merged (Auth, PII encryption, webhook auth, LLM hardening, middleware fix) |
+| M0 (Skills Registry) | **COMPLETE** | StopCrabs CI + 3 travel security gates proven |
+| M1 (Skills Pipeline) | **COMPLETE** | SkillRunner, egress enforcement, 2 skills, web UI, security proof (83 tests) |
+| M2 (Agent Loop) | **NOT STARTED** | Scoping phase — NanoClaw fork + agent reasoning loop |
 
 ### Design Decisions
 
@@ -107,50 +105,64 @@ pnpm db:studio    # Open Prisma Studio
 | DD-09 | Edge ID delimiter | **Resolved** — double underscore `__` |
 | DD-10 | AI_AGENT + API_PLATFORM provider types | **Resolved** — added to A6 (v1.1.0) |
 | DD-11 | Graph library for WP-3 | **Resolved** — custom adjacency maps, no graphology |
+| DD-12 | SkillRunner location | **Resolved** — App repo (`packages/skill-runner/`) |
+| DD-13 | NanoClaw | **Resolved** — irrelevant (WhatsApp daemon), `prosy/nanoclaw` abandoned |
 
 ---
 
-## Session Close Protocol (MANDATORY)
+## 5. Tech Stack
 
-**Full protocol:** `AUTH/SESSION_CLOSE_PROTOCOL.md`
-
-Before ending any session, running `/compact`, or switching branches, you MUST:
-1. Update `.agent_state.md` — what was completed, commit SHAs, next actions, blockers
-2. Add to `## Known Gotchas` in `CLAUDE.md` if you hit a non-obvious problem
-3. Update `CLAUDE.md` durable state if status/authorities/decisions changed
-4. Execute the full Session Close Protocol. **No session ends without it.**
-
----
-
-## Directory Structure
-
-```
-travel.aw/
-├── AUTH/                                   <- authority pack (governance)
-│   ├── TRAVEL_AUTHORITIES_INDEX.md
-│   ├── SESSION_CLOSE_PROTOCOL.md
-│   └── CHANGELOG.md
-├── apps/web/                              <- Next.js 16 app (Auth0, Prisma)
-├── packages/
-│   ├── contracts/                         <- shared types + ecosystem registries/schemas
-│   │   ├── registries/                    <- JSON enums (journey stages, capabilities, etc.)
-│   │   └── src/schemas/                   <- JSON Schemas (app + ecosystem)
-│   ├── skill-runner/                      <- Docker-based skill execution (M1)
-│   ├── adapters/                          <- external service adapters
-│   └── ui/                                <- shared UI components
-├── docs/ecosystem/                        <- specs, decisions, glossary
-├── data/ecosystem/                        <- canonical node/edge datasets
-├── tools/                                 <- validators, query tools, Seattle wiki RAG
-├── prod_plans/                            <- non-authoritative planning docs
-├── prisma/                                <- database schema
-├── .claude/rules/                         <- symlinks to authority files
-└── CLAUDE.md                              <- this file
-```
+- **Next.js 16** (NOT 14 or 15 — naming conventions differ). App Router.
+- **TypeScript** — monolang across all packages
+- **Auth0** for authentication
+- **Prisma ORM** — SQLite (dev) / Turso (prod)
+- **pnpm 10.28.2** — must match `packageManager` field in `package.json`
+- **Docker** for skill container execution
+- **Python 3.12** for skills
+- **Tailwind CSS** for styling
+- **Anthropic Claude API** for LLM features
 
 ---
 
-## Known Gotchas
+## 6. Key Patterns
 
+- **Auth:** All user-specific routes require Auth0 session + ownership check. Use `getCurrentUser()`.
+- **PII:** Emergency contacts and loyalty numbers encrypted at rest (`ENCRYPTION_KEY` env var).
+- **Skills:** Executed via SkillRunner in Docker containers with egress enforcement.
+- **Ecosystem data:** JSONL format, append-only, immutable IDs.
+- **Governance:** D-RAG pattern — Schema+Registries > Spec > Validator > Session prompt.
+- **API routes:** Return data at root level (not wrapped in `{ data: ... }`).
+- **Client components:** Require `'use client'` directive.
+- **Authority precedence:** Schemas > Spec > Everything else. Consult `AUTH/TRAVEL_AUTHORITIES_INDEX.md` before changing contracts.
+- **Registries are SSOT:** No new enums without registry update + DD entry.
+
+---
+
+## 7. Environment Variables
+
+| Var | Purpose | Required |
+|-----|---------|----------|
+| `AUTH0_SECRET` | Auth0 session encryption | Yes |
+| `AUTH0_BASE_URL` | Auth0 callback URL | Yes |
+| `AUTH0_ISSUER_BASE_URL` | Auth0 tenant URL | Yes |
+| `AUTH0_CLIENT_ID` | Auth0 app ID | Yes |
+| `AUTH0_CLIENT_SECRET` | Auth0 app secret | Yes |
+| `ENCRYPTION_KEY` | PII encryption at rest | Yes (production) |
+| `WEBHOOK_EMAIL_SECRET` | Inbound email webhook auth | Yes (production) |
+| `SKILLS_DIR` | Path to `travel-aw-skills/skills/` checkout | Yes (for skill execution) |
+| `AMADEUS_API_KEY` | Amadeus flight/hotel API | No (mock fallback) |
+| `AMADEUS_API_SECRET` | Amadeus flight/hotel API | No (mock fallback) |
+| `DATABASE_URL` | Database connection string | Yes (production, Turso) |
+
+---
+
+## 8. Known Gotchas
+
+- **RISK-10:** Next.js 16 renamed `proxy.ts` to `middleware.ts`. The framework only auto-invokes middleware from a file named `middleware.ts` at the app root. `proxy.ts` is silently ignored. This was fixed in Track B (B6) but any new middleware must use the correct filename.
+- SkillRunner needs Docker running. If Docker is not available, skill invocation returns 503.
+- The governance repo (`prosy/travel.aw`) has diverged history from this repo. Do NOT attempt to merge or pull from it.
+- pnpm version must match `packageManager` field in `package.json`.
+- Ecosystem registries are in `packages/contracts/registries/` — these are SSOT. Never define enums elsewhere.
 - ajv@8 default only supports draft-07 — using `$schema: "https://json-schema.org/draft/2020-12/schema"` causes "no schema with key or ref" error. Use `"http://json-schema.org/draft-07/schema#"` or import `Ajv2020`.
 - CC agent prompts from ChatGPT/claude.ai frequently have wrong file paths — always cross-check against Authority Index (A8) before executing.
 - Research CSV has commas inside quoted fields — `cut -d','` will silently mangle columns. Use python3 `csv.reader` for parsing.
@@ -163,24 +175,89 @@ travel.aw/
 - StopCrabs `none_of` rules flag absence of safety patterns in any Python file — template skills must include `ALLOWED_PATHS`, `ALLOWED_DOMAINS`, `validate_checksum()` to pass clean.
 - StopCrabs is NOT on public PyPI and has a wheel packaging bug (`data/` not included). CI must use `git clone + pip install -e` (editable install).
 - Next.js 16 app routes expose `searchParams` as async in server components — access without awaiting causes runtime warning/errors.
-- Next.js only auto-invokes middleware from a file named `middleware.ts` (or `.js`) at the app root — any other name (e.g., `proxy.ts`) is silently ignored.
+- Next.js 16: `params` is a Promise in route handlers — must await before accessing properties.
 - Prisma `migrate dev` can fail with `P3006` on legacy SQLite DBs without migration history — baseline migrations first, or use `migrate diff`/`db execute` only for local verification.
 - SkillRunner `validateEnvVars` checks key *presence* in the envVars map, not actual values — skills that handle missing credentials internally (mock fallback) still need placeholder empty strings passed.
 - Docker network cleanup tests are flaky when run in parallel — use before/after snapshot pattern instead of absolute counts.
-- Next.js 16: `params` is a Promise in route handlers — must await before accessing properties.
 - Repo was consolidated on 2026-02-26 from two diverged clones (governance at ~/Documents/GitHub/travel.aw, app at ~/Projects/augmented-worlds/travel) into this single repo. Archived clone at ~/Documents/GitHub/_archived_travel-aw-governance.
 - Turbopack (Next.js bundler) cannot resolve `.js` extension imports in workspace package source files — use extension-less imports (`./module` not `./module.js`) when `moduleResolution: "Bundler"` is set in tsconfig. Fixed in skill-runner `src/index.ts` and all internal modules.
 - Two-repo problem: `prosy/travel.aw` (governance history) and `prosy/travel-app` (app history) have completely unrelated git histories — cannot rebase/merge. Created `prosy/travel-app` as separate remote for the app. Local `origin` remote still points to `prosy/travel.aw`; use `app` remote for pushes.
-- **RISK-10:** Next.js 16 renamed `proxy.ts` to `middleware.ts`. The framework only auto-invokes middleware from a file named `middleware.ts` at the app root. `proxy.ts` is silently ignored. This was fixed in Track B (B6) but any new middleware must use the correct filename.
+
+---
+
+## 9. Commit Conventions
+
+- `feat(scope): description` — new features
+- `fix(scope): description` — bug fixes
+- `docs: description` — documentation only
+- `chore: description` — maintenance, session close
+- **Scopes:** `track-a`, `track-b`, `m0`, `m1`, `m2`, `skill-runner`, `ecosystem`
+- **Co-author:** `Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>`
+
+---
+
+## 10. Session Protocol
+
+1. Read this file FIRST every session
+2. Read `PROJECT_MANIFEST.md` for repo map and session routing
+3. Run validation before reporting "done" on any ecosystem changes
+4. Run `pnpm build` before reporting "done" on any code changes
+5. Always cite file paths for every edit
+6. No emojis in code or responses unless requested
+
+### Session Close (MANDATORY)
+
+**Full protocol:** `AUTH/SESSION_CLOSE_PROTOCOL.md`
+
+Before ending any session, running `/compact`, or switching branches, you MUST:
+1. Update `.agent_state.md` — what was completed, commit SHAs, next actions, blockers
+2. Add to **Known Gotchas** (section 8) if you hit a non-obvious problem
+3. Update durable state in this file if status/authorities/decisions changed
+4. Execute the full Session Close Protocol. **No session ends without it.**
+
+---
+
+## Common Commands
+
+```bash
+pnpm dev          # Start dev server (localhost:3000)
+pnpm build        # Production build (all packages)
+pnpm lint         # Lint all packages
+pnpm db:push      # Apply Prisma schema changes
+pnpm db:seed      # Seed database
+pnpm db:studio    # Open Prisma Studio
+pnpm db:generate  # Regenerate Prisma client
+pnpm db:migrate   # Run Prisma migrations
+```
+
+---
+
+## Authoritative Files (Always Consult First)
+
+| File | Location | Purpose |
+|------|----------|---------|
+| `TRAVEL_AUTHORITIES_INDEX.md` | `AUTH/` | Master authority index + precedence rules |
+| `SESSION_CLOSE_PROTOCOL.md` | `AUTH/` | Mandatory session close checklist |
+| `ECOSYSTEM_SPEC_v0_2.md` | `docs/ecosystem/` | Product scope, user journey, MVP (WP-0) |
+| `DECISIONS.md` | `docs/ecosystem/` | Design decisions registry (WP-0) |
+| `GLOSSARY.md` | `docs/ecosystem/` | Canonical term definitions (WP-0) |
+
+### Registries (SSOT)
+
+| File | Location | Owns |
+|------|----------|------|
+| `journey_stages.json` | `packages/contracts/registries/` | J0-J8 labels |
+| `capabilities_registry.json` | `packages/contracts/registries/` | C-codes |
+| `provider_types.json` | `packages/contracts/registries/` | ProviderType enum |
+| `relationship_types.json` | `packages/contracts/registries/` | Edge types + constraints |
 
 ---
 
 ## Git
 
-- Repository: github.com/prosy/travel-app (app remote)
-- Governance: github.com/prosy/travel.aw (origin remote)
-- Branch: main
-- Co-author commits with: `Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>`
+- **App remote:** `app` → `github.com/prosy/travel-app` (push here)
+- **Governance remote:** `origin` → `github.com/prosy/travel.aw` (READ-ONLY)
+- **Branch:** main
 
 ---
 
@@ -189,5 +266,5 @@ travel.aw/
 | Repo | Role |
 |------|------|
 | `prosy/travel-aw-skills` | Skills registry (flight-search, hotel-search), CI gates |
-| `prosy/nanoclaw` | Reference only (not a runtime dep) |
+| `prosy/nanoclaw` | Reference only (abandoned, not a runtime dep) |
 | `prosy/StopCrabs` | Security scanner |
