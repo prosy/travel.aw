@@ -1,5 +1,5 @@
 # TRAVEL.aw — Project Manifest
-**Last verified:** 2026-02-26
+**Last verified:** 2026-02-28
 **Status:** Canonical (update this file when repos, paths, or packages change)
 
 ---
@@ -9,8 +9,9 @@
 | Name | Remote | Local Path | Owns |
 |------|--------|------------|------|
 | **App** | `prosy/travel-app` | `~/Projects/augmented-worlds/travel/` | Web app, SkillRunner, Track B security, search UI, copied governance content |
-| **Governance** | `prosy/travel.aw` | `~/Documents/GitHub/travel.aw/` | Original ecosystem graph authoring, planning docs (read-only reference — content copied to App repo) |
+| **Governance** | `prosy/travel.aw` | `~/Documents/GitHub/_archived_travel-aw-governance/` | Original ecosystem graph authoring, planning docs (READ-ONLY ARCHIVE — content copied to App repo) |
 | **Skills** | `prosy/travel-aw-skills` | `~/Documents/GitHub/travel-aw-skills/` | Skill source code, skill.yaml manifests, StopCrabs + travel rules CI gates |
+| **NanoClaw** | `prosy/nanoclaw` | `~/Documents/GitHub/nanoclaw/` | Agent runtime fork — container isolation, multi-messenger I/O, swarms, scheduling. Active (DD-13 reopened). |
 
 > **Governance repo is read-only.** All active development happens in App or Skills. Governance content (authorities, ecosystem data, registries) has been copied into the App repo. Do not commit new work to `prosy/travel.aw`.
 
@@ -126,7 +127,7 @@
 | Decision | Resolution | Impact |
 |----------|-----------|--------|
 | DD-12: SkillRunner location | App repo (`packages/skill-runner/`) | Runtime dep of web app |
-| DD-13: NanoClaw | Irrelevant (WhatsApp daemon) | `prosy/nanoclaw` is abandoned |
+| DD-13: NanoClaw role | **Reopened** — full agent runtime (container isolation, multi-messenger I/O, swarms, scheduling). Fork active at `prosy/nanoclaw`. Reassess at M2-C. |
 | Repo split (2026-02-26) | App → `prosy/travel-app`, Gov → `prosy/travel.aw` | Two remotes, diverged histories, no force merge |
 | Governance content | Copied into App repo | Gov repo is now read-only archive |
 

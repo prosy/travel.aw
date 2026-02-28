@@ -106,7 +106,8 @@
 | DD-10 | AI_AGENT + API_PLATFORM provider types | **Resolved** — added to A6 (v1.1.0) |
 | DD-11 | Graph library for WP-3 | **Resolved** — custom adjacency maps, no graphology |
 | DD-12 | SkillRunner location | **Resolved** — App repo (`packages/skill-runner/`) |
-| DD-13 | NanoClaw | **Resolved** — irrelevant (WhatsApp daemon), `prosy/nanoclaw` abandoned |
+| DD-13 | NanoClaw role | **Reopened** — full agent runtime (container isolation, multi-messenger I/O, swarms, scheduling), not just a messaging daemon. Fork at `prosy/nanoclaw` active. Reassess at M2-C. |
+| DD-27 | Agent messaging transport | **Open** — NanoClaw fork vs custom build vs SDK-direct. Needed for agent-to-agent and agent-to-human communication (M2+, marketplace). |
 
 ---
 
@@ -266,5 +267,5 @@ pnpm db:migrate   # Run Prisma migrations
 | Repo | Role |
 |------|------|
 | `prosy/travel-aw-skills` | Skills registry (flight-search, hotel-search), CI gates |
-| `prosy/nanoclaw` | Reference only (abandoned, not a runtime dep) |
+| `prosy/nanoclaw` | Agent runtime fork — container isolation, multi-messenger I/O, swarms, scheduling. Local: `~/Documents/GitHub/nanoclaw/`. Reassess role at M2-C (DD-13 reopened). |
 | `prosy/StopCrabs` | Security scanner |

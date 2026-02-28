@@ -7,6 +7,12 @@ All changes to authority files (A1-A20), registries, and schemas are logged here
 
 ---
 
+## 2026-02-28 — DD-13 reopened, DD-27 opened: NanoClaw reassessment
+
+- **A2** `docs/ecosystem/DECISIONS.md` — DD-13 reopened: NanoClaw is a full agent runtime (container isolation, multi-messenger I/O, agent swarms, scheduled tasks, per-group context), not just a WhatsApp daemon. Original assessment was based on incomplete review. Fork at `prosy/nanoclaw` remains active. Reassess role at M2-C scoping.
+- **A2** `docs/ecosystem/DECISIONS.md` — DD-27 opened: Agent messaging and communication transport. NanoClaw fork vs custom build vs SDK-direct for agent-to-agent and agent-to-human communication layer.
+- `CLAUDE.md` — Updated DD-13 status, added DD-27, corrected NanoClaw entry in Related Repos.
+
 ## 2026-02-24 — WP-3: Query Cookbook — 5 MVP queries
 
 - **A16** `docs/ecosystem/QUERY_COOKBOOK.md` — Created. 5 deterministic queries (Q1–Q5) with verified expected results.

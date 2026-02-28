@@ -6,6 +6,39 @@ Rule: **Append-only mindset** (edit for clarity, but preserve history via dated 
 
 ---
 
+## Session: 2026-02-28 — Project Assessment + Seattle Integration + NanoClaw Reassessment
+
+### Work Completed
+
+**Task 1: Seattle City Guide Integration**
+- Migrated 4 pages, 2 API routes, and feature module (types, catalog, query) from archived governance repo
+- Created 9 new files under `apps/web/app/` — `_lib/seattle/`, `api/seattle/`, `(authenticated)/seattle/`
+- Converted all vanilla CSS to Tailwind, updated imports to `@/` aliases, `<a>` to `<Link>`
+- Added Seattle entry to Sidebar navigation
+- `pnpm build` passes clean, all 6 routes registered
+
+**Task 2: Full Project Assessment**
+- Cross-referenced CLAUDE.md, PROJECT_MANIFEST.md, .agent_state.md, Authority Pack, Living Record, Integration PRD v0.4, Agent Marketplace Vision, M2 Pre-Scoping Research, 24 planning docs in travel_aw_plans/, 38 docs in archived governance prod_plans/
+- Confirmed: Track A, Track B, M0, M1 all COMPLETE. M2 not started. Pre-M2 gates still pending.
+- Identified stale directories: `~/Documents/Seattle_wikidata/` (deleted — replaced by `tools/seattle_wiki_rag/`), `~/Projects/travel.aw/` and `~/Projects/travel_aw_plans/` flagged as cleanup candidates
+
+**Task 3: NanoClaw Reassessment — DD-13 Reopened**
+- Original DD-13 assessment ("irrelevant WhatsApp daemon") was incorrect
+- Full review of NanoClaw README and fork reveals it is a lightweight agent runtime: container isolation (Apple Container + Docker), multi-messenger I/O (WhatsApp, Telegram, Discord, Slack, Signal), agent swarms, scheduled tasks (heartbeat), per-group isolated CLAUDE.md memory, Claude Agent SDK integration
+- NanoClaw covers the agent communication, orchestration, and scheduling layer that SkillRunner does not — directly maps to M2+ and Agent Marketplace vision (NormieBots, ComBots, AdAgents)
+- DD-13 reopened in DECISIONS.md; DD-27 opened for agent messaging transport decision
+- CLAUDE.md and AUTH/CHANGELOG.md updated
+
+### Decisions Made
+- DD-13: Reopened — NanoClaw is a full agent runtime, not just a messaging daemon
+- DD-27: Opened — Agent messaging transport (NanoClaw fork vs custom vs SDK-direct)
+- `~/Documents/Seattle_wikidata/` confirmed replaced and deleted
+
+### Blockers
+- Pre-M2 gates still pending: Amadeus live test, Auth0 e2e browser test, production env vars
+
+---
+
 ## Session: 2026-02-26 — CC Task Blocks Execution
 
 ### Work Completed
