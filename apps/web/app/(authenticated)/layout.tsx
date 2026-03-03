@@ -27,7 +27,7 @@ export default async function AuthenticatedLayout({
       <div className="flex flex-1 flex-col overflow-hidden md:ml-56">
         <TopNav user={userData} />
         <MobileNav />
-        <main className="flex-1 overflow-y-auto bg-zinc-50 dark:bg-zinc-950 p-6">
+        <main className="flex-1 overflow-y-auto bg-zinc-50 dark:bg-zinc-950">
           {children}
         </main>
       </div>
