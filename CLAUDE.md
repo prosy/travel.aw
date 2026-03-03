@@ -1,7 +1,7 @@
 # TRAVEL.aw
 
 > **Claude Code reads this file automatically at session start.**
-> Last updated: 2026-02-26
+> Last updated: 2026-03-02
 
 > Canonical project manifest is `PROJECT_MANIFEST.md` in this repo root. Read it before any session work.
 
@@ -14,24 +14,24 @@
 
 | Repo | Remote | Local Path | Role |
 |------|--------|------------|------|
-| **App** (this repo) | `prosy/travel-app` | `~/Projects/augmented-worlds/travel/` | Web app, SkillRunner, Track B security, search UI, governance content |
-| **Governance** | `prosy/travel.aw` | `~/Documents/GitHub/travel.aw/` | **READ-ONLY ARCHIVE** — do not commit here |
-| **Skills** | `prosy/travel-aw-skills` | `~/Documents/GitHub/travel-aw-skills/` | Skill source code, skill.yaml manifests, CI gates |
+| **App** (this repo) | `prosy/travel-app` | `~/Documents/GitHub/travel/travel_web/` | Web app, SkillRunner, Track B security, search UI, governance content |
+| **Governance** | `prosy/travel.aw` | `~/Documents/GitHub/travel/_archived_travel-aw-governance/` | **READ-ONLY ARCHIVE** — do not commit here |
+| **Skills** | `prosy/travel-aw-skills` | `~/Documents/GitHub/travel/travel-aw-skills/` | Skill source code, skill.yaml manifests, CI gates |
 
 ---
 
 ## 2. Working Directory
 
-- **ALWAYS** start sessions in: `~/Projects/augmented-worlds/travel/`
+- **ALWAYS** start sessions in: `~/Documents/GitHub/travel/travel_web/`
 - If your shell resets to a different directory, `cd` back before any git operations
-- **NEVER** commit to `~/Documents/GitHub/travel.aw/` — that is the archived governance repo
+- **NEVER** commit to `~/Documents/GitHub/travel/_archived_travel-aw-governance/` — that is the archived governance repo
 
 ---
 
 ## 3. Repo Structure
 
 ```
-~/Projects/augmented-worlds/travel/
+~/Documents/GitHub/travel/travel_web/
 ├── apps/web/                          # Next.js 16 web app (Auth0, Prisma, Leaflet)
 │   ├── app/
 │   │   ├── api/skills/invoke/         # Skill invocation endpoint (M1-C)
@@ -150,7 +150,7 @@
 | `AUTH0_CLIENT_SECRET` | Auth0 app secret | Yes |
 | `ENCRYPTION_KEY` | PII encryption at rest | Yes (production) |
 | `WEBHOOK_EMAIL_SECRET` | Inbound email webhook auth | Yes (production) |
-| `SKILLS_DIR` | Path to `travel-aw-skills/skills/` checkout | Yes (for skill execution) |
+| `SKILLS_DIR` | Path to `travel/travel-aw-skills/skills/` checkout (e.g. `~/Documents/GitHub/travel/travel-aw-skills/skills`) | Yes (for skill execution) |
 | `AMADEUS_API_KEY` | Amadeus flight/hotel API | No (mock fallback) |
 | `AMADEUS_API_SECRET` | Amadeus flight/hotel API | No (mock fallback) |
 | `DATABASE_URL` | Database connection string | Yes (production, Turso) |
@@ -180,7 +180,7 @@
 - Prisma `migrate dev` can fail with `P3006` on legacy SQLite DBs without migration history — baseline migrations first, or use `migrate diff`/`db execute` only for local verification.
 - SkillRunner `validateEnvVars` checks key *presence* in the envVars map, not actual values — skills that handle missing credentials internally (mock fallback) still need placeholder empty strings passed.
 - Docker network cleanup tests are flaky when run in parallel — use before/after snapshot pattern instead of absolute counts.
-- Repo was consolidated on 2026-02-26 from two diverged clones (governance at ~/Documents/GitHub/travel.aw, app at ~/Projects/augmented-worlds/travel) into this single repo. Archived clone at ~/Documents/GitHub/_archived_travel-aw-governance.
+- Repo was consolidated on 2026-02-26 from two diverged clones. Further consolidation 2026-03-02: all travel projects now under ~/Documents/GitHub/travel/. App at travel_web/, Skills at travel-aw-skills/, Governance archive at _archived_travel-aw-governance/. ~/Projects/augmented-worlds/travel/ no longer exists.
 - Turbopack (Next.js bundler) cannot resolve `.js` extension imports in workspace package source files — use extension-less imports (`./module` not `./module.js`) when `moduleResolution: "Bundler"` is set in tsconfig. Fixed in skill-runner `src/index.ts` and all internal modules.
 - Two-repo problem: `prosy/travel.aw` (governance history) and `prosy/travel-app` (app history) have completely unrelated git histories — cannot rebase/merge. Created `prosy/travel-app` as separate remote for the app. Local `origin` remote still points to `prosy/travel.aw`; use `app` remote for pushes.
 

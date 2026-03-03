@@ -1,6 +1,8 @@
 # TRAVEL.aw — Project Manifest
-**Last verified:** 2026-02-28
+**Last verified:** 2026-03-02
 **Status:** Canonical (update this file when repos, paths, or packages change)
+
+> **Path consolidation (2026-03-02):** Project consolidated under `~/Documents/GitHub/travel/`. App lives at `travel_web/`. `~/Projects/augmented-worlds/travel/` no longer exists.
 
 ---
 
@@ -8,9 +10,9 @@
 
 | Name | Remote | Local Path | Owns |
 |------|--------|------------|------|
-| **App** | `prosy/travel-app` | `~/Projects/augmented-worlds/travel/` | Web app, SkillRunner, Track B security, search UI, copied governance content |
-| **Governance** | `prosy/travel.aw` | `~/Documents/GitHub/_archived_travel-aw-governance/` | Original ecosystem graph authoring, planning docs (READ-ONLY ARCHIVE — content copied to App repo) |
-| **Skills** | `prosy/travel-aw-skills` | `~/Documents/GitHub/travel-aw-skills/` | Skill source code, skill.yaml manifests, StopCrabs + travel rules CI gates |
+| **App** | `prosy/travel-app` | `~/Documents/GitHub/travel/travel_web/` | Web app, SkillRunner, Track B security, search UI, copied governance content |
+| **Governance** | `prosy/travel.aw` | `~/Documents/GitHub/travel/_archived_travel-aw-governance/` | Original ecosystem graph authoring, planning docs (READ-ONLY ARCHIVE — content copied to App repo) |
+| **Skills** | `prosy/travel-aw-skills` | `~/Documents/GitHub/travel/travel-aw-skills/` | Skill source code, skill.yaml manifests, StopCrabs + travel rules CI gates |
 | **NanoClaw** | `prosy/nanoclaw` | `~/Documents/GitHub/nanoclaw/` | Agent runtime fork — container isolation, multi-messenger I/O, swarms, scheduling. Active (DD-13 reopened). |
 
 > **Governance repo is read-only.** All active development happens in App or Skills. Governance content (authorities, ecosystem data, registries) has been copied into the App repo. Do not commit new work to `prosy/travel.aw`.
@@ -20,7 +22,7 @@
 ## 2. App Repo Structure (`prosy/travel-app`)
 
 ```
-~/Projects/augmented-worlds/travel/
+~/Documents/GitHub/travel/travel_web/
 ├── apps/web/                          # Next.js 16 web app
 │   ├── app/
 │   │   ├── api/skills/invoke/         # Skill invocation endpoint (M1-C)
@@ -66,7 +68,7 @@
 ## 3. Skills Repo Structure (`prosy/travel-aw-skills`)
 
 ```
-~/Documents/GitHub/travel-aw-skills/
+~/Documents/GitHub/travel/travel-aw-skills/
 ├── .github/workflows/stopcrabs-gate.yml   # CI: StopCrabs + travel rules + manifest validation
 ├── skills/
 │   ├── _template/                         # Reference skill structure
@@ -100,10 +102,10 @@
 
 | Working on... | Use this repo | Local path |
 |---------------|--------------|------------|
-| API routes, UI, SkillRunner, auth, encryption | **App** | `~/Projects/augmented-worlds/travel/` |
-| Ecosystem graph, registries, authorities, validator | **App** (governance content lives here now) | `~/Projects/augmented-worlds/travel/` |
-| Skill source code, skill.yaml manifests, CI gates | **Skills** | `~/Documents/GitHub/travel-aw-skills/` |
-| Planning docs, PRDs, session records | **App** | `~/Projects/augmented-worlds/travel/prod_plans/` |
+| API routes, UI, SkillRunner, auth, encryption | **App** | `~/Documents/GitHub/travel/travel_web/` |
+| Ecosystem graph, registries, authorities, validator | **App** (governance content lives here now) | `~/Documents/GitHub/travel/travel_web/` |
+| Skill source code, skill.yaml manifests, CI gates | **Skills** | `~/Documents/GitHub/travel/travel-aw-skills/` |
+| Planning docs, PRDs, session records | **App** | `~/Documents/GitHub/travel/travel_web/prod_plans/` |
 
 > **Do NOT commit to `prosy/travel.aw` (governance repo).** It is archived for reference.
 
@@ -141,12 +143,12 @@ Run this to verify manifest accuracy:
 # Check all critical paths exist
 echo "=== Manifest Validation ==="
 for path in \
-  ~/Projects/augmented-worlds/travel/packages/skill-runner/src/index.ts \
-  ~/Projects/augmented-worlds/travel/packages/contracts/registries/journey_stages.json \
-  ~/Projects/augmented-worlds/travel/AUTH/TRAVEL_AUTHORITIES_INDEX.md \
-  ~/Projects/augmented-worlds/travel/data/ecosystem/nodes.jsonl \
-  ~/Documents/GitHub/travel-aw-skills/skills/flight-search/skill.yaml \
-  ~/Documents/GitHub/travel-aw-skills/scripts/travel-rules-check.py
+  ~/Documents/GitHub/travel/travel_web/packages/skill-runner/src/index.ts \
+  ~/Documents/GitHub/travel/travel_web/packages/contracts/registries/journey_stages.json \
+  ~/Documents/GitHub/travel/travel_web/AUTH/TRAVEL_AUTHORITIES_INDEX.md \
+  ~/Documents/GitHub/travel/travel_web/data/ecosystem/nodes.jsonl \
+  ~/Documents/GitHub/travel/travel-aw-skills/skills/flight-search/skill.yaml \
+  ~/Documents/GitHub/travel/travel-aw-skills/scripts/travel-rules-check.py
 do
   if [ -e "$path" ]; then
     echo "✅ $path"

@@ -1,0 +1,121 @@
+{
+  "$schema": "https://travel.aw/schemas/work_contract.schema.json",
+  "version": "1.0.0",
+  "id": "M2-S1-PROVIDER-DEPLOY",
+  "title": "M2 Session 1: Provider Integration + Deploy",
+  "date": "2026-02-27",
+  "authority_chain": [
+    "TRAVEL_AW_INTEGRATION_PRD_v0_5_2026-02-27.md",
+    "TRAVEL_AW_DATA_ARCHITECTURE_DEEP_DIVE_2026-02-27.md",
+    "M2_S1_PRD.md",
+    "M2_S1_SPEC.md"
+  ],
+  "epics": [
+    {
+      "id": "E1",
+      "title": "Provider Adapter Layer",
+      "write_scope": {
+        "app_repo": {
+          "new": [
+            "packages/contracts/src/offers.ts",
+            "packages/adapters/src/types.ts",
+            "packages/adapters/src/registry.ts",
+            "packages/adapters/src/duffel/flight-adapter.ts",
+            "packages/adapters/src/duffel/hotel-adapter.ts",
+            "packages/adapters/src/duffel/normalize.ts",
+            "packages/adapters/src/kiwi/flight-adapter-stub.ts",
+            "packages/adapters/src/index.ts",
+            "packages/adapters/package.json",
+            "packages/adapters/tsconfig.json",
+            "packages/adapters/__tests__/duffel-normalize.test.ts",
+            "packages/adapters/__tests__/kiwi-stub.test.ts",
+            "packages/adapters/__tests__/fixtures/"
+          ],
+          "modify": [
+            "packages/contracts/src/index.ts"
+          ]
+        },
+        "skills_repo": {
+          "modify": [
+            "skills/flight-search/src/main.ts",
+            "skills/flight-search/skill.yaml",
+            "skills/hotel-search/src/main.ts",
+            "skills/hotel-search/skill.yaml"
+          ]
+        }
+      },
+      "no_write": [
+        "AUTH/*",
+        "data/ecosystem/*",
+        "packages/skill-runner/*",
+        "packages/contracts/registries/*",
+        "apps/web/app/(authenticated)/search/*"
+      ]
+    },
+    {
+      "id": "E2",
+      "title": "Deploy Infrastructure",
+      "write_scope": {
+        "app_repo": {
+          "new": [
+            "apps/web/vercel.json",
+            "Dockerfile.skills",
+            "apps/web/app/api/health/route.ts",
+            "scripts/smoke-test.sh",
+            "docs/DEPLOY.md",
+            ".env.example"
+          ],
+          "modify": [
+            "apps/web/app/api/skills/invoke/route.ts"
+          ]
+        }
+      }
+    }
+  ],
+  "invariants": [
+    "No provider-specific types outside adapters/src/{provider}/",
+    "All monetary values as strings (no float arithmetic)",
+    "All timestamps ISO 8601 UTC",
+    "Adapter errors return AdapterResult, never throw unstructured",
+    "Kiwi stub makes zero network calls",
+    "83 existing SkillRunner tests pass",
+    "TRAVEL-003 CI enforcement unchanged",
+    "Health endpoints return 200",
+    "Test fixtures follow existing repo data conventions (check data/seattle/ patterns)"
+  ],
+  "preconditions": {
+    "app_repo": "main branch, clean git state",
+    "skills_repo": "main branch, clean git state",
+    "env_vars": ["DUFFEL_API_TOKEN"],
+    "tools": ["node 20+", "pnpm", "vercel cli", "railway cli"]
+  },
+  "gates": {
+    "pre_commit": [
+      "git diff --stat shows only files in write_scope",
+      "pnpm build succeeds",
+      "pnpm test succeeds (all packages)",
+      "No 'any' types in packages/adapters/"
+    ],
+    "ci": [
+      "Skills repo CI green (StopCrabs + travel-rules + manifest)",
+      "Vercel build succeeds",
+      "Railway build succeeds"
+    ],
+    "post_deploy": [
+      "GET /api/health → 200 (Vercel)",
+      "Skills service health → 200 (Railway)",
+      "Flight search returns results (smoke test)",
+      "Hotel search returns results (smoke test)"
+    ]
+  },
+  "failure_policy": "fail-fast",
+  "rollback": "If deploy fails, local SkillRunner fallback. Document in DEPLOY.md.",
+  "session_close": {
+    "required_artifacts": [
+      "CLOSEOUT.md with pass/fail per acceptance criterion",
+      "git diff --stat output",
+      "test output summary",
+      "deploy URLs (if successful)"
+    ]
+  }
+}
