@@ -24,7 +24,7 @@ export default async function AuthenticatedLayout({
   return (
     <div className="flex h-screen">
       <Sidebar user={userData} />
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex flex-1 flex-col overflow-hidden md:ml-56">
         <TopNav user={userData} />
         <MobileNav />
         <main className="flex-1 overflow-y-auto bg-zinc-50 dark:bg-zinc-950 p-6">
