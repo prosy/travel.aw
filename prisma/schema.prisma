@@ -74,6 +74,43 @@ model TripItem {
 }
 
 // ============================================================================
+// Collections (Pinterest-style idea boards)
+// ============================================================================
+
+model Collection {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  coverUrl    String?  // User-uploaded or auto-selected cover image
+
+  items       CollectionItem[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model CollectionItem {
+  id            String   @id @default(cuid())
+  collectionId  String
+  collection    Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  title         String
+  description   String?
+  imageUrl      String?
+  sourceUrl     String?  // Wikipedia page URL or other source
+  sourceType    String   @default("wikipedia") // wikipedia, user, web
+
+  createdAt     DateTime @default(now())
+
+  @@index([collectionId])
+}
+
+// ============================================================================
 // Media Cache
 // ============================================================================
 
@@ -232,6 +269,7 @@ model User {
 
   // Relations
   trips             Trip[]
+  collections       Collection[]
   pointsAccounts    PointsAccount[]
   travelDocs        TravelDoc[]
   emergencyContacts EmergencyContact[]

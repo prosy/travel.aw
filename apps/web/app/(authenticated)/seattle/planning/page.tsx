@@ -83,7 +83,7 @@ export default async function SeattlePlanningPage({ searchParams }: SearchProps)
             </svg>
           </Link>
           <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">Seattle</p>
+            <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">Explore</p>
             <h1 className="text-3xl font-bold">Planning</h1>
           </div>
         </div>

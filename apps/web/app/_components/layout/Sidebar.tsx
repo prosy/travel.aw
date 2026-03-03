@@ -15,7 +15,7 @@ interface SidebarProps {
 
 const NAV_LINKS = [
   { href: '/trips', label: 'Trips', icon: '\u2708\uFE0F' },
-  { href: '/seattle', label: 'Seattle', icon: '\u{1F30A}' },
+  { href: '/seattle', label: 'Explore', icon: '\u{1F30D}' },
   { href: '/points', label: 'Points', icon: '\u2B50' },
   { href: '/friends', label: 'Friends', icon: '\u{1F465}' },
   { href: '/safety', label: 'Safety', icon: '\u{1F6E1}\uFE0F' },

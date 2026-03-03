@@ -110,7 +110,7 @@ export default function SeattleSportsPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="text-2xl font-bold">Seattle Sports</h1>
+      <h1 className="text-2xl font-bold">Sports</h1>
       <p className="text-sm text-zinc-500 dark:text-zinc-400">
         Stored query fires on page open and renders deterministic Seattle sports context.
       </p>
