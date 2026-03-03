@@ -3,6 +3,8 @@ import { fetchTrip } from '@/app/_lib/mock-data';
 import { fetchWikiImage } from '@/app/_lib/wikipedia-image';
 import { notFound } from 'next/navigation';
 import { QuickSearchChips } from './QuickSearchChips';
+import { TimelineItemActions } from './TimelineItemActions';
+import { TripMoreOptions } from './TripMoreOptions';
 import type { TripItem } from '@travel/contracts';
 
 interface Props {
@@ -132,8 +134,7 @@ export default async function TripDetailPage({ params }: Props) {
           <div className="flex flex-1 justify-center">
             <QuickSearchChips query={trip.destination} />
           </div>
-          {/* Spacer to balance the back button */}
-          <div className="w-10" />
+          <TripMoreOptions tripId={id} />
         </div>
 
         {/* Header: title + image */}
@@ -190,9 +191,15 @@ export default async function TripDetailPage({ params }: Props) {
 
                         {/* Content */}
                         <div className="pl-6">
-                          <h3 className="font-semibold leading-snug text-white">
-                            {item.title}
-                          </h3>
+                          <div className="flex items-start justify-between">
+                            <Link
+                              href={`/trips/${id}/items/${item.id}`}
+                              className="font-semibold leading-snug text-white hover:text-blue-400 transition-colors"
+                            >
+                              {item.title}
+                            </Link>
+                            <TimelineItemActions tripId={id} itemId={item.id} />
+                          </div>
                           {subtitle.map((line, i) => (
                             <p key={i} className="text-sm leading-snug text-zinc-400">
                               {line}

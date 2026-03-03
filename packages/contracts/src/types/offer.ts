@@ -38,6 +38,15 @@ export interface OfferHotel {
 }
 
 /**
+ * Layover between flight segments
+ */
+export interface FlightLayover {
+  airport: string;
+  city?: string | null;
+  duration: string; // ISO 8601 duration, e.g. "PT1H25M"
+}
+
+/**
  * Flight offer details
  */
 export interface OfferFlight {
@@ -48,8 +57,10 @@ export interface OfferFlight {
   arrival: FlightLocation;
   class?: FlightClass;
   aircraft?: string | null;
+  seatNumber?: string | null;
   duration?: string | null; // ISO 8601 duration
   stops: number;
+  layovers?: FlightLayover[];
   price?: Price | null;
   baggageAllowance?: string | null;
   sourceUrl?: string | null;

@@ -29,6 +29,17 @@ export async function fetchTrip(id: string): Promise<Trip | null> {
 }
 
 /**
+ * Fetch a single trip item by trip ID and item ID.
+ */
+export async function fetchTripItem(tripId: string, itemId: string) {
+  const item = await prisma.tripItem.findFirst({
+    where: { id: itemId, tripId },
+  });
+  if (!item) return null;
+  return mapTripItem(item);
+}
+
+/**
  * Fetch hotel offers from trip items.
  * Temporary implementation until real search API exists.
  */

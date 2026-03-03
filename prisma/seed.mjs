@@ -68,6 +68,7 @@ async function main() {
                 terminal: '1'
               },
               class: 'economy',
+              seatNumber: '34A',
               duration: 'PT11H15M',
               stops: 0
             })
@@ -141,6 +142,7 @@ async function main() {
                 terminal: 'International G'
               },
               class: 'economy',
+              seatNumber: '34A',
               duration: 'PT9H30M',
               stops: 0
             })
@@ -167,8 +169,8 @@ async function main() {
         create: [
           {
             type: 'flight',
-            title: 'JFK → FCO (Alitalia)',
-            description: 'Flight to Rome Fiumicino',
+            title: 'JFK → FCO (British Airways via LHR)',
+            description: 'Flight to Rome via London Heathrow',
             startDateTime: new Date('2026-06-15T18:00:00Z'),
             endDateTime: new Date('2026-06-16T08:30:00+02:00'),
             locationName: 'JFK International Airport',
@@ -177,23 +179,27 @@ async function main() {
             status: 'pending',
             offerData: JSON.stringify({
               type: 'flight',
-              airline: 'ITA Airways',
-              flightNumber: 'AZ611',
+              airline: 'British Airways',
+              flightNumber: 'BA178',
               departure: {
                 airport: 'JFK',
                 city: 'New York',
                 dateTime: '2026-06-15T18:00:00Z',
-                terminal: '1'
+                terminal: '7'
               },
               arrival: {
                 airport: 'FCO',
                 city: 'Rome',
-                dateTime: '2026-06-16T08:30:00+02:00',
+                dateTime: '2026-06-16T12:30:00+02:00',
                 terminal: '3'
               },
               class: 'economy',
-              duration: 'PT8H30M',
-              stops: 0
+              seatNumber: '22F',
+              duration: 'PT12H30M',
+              stops: 1,
+              layovers: [
+                { airport: 'LHR', city: 'London', duration: 'PT2H15M' }
+              ]
             })
           },
           {

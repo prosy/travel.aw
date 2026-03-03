@@ -16,6 +16,7 @@ export type {
   OfferFlight,
   FlightClass,
   FlightLocation,
+  FlightLayover,
 } from './offer';
 
 // Media types
