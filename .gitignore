@@ -7,3 +7,4 @@ dist
 prisma/dev.db
 apps/web/dev.db
 *.db
+.vercel
