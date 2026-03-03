@@ -182,6 +182,9 @@
 - Docker network cleanup tests are flaky when run in parallel — use before/after snapshot pattern instead of absolute counts.
 - Repo was consolidated on 2026-02-26 from two diverged clones. Further consolidation 2026-03-02: all travel projects now under ~/Documents/GitHub/travel/. App at travel_web/, Skills at travel-aw-skills/, Governance archive at _archived_travel-aw-governance/. ~/Projects/augmented-worlds/travel/ no longer exists.
 - Turbopack (Next.js bundler) cannot resolve `.js` extension imports in workspace package source files — use extension-less imports (`./module` not `./module.js`) when `moduleResolution: "Bundler"` is set in tsconfig. Fixed in skill-runner `src/index.ts` and all internal modules.
+- Layout `<main>` padding (`p-6`) creates a visible gap between the sidebar and content area because `bg-zinc-900` (sidebar) vs `dark:bg-zinc-950` (main) are different shades. All 30 authenticated pages have their own padding containers (`mx-auto max-w-3xl px-4 py-10` or equivalent), so layout `<main>` should have NO padding.
+- Vercel deploy must run from the monorepo root (`travel_web/`), not from `apps/web/`. Deploying from `apps/web/` creates a separate `.vercel/project.json` linked to the wrong project and fails with `npm install` instead of `pnpm`.
+- The sidebar is `fixed left-0 top-0 w-56` — the content wrapper needs `md:ml-56` to offset past it. Without this, content renders behind the sidebar.
 - Two-repo problem: `prosy/travel.aw` (governance history) and `prosy/travel-app` (app history) have completely unrelated git histories — cannot rebase/merge. Created `prosy/travel-app` as separate remote for the app. Local `origin` remote still points to `prosy/travel.aw`; use `app` remote for pushes.
 
 ---
