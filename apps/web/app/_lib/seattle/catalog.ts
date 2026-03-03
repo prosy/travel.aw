@@ -20,6 +20,20 @@ function candidateRoots(): string[] {
     resolve(cwd, "../../../.."),
     resolve(cwd, "../../../../.."),
   ];
+
+  // On Vercel serverless, __dirname is more reliable than cwd for locating
+  // bundled files included via outputFileTracingIncludes.
+  if (typeof __dirname !== "undefined") {
+    roots.push(
+      resolve(__dirname, ".."),
+      resolve(__dirname, "../.."),
+      resolve(__dirname, "../../.."),
+      resolve(__dirname, "../../../.."),
+      resolve(__dirname, "../../../../.."),
+      resolve(__dirname, "../../../../../.."),
+    );
+  }
+
   return [...new Set(roots)];
 }
 
@@ -30,7 +44,10 @@ function resolveSeattleDataDir(): string {
       return candidate;
     }
   }
-  throw new Error("Could not resolve data/seattle directory from current working directory.");
+  const searched = candidateRoots().map(r => join(r, "data", "seattle"));
+  throw new Error(
+    `Could not resolve data/seattle directory. cwd=${process.cwd()}, searched: ${searched.join(", ")}`
+  );
 }
 
 function parseJsonl<T>(raw: string): T[] {
